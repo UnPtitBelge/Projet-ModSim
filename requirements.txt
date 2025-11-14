@@ -1,4 +1,5 @@
 numpy
+pandas
 panel
 watchfiles
 hvplot
