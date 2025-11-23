@@ -19,3 +19,13 @@ Lancer l'application localement. Si nécessaire, suivre le tutoriel de la page o
 ```bash
 panel serve app.py --autoreload --show
 ```
+
+## Lancement des tests
+
+Pytest devrait normalement déjà être inclu dans les packages installés via le requirements.txt.
+
+Pour lancer les tests, utiliser la commande suivante :
+
+```bash
+python -m pytest tests/
+```

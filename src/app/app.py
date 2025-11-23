@@ -9,13 +9,14 @@ Exposes: `template.servable()` when run as a Panel app
 """
 
 import panel as pn
-import show
-from classifier import Classifier
+
+from .classifier import Classifier
+from .show import *
 
 pn.extension(sizing_mode="stretch_width")
 
 # Build the UI template using the plotting module and the classify callback
-template = show.build_template(Classifier().classify)
+template = build_template(Classifier().classify)
 
 
 if __name__.startswith("__main__"):
