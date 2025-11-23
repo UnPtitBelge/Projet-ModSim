@@ -13,13 +13,12 @@ build_template(classify_func) -> pn.template.FastListTemplate
 
 from __future__ import annotations
 
+import config
 import numpy as np
 import panel as pn
 from bokeh.events import Tap
 from bokeh.models import ColumnDataSource, Label, Span
 from bokeh.plotting import figure
-
-import config
 
 __all__ = ["build_template"]
 
@@ -32,6 +31,9 @@ def build_template(classify_func):
     classify_func: Callable[[float, float], str]
             Function that takes (tr, det) and returns a Markdown string.
     """
+    # Local import to satisfy type-checkers that expect Range objects
+    from bokeh.models import Range1d
+
     # Prepare grid
     tr = np.linspace(config.TR_MIN, config.TR_MAX, config.GRID_RES)
     det_curve = tr**2 / 4.0
@@ -41,8 +43,8 @@ def build_template(classify_func):
     TOOLS = "pan,wheel_zoom,box_zoom,reset,save,tap"
     p = figure(
         title="Poincaré Diagram (Tr A vs det A) — click to move the point",
-        x_range=(config.TR_MIN, config.TR_MAX),
-        y_range=(config.DET_MIN, config.DET_MAX),
+        x_range=Range1d(config.TR_MIN, config.TR_MAX),
+        y_range=Range1d(config.DET_MIN, config.DET_MAX),
         tools=TOOLS,
         sizing_mode="stretch_both",
     )
