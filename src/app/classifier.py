@@ -4,33 +4,45 @@ This module provides the `classify(tr, det)` function which returns a
 short Markdown-friendly description of the equilibrium type and stability.
 """
 
+from typing import Callable
 
-def classify(trval, detval):
-    """Classify the stability region given trace `trval` and determinant `detval`.
+from .models import ClassificationResult
 
-    The logic mirrors the original implementation: compute Delta = Tr^2 - 4*det
-    and classify into saddle, degenerate node, center/spiral, or node.
-    """
-    Delta = trval**2 - 4 * detval
 
-    # Saddle (det < 0)
-    if detval < 0:
-        return f"**Saddle** — det < 0\nΔ = {Delta:.3g} < 0"
+class Classifier:
+    def __init__(
+        self, eps: float = 1e-8, formatter: Callable[[str], str] | None = None
+    ):
+        self.eps = eps
+        self.formatter = formatter  # Optional formater for other output
 
-    # Degenerate (Δ ≈ 0)
-    if abs(Delta) < 1e-8:
-        if trval == 0 and detval == 0:
-            return "Degenerate origin (0,0)"
-        stability = "stable" if trval < 0 else "unstable"
-        return f"**Degenerate node ({stability})** — Δ ≈ 0"
+    def classify(self, tr: float, det: float) -> ClassificationResult:
+        Delta = tr**2 - 4 * det
 
-    # Complex eigenvalues (Δ < 0)
-    if Delta < 0:
-        if abs(trval) < 1e-8:
-            return "**Center** — Tr A ≈ 0, Δ < 0"
-        stability = "stable (spiral sink)" if trval < 0 else "unstable (spiral source)"
-        return f"**{stability}** — Δ < 0"
+        if det < 0:
+            label = "Saddle"
+            stability = "unstable"
+            markdown = f"**Saddle** — det < 0\nΔ = {Delta:.3g} < 0"
+            return ClassificationResult(label, stability, Delta, markdown)
 
-    # Δ > 0 & det > 0 -> node (real eigenvalues)
-    stability = "stable (node sink)" if trval < 0 else "unstable (node source)"
-    return f"**{stability}** — Δ > 0"
+        if abs(Delta) < self.eps:
+            if tr == 0 and det == 0:
+                markdown = "Degenerate origin (0,0)"
+                return ClassificationResult("Degenerate", "neutral", Delta, markdown)
+            stability = "stable" if tr < 0 else "unstable"
+            markdown = f"**Degenerate node ({stability})** — Δ ≈ 0"
+            return ClassificationResult("Degenerate node", stability, Delta, markdown)
+
+        if Delta < 0:
+            if abs(tr) < self.eps:
+                markdown = "**Center** — Tr A ≈ 0, Δ < 0"
+                return ClassificationResult("Center", "neutral", Delta, markdown)
+            stability = "stable (spiral sink)" if tr < 0 else "unstable (spiral source)"
+            return ClassificationResult(
+                "Spiral", stability, Delta, f"**{stability}** — Δ < 0"
+            )
+
+        stability = "stable (node sink)" if tr < 0 else "unstable (node source)"
+        return ClassificationResult(
+            "Node", stability, Delta, f"**{stability}** — Δ > 0"
+        )

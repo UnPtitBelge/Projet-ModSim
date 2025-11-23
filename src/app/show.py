@@ -13,12 +13,13 @@ build_template(classify_func) -> pn.template.FastListTemplate
 
 from __future__ import annotations
 
-import config
 import numpy as np
 import panel as pn
 from bokeh.events import Tap
 from bokeh.models import ColumnDataSource, Label, Span
 from bokeh.plotting import figure
+
+from .models import AppConfig
 
 __all__ = ["build_template"]
 
@@ -35,16 +36,16 @@ def build_template(classify_func):
     from bokeh.models import Range1d
 
     # Prepare grid
-    tr = np.linspace(config.TR_MIN, config.TR_MAX, config.GRID_RES)
+    tr = np.linspace(AppConfig.tr_min, AppConfig.tr_max, AppConfig.grid_res)
     det_curve = tr**2 / 4.0
-    x_equal_0 = np.linspace(config.DET_MIN, config.DET_MAX, 2)
+    x_equal_0 = np.linspace(AppConfig.det_min, AppConfig.det_max, 2)
 
     # Bokeh figure
     TOOLS = "pan,wheel_zoom,box_zoom,reset,save,tap"
     p = figure(
         title="Poincaré Diagram (Tr A vs det A) — click to move the point",
-        x_range=Range1d(config.TR_MIN, config.TR_MAX),
-        y_range=Range1d(config.DET_MIN, config.DET_MAX),
+        x_range=Range1d(AppConfig.tr_min, AppConfig.tr_max),
+        y_range=Range1d(AppConfig.det_min, AppConfig.det_max),
         tools=TOOLS,
         sizing_mode="stretch_both",
     )
@@ -78,14 +79,14 @@ def build_template(classify_func):
     # Fill regions
     p.patch(
         np.concatenate([tr, tr[::-1]]),
-        np.concatenate([det_curve, np.full_like(det_curve, config.DET_MAX)]),
+        np.concatenate([det_curve, np.full_like(det_curve, AppConfig.det_max)]),
         fill_alpha=0.08,
         fill_color="#fff0d9",
         line_color=None,
     )
     p.patch(
         np.concatenate([tr, tr[::-1]]),
-        np.concatenate([det_curve, np.full_like(det_curve, config.DET_MIN)]),
+        np.concatenate([det_curve, np.full_like(det_curve, AppConfig.det_min)]),
         fill_alpha=0.08,
         fill_color="#e8f6ff",
         line_color=None,
@@ -111,8 +112,8 @@ def build_template(classify_func):
 
     # Click event handler uses provided classify function
     def on_tap(event):
-        x = max(min(event.x, config.TR_MAX), config.TR_MIN)
-        y = max(min(event.y, config.DET_MAX), config.DET_MIN)
+        x = max(min(event.x, AppConfig.tr_max), AppConfig.tr_min)
+        y = max(min(event.y, AppConfig.det_max), AppConfig.det_min)
 
         source.data = dict(x=[x], y=[y])
         md.object = f"**Current position**: TrA = {x:.3f}, detA = {y:.3f}\n\n{classify_func(x, y)}"

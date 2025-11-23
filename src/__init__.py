@@ -1,3 +1,4 @@
-from .app import app, classifier
+from .app import app
+from .app.classifier import Classifier
 
-__all__ = ['app', 'classifier']
+__all__ = ["app", "Classifier"]

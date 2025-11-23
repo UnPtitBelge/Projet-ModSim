@@ -14,7 +14,7 @@ Installer les dépendances avec `pip`
 pip install -r requirements.txt
 ```
 
-(Pas encore implémenté) Lancer l'application localement. Si nécessaire, suivre le tutoriel de la page officielle [Panel](https://panel.holoviz.org/getting_started/build_app.html)
+Lancer l'application localement. Si nécessaire, suivre le tutoriel de la page officielle [Panel](https://panel.holoviz.org/getting_started/build_app.html)
 
 ```bash
 panel serve app.py --autoreload --show
