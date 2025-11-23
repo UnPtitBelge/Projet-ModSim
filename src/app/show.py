@@ -1,154 +1,56 @@
-"""Visualization helpers and components for the application.
+"""
+Compatibility wrapper: expose `build_template(classify_func)`.
 
-This module builds the Bokeh figure and the Panel template used by the
-application. The plotting logic is self-contained and accepts a
-classification callback so the UI can remain decoupled from business logic.
-
-Public API
-----------
-build_template(classify_func) -> pn.template.FastListTemplate
-        Build and return a Panel template. `classify_func(tr, det)` is used to
-        produce the classification text when the user interacts with the plot.
+This module provides a small adapter so the original call-site
+`show.build_template(classify)` continues to work while the plotting
+implementation lives in `plot.py`.
 """
 
-from __future__ import annotations
+from typing import Any, Callable
 
-import numpy as np
-import panel as pn
-from bokeh.events import Tap
-from bokeh.models import ColumnDataSource, Label, Span
-from bokeh.plotting import figure
-
-from .models import AppConfig
+from models import AppConfig
+from plot import PoincarePlot
 
 __all__ = ["build_template"]
 
 
-def build_template(classify_func):
-    """Build the interactive Poincaré diagram and return a Panel template.
+def build_template(classify_func: Callable[[float, float], Any]):
+    """
+    Build and return the Panel template by delegating to `PoincarePlot`.
 
     Parameters
     ----------
-    classify_func: Callable[[float, float], str]
-            Function that takes (tr, det) and returns a Markdown string.
+    classify_func:
+        A callable taking (tr, det) and returning a string (or any object
+        renderable as text). It may also be an object with a `.classify`
+        method (in which case it will be used directly).
+
+    Returns
+    -------
+    A Panel template/layout as constructed by `PoincarePlot.render_template()`.
     """
-    # Local import to satisfy type-checkers that expect Range objects
-    from bokeh.models import Range1d
+    # If the passed value is a plain function, adapt it to an object with
+    # a `.classify` attribute expected by `PoinCarePlot`.
+    if callable(classify_func) and not hasattr(classify_func, "classify"):
 
-    # Prepare grid
-    tr = np.linspace(AppConfig.tr_min, AppConfig.tr_max, AppConfig.grid_res)
-    det_curve = tr**2 / 4.0
-    x_equal_0 = np.linspace(AppConfig.det_min, AppConfig.det_max, 2)
+        class _FuncAdapter:
+            def __init__(self, f: Callable[[float, float], Any]) -> None:
+                self.classify = f
 
-    # Bokeh figure
-    TOOLS = "pan,wheel_zoom,box_zoom,reset,save,tap"
-    p = figure(
-        title="Poincaré Diagram (Tr A vs det A) — click to move the point",
-        x_range=Range1d(AppConfig.tr_min, AppConfig.tr_max),
-        y_range=Range1d(AppConfig.det_min, AppConfig.det_max),
-        tools=TOOLS,
-        sizing_mode="stretch_both",
-    )
+        classifier_obj = _FuncAdapter(classify_func)
+    else:
+        # It may already be a Classifier-like object with `.classify`.
+        classifier_obj = classify_func
 
-    p.line(
-        tr,
-        det_curve,
-        line_width=3,
-        line_color="#ff9900",
-        legend_label="Δ = 0 (det = (Tr)^2 / 4)",
-    )
+    config = AppConfig()
+    plot = PoincarePlot(config, classifier_obj)
 
-    p.line(
-        tr,
-        np.full_like(tr, 0),
-        line_width=2,
-        line_color="#00aaff",
-        line_dash="dashed",
-        legend_label="y = 0",
-    )
+    # Some plot implementations register events during construction;
+    # calling `register_events` is harmless and kept for compatibility.
+    try:
+        plot.register_events()
+    except Exception:
+        # Tolerate environments where explicit registration isn't needed.
+        pass
 
-    p.line(
-        np.full_like(x_equal_0, 0),
-        x_equal_0,
-        line_width=2,
-        line_color="#00aaff",
-        line_dash="dashed",
-        legend_label="x = 0",
-    )
-
-    # Fill regions
-    p.patch(
-        np.concatenate([tr, tr[::-1]]),
-        np.concatenate([det_curve, np.full_like(det_curve, AppConfig.det_max)]),
-        fill_alpha=0.08,
-        fill_color="#fff0d9",
-        line_color=None,
-    )
-    p.patch(
-        np.concatenate([tr, tr[::-1]]),
-        np.concatenate([det_curve, np.full_like(det_curve, AppConfig.det_min)]),
-        fill_alpha=0.08,
-        fill_color="#e8f6ff",
-        line_color=None,
-    )
-
-    # Axes lines and labels
-    p.add_layout(Span(location=0, dimension="width", line_color="black", line_width=1))
-    p.add_layout(Span(location=0, dimension="height", line_color="black", line_width=1))
-    p.xaxis.axis_label = "Tr A"
-    p.yaxis.axis_label = "det A"
-
-    # Movable point
-    source = ColumnDataSource(data=dict(x=[0.0], y=[0.0]))
-    p.square("x", "y", size=12, fill_color="white", line_color="black", source=source)
-
-    # Markdown pane for classification text
-    md = pn.pane.Markdown("", sizing_mode="stretch_width")
-
-    # initial text
-    md.object = (
-        f"**Current position**: TrA = 0.000, detA = 0.000\n\n{classify_func(0.0, 0.0)}"
-    )
-
-    # Click event handler uses provided classify function
-    def on_tap(event):
-        x = max(min(event.x, AppConfig.tr_max), AppConfig.tr_min)
-        y = max(min(event.y, AppConfig.det_max), AppConfig.det_min)
-
-        source.data = dict(x=[x], y=[y])
-        md.object = f"**Current position**: TrA = {x:.3f}, detA = {y:.3f}\n\n{classify_func(x, y)}"
-
-    p.on_event(Tap, on_tap)
-
-    # region labels
-    labels = [
-        Label(x=0, y=22, text="Spirals / Nodes\n(Δ > 0)", text_align="center"),
-        Label(x=0, y=-4, text="Saddle\n(Δ < 0)", text_align="center"),
-        Label(
-            x=0,
-            y=1.0,
-            text="Possible center region\n(Tr A = 0, Δ < 0)",
-            text_align="center",
-        ),
-    ]
-    for lab in labels:
-        p.add_layout(lab)
-
-    p.legend.location = "top_left"
-
-    # Panel template
-    template = pn.template.FastListTemplate(
-        title="Projet ModSim — Stability analysis",
-        theme="dark",
-        sidebar=[
-            pn.pane.Markdown(
-                "### Instructions\n"
-                "- Click the plot to move the point.\n"
-                "- The point classification updates automatically.\n"
-            )
-        ],
-        main=[p, pn.layout.Divider(), md],
-        accent_base_color="#ff9900",
-    )
-
-    return template
+    return plot.render_template()

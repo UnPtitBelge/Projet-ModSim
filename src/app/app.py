@@ -9,9 +9,8 @@ Exposes: `template.servable()` when run as a Panel app
 """
 
 import panel as pn
-
-from .classifier import Classifier
-from .show import *
+from classifier import Classifier
+from show import build_template
 
 pn.extension(sizing_mode="stretch_width")
 
