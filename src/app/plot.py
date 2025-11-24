@@ -26,7 +26,7 @@ class PoincarePlot:
             title="Poincaré Diagram (Tr A vs det A) — click to move the point",
             x_range=Range1d(self.config.tr_min, self.config.tr_max),
             y_range=Range1d(self.config.det_min, self.config.det_max),
-            tools="pan,wheel_zoom,box_zoom,reset,save,tap",
+            tools="pan,wheel_zoom,box_zoom,reset,tap",
             sizing_mode="stretch_both",
         )
 
@@ -42,7 +42,7 @@ class PoincarePlot:
             det_curve,
             line_width=3,
             line_color="#ff9900",
-            legend_label="Δ = 0 (det = (Tr)^2 / 4)",
+            legend_label="Δ = 0 (det = (Tr)² / 4)",
         )
 
         # axis dashed lines
@@ -63,21 +63,35 @@ class PoincarePlot:
             legend_label="x = 0",
         )
 
-        # Fill regions (above and below parabola)
-        self.fig.patch(
-            np.concatenate([tr_vals, tr_vals[::-1]]),
-            np.concatenate([det_curve, np.full_like(det_curve, self.config.det_max)]),
-            fill_alpha=0.08,
-            fill_color="#fff0d9",
-            line_color=None,
-        )
-        self.fig.patch(
-            np.concatenate([tr_vals, tr_vals[::-1]]),
-            np.concatenate([det_curve, np.full_like(det_curve, self.config.det_min)]),
-            fill_alpha=0.08,
-            fill_color="#e8f6ff",
-            line_color=None,
-        )
+        # Fill regions (above and below parabola). If `regions` were
+        # passed into the plot we delegate drawing to them; otherwise
+        # fall back to the original hard-coded patches.
+        if self.regions:
+            for region in self.regions:
+                # Region implementations should provide an `add_to_figure(fig)`
+                # method that draws themselves appropriately (see `Region`).
+                try:
+                    region.add_to_figure(self.fig)
+                except Exception:
+                    # If a region fails to draw, ignore and continue so the
+                    # rest of the plot still appears. This keeps behaviour
+                    # robust for partially-constructed region objects.
+                    pass
+        else:
+            self.fig.patch(
+                np.concatenate([tr_vals, tr_vals[::-1]]),
+                np.concatenate([det_curve, np.full_like(det_curve, self.config.det_max)]),
+                fill_alpha=0.08,
+                fill_color="#fff0d9",
+                line_color=None,
+            )
+            self.fig.patch(
+                np.concatenate([tr_vals, tr_vals[::-1]]),
+                np.concatenate([det_curve, np.full_like(det_curve, self.config.det_min)]),
+                fill_alpha=0.08,
+                fill_color="#e8f6ff",
+                line_color=None,
+            )
 
         # Axes lines and labels
         self.fig.add_layout(

@@ -30,7 +30,7 @@ def build_template(classify_func: Callable[[float, float], Any]):
     A Panel template/layout as constructed by `PoincarePlot.render_template()`.
     """
     # If the passed value is a plain function, adapt it to an object with
-    # a `.classify` attribute expected by `PoinCarePlot`.
+    # a `.classify` attribute expected by `PoincarePlot`.
     if callable(classify_func) and not hasattr(classify_func, "classify"):
 
         class _FuncAdapter:
