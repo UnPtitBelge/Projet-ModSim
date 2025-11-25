@@ -1,26 +1,60 @@
-"""Main application module for the stability analysis visualization tool.
+# Use of streamlit to create a web app for project management
+import streamlit as st
+from analyzer import StabilityAnalyzer
+from system import System
 
-This module builds a Panel + Bokeh interactive Poincaré diagram (Tr A vs det A)
-that allows the user to click to move a point and see the stability classification
-of the corresponding 2x2 linear system.
+if __name__ == "__main__":
+    st.title("System Analysis App")
 
-Dependencies: numpy, panel, bokeh
-Exposes: `template.servable()` when run as a Panel app
-"""
+    # Define system properties
+    is_linear = st.checkbox("Is the system linear?", value=True)
+    is_continuous = st.checkbox("Is the system continuous?", value=True)
 
-import panel as pn
-from classifier import Classifier
-from show import build_template
+    # Input variables, parameters, equations, and initial conditions
+    variables = list(
+        map(float, st.text_input("Variables (comma-separated)", "x1,x2").split(","))
+    )
+    parameters = list(
+        map(float, st.text_input("Parameters (comma-separated)", "p1,p2").split(","))
+    )
+    equations = st.text_area(
+        "Equations (one per line)", "dx1/dt = -p1*x1 + p2*x2\ndx2/dt = p1*x1 - p2*x2"
+    ).split("\n")
+    initial_conditions = list(
+        map(
+            float,
+            st.text_input("Initial Conditions (comma-separated)", "1.0,0.0").split(","),
+        )
+    )
 
-pn.extension(sizing_mode="stretch_width")
+    # Create System instance
+    system = System(
+        is_linear=is_linear,
+        is_continuous=is_continuous,
+        variables=variables,
+        parameters=parameters,
+        equations=equations,
+        initial_conditions=initial_conditions,
+    )
 
-# Build the UI template using the plotting module and the classify callback
-template = build_template(Classifier().classify)
+    st.write("System created:", system)
 
+    # Perform analyses
+    if st.button("Calculate Equilibrium Points"):
+        eq_points = system.calculate_equilibrium_points()
+        st.write("Equilibrium Points:", eq_points)
 
-if __name__.startswith("__main__"):
-    # Make the app servable when run as a script
-    template.servable()
-else:
-    # When imported by Panel server, register the template
-    template.servable()
+    if st.button("Generate Phase Diagram"):
+        phase_diag = system.phase_diagram()
+        st.write("Phase Diagram Data:", phase_diag)
+
+    if st.button("Simulate System"):
+        time_span = (0.0, 10.0)
+        time_steps = 100
+        sim_results = system.simulate(time_span, time_steps)
+        st.write("Simulation Results:", sim_results)
+
+    if st.button("Analyze Stability"):
+        analyzer = StabilityAnalyzer(system)
+        stability_results = analyzer.analyze()
+        st.write("Stability Analysis Results:", stability_results)
