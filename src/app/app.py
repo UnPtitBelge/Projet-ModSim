@@ -1,58 +1,99 @@
-# Use of streamlit to create a web app for project management
-import streamlit as st
-from analyzer import StabilityAnalyzer
-from system import System
+"""
+Application Dash multipage native (use_pages) pour les visualisations.
+
+Découverte automatique des pages via le dossier `pages/` (chaque fichier appelle dash.register_page).
+Chaque page gère ses propres callbacks (principe de responsabilité locale).
+
+Comportement:
+- Pages détectées : barre de navigation + dash.page_container
+- Aucune page détectée : fallback affichant directement le diagramme de Poincaré (sans interactivité par défaut)
+
+Pour une page Poincaré auto‑découverte:
+    src/app/pages/poincare.py
+        import dash
+        from dash import dcc, html
+        from src.app.poincare.figure import build_poincare_figure
+        from src.app.poincare.layout import build_layout
+        from src.app.poincare.callbacks import register_callbacks
+        dash.register_page(__name__, path="/", name="Poincaré", title="Diagramme de Poincaré")
+        fig = build_poincare_figure()
+        layout = build_layout(fig)
+        register_callbacks(dash.get_app(), fig)  # attache les callbacks dans la page
+
+Usage:
+    python -m src.app.app
+    ou: python Projet-ModSim/src/app/app.py
+"""
+
+from __future__ import annotations
+
+import importlib
+
+import dash
+from dash import Dash, html  # type: ignore
+
+from .poincare.figure import build_poincare_figure
+from .poincare.layout import build_layout
+
+# Tentative d'import de la page Poincaré pour récupérer sa figure immuable
+try:
+    _pages_poincare = importlib.import_module("src.app.pages.poincare")
+    _poincare_page_get_figure = getattr(_pages_poincare, "get_figure", None)
+except Exception:
+    _poincare_page_get_figure = None
+
+__all__ = ["create_app", "app"]
+
+
+def create_app() -> Dash:
+    """Instancier l'application Dash (multipage natif)."""
+    app = Dash(__name__, use_pages=True, suppress_callback_exceptions=True)
+
+    # Figure partagée (utilisée pour le fallback ou peut être régénérée dans une page auto-découverte)
+    base_figure = build_poincare_figure()
+
+    if dash.page_registry:
+        # Pages auto‑découvertes présentes
+        app.layout = html.Div(
+            [
+                html.Nav(
+                    [
+                        html.Span("Navigation:", style={"marginRight": "12px"}),
+                        *[
+                            html.A(
+                                page["name"],
+                                href=page["path"],
+                                style={"marginRight": "16px"},
+                            )
+                            for page in sorted(
+                                dash.page_registry.values(),
+                                key=lambda p: p.get("order", 0),
+                            )
+                        ],
+                    ],
+                    style={
+                        "padding": "10px 16px",
+                        "backgroundColor": "#f5f5f5",
+                        "borderBottom": "1px solid #ddd",
+                        "marginBottom": "12px",
+                    },
+                ),
+                dash.page_container,
+            ]
+        )
+        # Les pages sont responsables d'attacher leurs propres callbacks (aucun appel ici).
+    else:
+        # Fallback: aucune page déclarée, on fournit directement la vue Poincaré (inclut IDs nécessaires).
+        app.layout = build_layout(base_figure)
+        # Dans ce mode sans pages découvertes, les callbacks ne sont pas attachés automatiquement.
+        # Pour réactiver l'interactivité en mode fallback, réintroduire l'import et l'appel à register_callbacks.
+
+    return app
+
+
+# Instance prête à l'import (gunicorn, waitress, etc.)
+app = create_app()
+
 
 if __name__ == "__main__":
-    st.title("System Analysis App")
-
-    # Define system properties
-    is_linear = st.checkbox("Is the system linear?", value=True)
-    is_continuous = st.checkbox("Is the system continuous?", value=True)
-
-    # Input variables, parameters, equations, and initial conditions
-    variables = st.text_input("Variables (comma-separated)", "x1,x2").split(",")
-    parameters = list(
-        map(float, st.text_input("Parameters (comma-separated)", "1.0,1.0").split(","))
-    )
-    equations = st.text_area(
-        "Equations (one per line)", "dx1/dt = -p1*x1 + p2*x2\ndx2/dt = p1*x1 - p2*x2"
-    ).split("\n")
-    initial_conditions = list(
-        map(
-            float,
-            st.text_input("Initial Conditions (comma-separated)", "1.0,0.0").split(","),
-        )
-    )
-
-    # Create System instance
-    system = System(
-        is_linear=is_linear,
-        is_continuous=is_continuous,
-        variables=variables,
-        parameters=parameters,
-        equations=equations,
-        initial_conditions=initial_conditions,
-    )
-
-    st.write("System created:", system)
-
-    # Perform analyses
-    if st.button("Calculate Equilibrium Points"):
-        eq_points = system.calculate_equilibrium_points()
-        st.write("Equilibrium Points:", eq_points)
-
-    if st.button("Generate Phase Diagram"):
-        phase_diag = system.phase_diagram()
-        st.write("Phase Diagram Data:", phase_diag)
-
-    if st.button("Simulate System"):
-        time_span = (0.0, 10.0)
-        time_steps = 100
-        sim_results = system.simulate(time_span, time_steps)
-        st.write("Simulation Results:", sim_results)
-
-    if st.button("Analyze Stability"):
-        analyzer = StabilityAnalyzer(system)
-        stability_results = analyzer.analyze()
-        st.write("Stability Analysis Results:", stability_results)
+    app.run(debug=True)
