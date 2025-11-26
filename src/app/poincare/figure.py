@@ -15,12 +15,14 @@ from dataclasses import dataclass
 import numpy as np
 import plotly.graph_objs as go
 
+from .constants import DELTA_MAX, N_SAMPLES, TAU_MAX, TAU_MIN
+
 
 @dataclass(frozen=True)
 class PoincareConfig:
-    tau_min: float = -10.0
-    tau_max: float = 10.0
-    samples: int = 300  # number of tau discretization points
+    tau_min: float = TAU_MIN
+    tau_max: float = TAU_MAX
+    samples: int = N_SAMPLES  # number of tau discretization points
     # Base colors (rgba for transparency to preserve axis visibility)
     base_color: str = "rgba(210, 70, 70, 0.35)"
     hover_color: str = "rgba(240, 150, 150, 0.55)"
@@ -40,16 +42,13 @@ def _generate_core_arrays(cfg: PoincareConfig):
     -------
     tau_vals : np.ndarray
     parabola_vals : np.ndarray
-    delta_max : float
     """
     tau_vals = np.linspace(cfg.tau_min, cfg.tau_max, cfg.samples)
     parabola_vals = (tau_vals**2) / 4.0
-    # Parabola evaluated at tau_max gives vertical extent used previously
-    delta_max = (cfg.tau_max**2) / 4.0
-    return tau_vals, parabola_vals, delta_max
+    return tau_vals, parabola_vals
 
 
-def _build_polygons(tau_vals: np.ndarray, parabola_vals: np.ndarray, delta_max: float):
+def _build_polygons(tau_vals: np.ndarray, parabola_vals: np.ndarray):
     """
     Construct polygon coordinate pairs for each zone.
 
@@ -65,13 +64,13 @@ def _build_polygons(tau_vals: np.ndarray, parabola_vals: np.ndarray, delta_max: 
     parabola_left = parabola_vals[left_mask]
     parabola_right = parabola_vals[right_mask]
 
-    # Upper Left: between parabola and delta_max for tau < 0
+    # Upper Left: between parabola and DELTA_MAX for tau < 0
     UL_x = np.concatenate([tau_vals[left_mask], tau_vals[left_mask][::-1]])
-    UL_y = np.concatenate([parabola_left, [delta_max] * len(parabola_left)])
+    UL_y = np.concatenate([parabola_left, [DELTA_MAX] * len(parabola_left)])
 
     # Upper Right: tau > 0
     UR_x = np.concatenate([tau_vals[right_mask], tau_vals[right_mask][::-1]])
-    UR_y = np.concatenate([parabola_right, [delta_max] * len(parabola_right)])
+    UR_y = np.concatenate([parabola_right, [DELTA_MAX] * len(parabola_right)])
 
     # Lower Left: between parabola and 0 for tau < 0
     LL_x = np.concatenate([tau_vals[left_mask], tau_vals[left_mask][::-1]])
@@ -81,9 +80,9 @@ def _build_polygons(tau_vals: np.ndarray, parabola_vals: np.ndarray, delta_max: 
     LR_x = np.concatenate([tau_vals[right_mask], tau_vals[right_mask][::-1]])
     LR_y = np.concatenate([parabola_right, [0] * len(parabola_right)])
 
-    # Lower Zone: between 0 and -delta_max for all tau
+    # Lower Zone: between 0 and -DELTA_MAX for all tau
     LOW_x = np.concatenate([tau_vals, tau_vals[::-1]])
-    LOW_y = np.concatenate([[0] * len(tau_vals), [-delta_max] * len(tau_vals)])
+    LOW_y = np.concatenate([[0] * len(tau_vals), [-DELTA_MAX] * len(tau_vals)])
 
     return {
         "upper_left": (UL_x, UL_y),
@@ -108,8 +107,8 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
     plotly.graph_objs.Figure
     """
     cfg = config or PoincareConfig()
-    tau_vals, parabola_vals, delta_max = _generate_core_arrays(cfg)
-    polygons = _build_polygons(tau_vals, parabola_vals, delta_max)
+    tau_vals, parabola_vals = _generate_core_arrays(cfg)
+    polygons = _build_polygons(tau_vals, parabola_vals)
 
     fig = go.Figure()
 
@@ -155,4 +154,20 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
     return fig
 
 
-__all__ = ["PoincareConfig", "build_poincare_figure"]
+_cached_figure: go.Figure | None = None
+
+
+def get_cached_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
+    """
+    Retourne une figure Poincaré mise en cache.
+    - Première invocation: construit et stocke la figure.
+    - Si un config non None est passé: reconstruit avec cette config et met à jour le cache.
+    - Appels suivants sans config: réutilisent la figure existante.
+    """
+    global _cached_figure
+    if _cached_figure is None or config is not None:
+        _cached_figure = build_poincare_figure(config)
+    return _cached_figure
+
+
+__all__ = ["PoincareConfig", "build_poincare_figure", "get_cached_poincare_figure"]

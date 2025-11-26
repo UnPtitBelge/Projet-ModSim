@@ -13,15 +13,7 @@ from __future__ import annotations
 
 import numpy as np
 
-try:
-    # Local constants (expected to be defined in constants.py)
-    from .constants import DELTA_MAX, N_SAMPLES, TAU_MAX, TAU_MIN
-except Exception:
-    # Fallback values if constants module not yet present (allows standalone testing)
-    TAU_MIN = -10
-    TAU_MAX = 10
-    N_SAMPLES = 300
-    DELTA_MAX = (TAU_MAX**2) / 4
+from .constants import DELTA_MAX, N_SAMPLES, TAU_MAX, TAU_MIN
 
 
 def generate_axes() -> np.ndarray:

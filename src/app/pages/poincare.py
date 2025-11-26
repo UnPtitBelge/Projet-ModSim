@@ -10,8 +10,7 @@ Cette page :
 Les callbacks ne sont pas définis ici : ils sont attachés via
 `register_callbacks` dans le module principal ou dans le module callbacks.
 
-Si tu veux alléger encore, tu peux recréer la figure avec un cache
-(memoization) si le calcul devenait coûteux.
+Cette page utilise un cache interne pour éviter de recalculer la figure à chaque import.
 """
 
 from __future__ import annotations
@@ -20,7 +19,7 @@ import dash
 from dash import html  # type: ignore
 
 from src.app.poincare.callbacks import register_callbacks
-from src.app.poincare.figure import build_poincare_figure
+from src.app.poincare.figure import get_cached_poincare_figure
 from src.app.poincare.layout import build_layout
 
 # Enregistrement de la page (native multipage)
@@ -33,8 +32,8 @@ dash.register_page(
     order=0,
 )
 
-# Construction de la figure immuable (réutilisée à chaque rendu)
-_base_figure = build_poincare_figure()
+# Construction / récupération de la figure immuable via cache
+_base_figure = get_cached_poincare_figure()
 
 # Layout principal réutilisant la fonction existante
 # (contient déjà le Graph + zones + panneaux de sortie)
