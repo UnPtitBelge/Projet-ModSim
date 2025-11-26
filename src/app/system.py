@@ -1,3 +1,7 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class System:
     """Class that define a system to be analyzed. It can be linear or non-linear and continuous or discrete."""
 
@@ -56,30 +60,6 @@ class System:
     def set_initial_conditions(self, initial_conditions: list[float]):
         """Set the initial conditions for the system."""
         self.initial_conditions = initial_conditions
-
-    def get_equations(self):
-        """Get the equations of the system."""
-        return self.equations
-
-    def get_initial_conditions(self):
-        """Get the initial conditions of the system."""
-        return self.initial_conditions
-
-    def get_variables(self):
-        """Get the variables of the system."""
-        return self.variables
-
-    def get_parameters(self):
-        """Get the parameters of the system."""
-        return self.parameters
-
-    def is_nonlinear(self):
-        """Check if the system is non-linear."""
-        return not self.is_linear
-
-    def is_discrete(self):
-        """Check if the system is discrete."""
-        return not self.is_continuous
 
     def summary(self):
         """Print a summary of the system."""
