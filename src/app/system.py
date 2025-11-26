@@ -5,7 +5,7 @@ class System:
         self,
         is_linear: bool,
         is_continuous: bool,
-        variables: list[float] = [],
+        variables: list[str] = [],
         parameters: list[float] = [],
         equations: list[str] = [],
         initial_conditions: list[float] = [],

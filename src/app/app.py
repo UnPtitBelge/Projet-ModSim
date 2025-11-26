@@ -11,11 +11,9 @@ if __name__ == "__main__":
     is_continuous = st.checkbox("Is the system continuous?", value=True)
 
     # Input variables, parameters, equations, and initial conditions
-    variables = list(
-        map(float, st.text_input("Variables (comma-separated)", "x1,x2").split(","))
-    )
+    variables = st.text_input("Variables (comma-separated)", "x1,x2").split(",")
     parameters = list(
-        map(float, st.text_input("Parameters (comma-separated)", "p1,p2").split(","))
+        map(float, st.text_input("Parameters (comma-separated)", "1.0,1.0").split(","))
     )
     equations = st.text_area(
         "Equations (one per line)", "dx1/dt = -p1*x1 + p2*x2\ndx2/dt = p1*x1 - p2*x2"
