@@ -7,7 +7,7 @@ app = Dash(__name__)
 
 # Données pour la parabole et les surfaces
 x = np.linspace(-10, 10, 200)
-y_parabole = x**2
+y_parabole = (x**2) / 4
 
 # Mise en page de l'application
 app.layout = html.Div([
