@@ -16,7 +16,6 @@ from importlib import import_module
 from typing import Any
 
 from .poincare.callbacks import register_callbacks
-
 # Re-export figure construction and callbacks directly (these are pure modules).
 from .poincare.figure import PoincareConfig, build_poincare_figure
 

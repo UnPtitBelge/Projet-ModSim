@@ -14,12 +14,7 @@ def build_layout(figure):
                 style={"height": "70vh"},
                 config={
                     "displaylogo": False,
-                    "modeBarButtonsToRemove": [
-                        "toImage",
-                        "lasso2d",
-                        "select2d",
-                        "autoScale2d",
-                    ],
+                    "displayModeBar": False,
                 },
             ),
             html.Div(

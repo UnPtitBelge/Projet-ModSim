@@ -1,9 +1,18 @@
 """
-Construit la figure Plotly du diagramme de Poincaré.
+Construit la figure Plotly du diagramme de Poincaré afin de reproduire fidèlement
+la figure de `src/temp/poincare_temp.py`:
+- 5 zones (polygones) aux mêmes formes et couleurs
+- Parabole et axes tracés avec les mêmes couleurs/épaisseurs
+- Axes masqués et marges nulles
 
-Trace indices:
-0  parabole
-1–5 zones de stabilité (polygones remplis)
+IMPORTANT (indices de traces attendus par les callbacks):
+0  parabole (ligne) — conservé pour compatibilité avec callbacks existants
+1  zone supérieure gauche
+2  zone supérieure droite
+3  zone inférieure gauche
+4  zone inférieure droite
+5  zone sous l'axe x
+6+ éléments décoratifs additionnels (axes, parabole en surcouche) — ignorés par les callbacks
 
 API principale: build_poincare_figure(config=None) -> plotly.graph_objs.Figure
 """
@@ -15,139 +24,168 @@ from dataclasses import dataclass
 import numpy as np
 import plotly.graph_objs as go
 
-from .constants import DELTA_MAX, N_SAMPLES, TAU_MAX, TAU_MIN
+from .constants import N_SAMPLES, TAU_MAX, TAU_MIN
 
 
 @dataclass(frozen=True)
 class PoincareConfig:
+    # Domaine échantillonné
     tau_min: float = TAU_MIN
     tau_max: float = TAU_MAX
-    samples: int = N_SAMPLES  # number of tau discretization points
-    # Base colors (rgba for transparency to preserve axis visibility)
-    base_color: str = "rgba(210, 70, 70, 0.35)"
-    hover_color: str = "rgba(240, 150, 150, 0.55)"
-    click_color: str = "rgba(150, 30, 30, 0.65)"
-    parabola_line_color: str = "black"
-    parabola_line_width: int = 4
-    title: str = "Diagramme de Poincaré"
-    x_label: str = "Tau"
-    y_label: str = "Delta"
+    samples: int = N_SAMPLES
+
+    # Styles (adaptés à poincare_temp.py)
+    line_width: int = 6
+    main_line_color: str = "rgba(100,149,237,0.9)"  # CornflowerBlue
+    # Couleurs des zones
+    color_upper_left: str = "rgba(255,165,0,0.3)"  # orange pastel
+    color_upper_right: str = "rgba(0,191,255,0.3)"  # bleu ciel transparent
+    color_lower_left: str = "rgba(255,182,193,0.4)"  # rose pastel
+    color_lower_right: str = "rgba(100,149,237,0.2)"  # bleu pastel
+    color_lower_axis: str = "rgba(211,211,211,0.5)"  # gris pastel
+    # Mise en page
+    plot_bgcolor: str = "white"
 
 
-def _generate_core_arrays(cfg: PoincareConfig):
+def _core_arrays(cfg: PoincareConfig):
     """
-    Generate tau axis and parabola values.
-
-    Returns
-    -------
-    tau_vals : np.ndarray
-    parabola_vals : np.ndarray
+    Génére le vecteur tau et la parabole.
     """
     tau_vals = np.linspace(cfg.tau_min, cfg.tau_max, cfg.samples)
     parabola_vals = (tau_vals**2) / 4.0
     return tau_vals, parabola_vals
 
 
-def _build_polygons(tau_vals: np.ndarray, parabola_vals: np.ndarray):
-    """
-    Construct polygon coordinate pairs for each zone.
-
-    Returns
-    -------
-    dict[str, tuple[np.ndarray, np.ndarray]]
-        Keys: upper_left, upper_right, lower_left, lower_right, lower
-        Each value: (x_coords, y_coords)
-    """
-    left_mask = tau_vals < 0
-    right_mask = tau_vals > 0
-
-    parabola_left = parabola_vals[left_mask]
-    parabola_right = parabola_vals[right_mask]
-
-    # Upper Left: between parabola and DELTA_MAX for tau < 0
-    UL_x = np.concatenate([tau_vals[left_mask], tau_vals[left_mask][::-1]])
-    UL_y = np.concatenate([parabola_left, [DELTA_MAX] * len(parabola_left)])
-
-    # Upper Right: tau > 0
-    UR_x = np.concatenate([tau_vals[right_mask], tau_vals[right_mask][::-1]])
-    UR_y = np.concatenate([parabola_right, [DELTA_MAX] * len(parabola_right)])
-
-    # Lower Left: between parabola and 0 for tau < 0
-    LL_x = np.concatenate([tau_vals[left_mask], tau_vals[left_mask][::-1]])
-    LL_y = np.concatenate([parabola_left, [0] * len(parabola_left)])
-
-    # Lower Right: between parabola and 0 for tau > 0
-    LR_x = np.concatenate([tau_vals[right_mask], tau_vals[right_mask][::-1]])
-    LR_y = np.concatenate([parabola_right, [0] * len(parabola_right)])
-
-    # Lower Zone: between 0 and -DELTA_MAX for all tau
-    LOW_x = np.concatenate([tau_vals, tau_vals[::-1]])
-    LOW_y = np.concatenate([[0] * len(tau_vals), [-DELTA_MAX] * len(tau_vals)])
-
-    return {
-        "upper_left": (UL_x, UL_y),
-        "upper_right": (UR_x, UR_y),
-        "lower_left": (LL_x, LL_y),
-        "lower_right": (LR_x, LR_y),
-        "lower": (LOW_x, LOW_y),
-    }
-
-
 def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
     """
-    Build and return the base Poincaré diagram figure.
-
-    Parameters
-    ----------
-    config : PoincareConfig | None
-        Optional configuration. If None, defaults are used.
-
-    Returns
-    -------
-    plotly.graph_objs.Figure
+    Construit et retourne la figure Poincaré mimant `src/temp/poincare_temp.py`
+    tout en préservant les indices 0..5 attendus par les callbacks.
     """
     cfg = config or PoincareConfig()
-    tau_vals, parabola_vals = _generate_core_arrays(cfg)
-    polygons = _build_polygons(tau_vals, parabola_vals)
+
+    # Données de base
+    x, y_parab = _core_arrays(cfg)
+    # Découpage gauche/droite (inclut 0 des deux côtés si présent)
+    x_left = x[x <= 0]
+    y_left = y_parab[x <= 0]
+    x_right = x[x >= 0]
+    y_right = y_parab[x >= 0]
+
+    # Étendue symétrique des axes comme dans le temp (val_max)
+    val_max = max(abs(cfg.tau_min), abs(cfg.tau_max))
 
     fig = go.Figure()
 
-    # Parabola line (curve index 0)
+    # 0. Parabole (INDEX 0 requis par les callbacks)
     fig.add_trace(
         go.Scatter(
-            x=tau_vals,
-            y=parabola_vals,
+            x=x,
+            y=y_parab,
             mode="lines",
-            line=dict(color=cfg.parabola_line_color, width=cfg.parabola_line_width),
-            name="Parabola",
+            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            name="parabola line",
+            meta="parabola",
+            hoverinfo="none",
+            showlegend=False,
         )
     )
 
-    def add_zone(name: str, coords: tuple[np.ndarray, np.ndarray]):
-        x, y = coords
+    # Helper pour les zones
+    def add_zone(zone_x, zone_y, fillcolor, name, meta):
         fig.add_trace(
             go.Scatter(
-                x=x,
-                y=y,
+                x=zone_x,
+                y=zone_y,
+                mode="lines+markers",
                 fill="toself",
-                fillcolor=cfg.base_color,
-                line=dict(width=0),
+                fillcolor=fillcolor,
+                line=dict(color="rgba(0,0,0,0)"),
                 name=name,
-                hoverinfo="none",  # we rely on curveNumber-based identification
+                meta=meta,
+                hoverinfo="none",
+                hoveron="points+fills",
+                showlegend=False,
             )
         )
 
-    # Order matters for callbacks referencing curveNumber
-    add_zone("Upper Left Zone", polygons["upper_left"])
-    add_zone("Upper Right Zone", polygons["upper_right"])
-    add_zone("Lower Left Zone", polygons["lower_left"])
-    add_zone("Lower Right Zone", polygons["lower_right"])
-    add_zone("Lower Zone", polygons["lower"])
+    # 1. Zone au-dessus de la parabole à gauche (polygone fermé)
+    # x=0 → longe la parabole côté gauche (vers -val) → retour x=0
+    ul_x = np.concatenate([[0.0], x_left[::-1], [0.0]])
+    ul_y = np.concatenate([[0.0], y_left[::-1], [y_left[0] if len(y_left) else 0.0]])
+    add_zone(ul_x, ul_y, cfg.color_upper_left, "upper left parabola", "ulp")
 
+    # 2. Zone au-dessus de la parabole à droite
+    # x=0 → longe la parabole côté droit → retour x=0
+    ur_x = np.concatenate([[0.0], x_right, [0.0]])
+    ur_y = np.concatenate([[0.0], y_right, [y_right[-1] if len(y_right) else 0.0]])
+    add_zone(ur_x, ur_y, cfg.color_upper_right, "upper right parabola", "urp")
+
+    # 3. Zone sous la parabole à gauche (de -val_max à 0)
+    ll_x = np.concatenate([[-val_max], x_left, [0.0]])
+    ll_y = np.concatenate([[y_left[-1] if len(y_left) else 0.0], y_left, [0.0]])
+    add_zone(ll_x, ll_y, cfg.color_lower_left, "lower left parabola", "llp")
+
+    # 4. Zone sous la parabole à droite (de 0 à +val_max)
+    lr_x = np.concatenate([[0.0], x_right, [val_max]])
+    lr_y = np.concatenate([[y_right[0] if len(y_right) else 0.0], y_right, [0.0]])
+    add_zone(lr_x, lr_y, cfg.color_lower_right, "lower right parabola", "lrp")
+
+    # 5. Zone sous l'axe x (rectangle plein)
+    lxa_x = [-val_max, val_max, val_max, -val_max]
+    lxa_y = [0.0, 0.0, -val_max, -val_max]
+    add_zone(lxa_x, lxa_y, cfg.color_lower_axis, "lower x axis", "lxa")
+
+    # Traces décoratives (indices >= 6) — pour reproduire l'apparence exacte:
+    # Axe vertical (y)
+    fig.add_trace(
+        go.Scatter(
+            x=[0.0, 0.0],
+            y=[0.0, val_max],
+            mode="lines",
+            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            name="y line",
+            meta="y",
+            hoverinfo="none",
+            showlegend=False,
+        )
+    )
+    # Axe horizontal (x)
+    fig.add_trace(
+        go.Scatter(
+            x=[-val_max, val_max],
+            y=[0.0, 0.0],
+            mode="lines",
+            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            name="x line",
+            meta="x",
+            hoverinfo="none",
+            showlegend=False,
+        )
+    )
+    # Parabole en surcouche pour la lisibilité (même style que l'index 0)
+    fig.add_trace(
+        go.Scatter(
+            x=x,
+            y=y_parab,
+            mode="lines",
+            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            name="parabola overlay",
+            meta="parabola_top",
+            hoverinfo="none",
+            showlegend=False,
+        )
+    )
+
+    # Layout identique au temp: axes masqués, fond blanc, marges nulles, bornes [-val_max, val_max]
     fig.update_layout(
-        title=cfg.title,
-        xaxis_title=cfg.x_label,
-        yaxis_title=cfg.y_label,
+        xaxis=dict(
+            showgrid=False, zeroline=False, visible=False, range=[-val_max, val_max]
+        ),
+        yaxis=dict(
+            showgrid=False, zeroline=False, visible=False, range=[-val_max, val_max]
+        ),
+        plot_bgcolor=cfg.plot_bgcolor,
+        margin=dict(l=0, r=0, t=0, b=0),
         hovermode="closest",
     )
 
