@@ -1,15 +1,19 @@
 from dash import dcc, html
 
+from src.app.logging_setup import get_logger
+
 
 def build_layout(figure):
     """Return the main layout (title, graph, info panels) for the Poincaré diagram."""
-    return html.Div(
+    log = get_logger(__name__)
+    log.debug("Début construction du layout du diagramme de Poincaré.")
+    layout = html.Div(
         [
             html.H2(
                 "Analyse et découverte de la notion de stabilité pour des systèmes linéaires continus d'ordre deux"
             ),
             dcc.Graph(
-                id="poincaré-graph",
+                id="poincare-graph",
                 figure=figure,
                 style={"height": "70vh"},
                 config={
@@ -42,6 +46,8 @@ def build_layout(figure):
             "fontFamily": "Arial, sans-serif",
         },
     )
+    log.info("Layout du diagramme de Poincaré construit.")
+    return layout
 
 
 __all__ = ["build_layout"]

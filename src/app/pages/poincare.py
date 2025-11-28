@@ -5,7 +5,7 @@ Cette page :
 - enregistre sa route ("/")
 - construit la figure (parabole + zones)
 - expose un layout avec les IDs attendus par les callbacks:
-    "poincaré-graph", "output-temp-hover", "output-temp-click"
+    "poincare-graph", "output-temp-hover", "output-temp-click"
 
 Les callbacks ne sont pas définis ici : ils sont attachés via
 `register_callbacks` dans le module principal ou dans le module callbacks.
@@ -25,7 +25,7 @@ from src.app.poincare.layout import build_layout
 # Enregistrement de la page (native multipage)
 dash.register_page(
     __name__,
-    path="/",
+    path="/poincare",
     name="Poincaré",
     title="Diagramme de Poincaré",
     description="Visualisation des zones de stabilité locales pour systèmes linéaires d'ordre 2.",
@@ -69,3 +69,26 @@ def get_figure():
     Retourne la figure immuable (utilitaire si besoin externe).
     """
     return _base_figure
+
+
+# ---------------------------------------------------------------------------
+# OPTIONNEL : Listener de route pour le debug
+# ---------------------------------------------------------------------------
+# Ce callback (à activer si nécessaire) permet d’afficher la route courante
+# et de vérifier que le changement de pathname (dcc.Location) est bien propagé.
+# Par défaut il est commenté pour ne pas surcharger l’interface.
+#
+# Pour l’activer :
+#   1. Décommenter le décorateur et la fonction ci-dessous.
+#   2. Ajouter un composant html.Div(id="debug-route") dans le layout si on
+#      préfère ne pas réutiliser un ID existant.
+#
+# Exemple d’usage : valider que la navigation clientside déclenche bien le
+# rerender multipage sans nécessiter de refresh manuel.
+#
+# @dash.get_app().callback(Output("output-temp-hover", "children"),
+#                          Input("url", "pathname"),
+#                          prevent_initial_call=True)
+# def _debug_current_path(pathname: str):
+#     return f"Route active: {pathname}"
+# ---------------------------------------------------------------------------

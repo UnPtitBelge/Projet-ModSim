@@ -60,7 +60,7 @@ layout = html.Div(
         ),
         html.A(
             "Retour au diagramme de Poincaré",
-            href="/",
+            href="/poincare",
             style={"display": "inline-block", "marginTop": "18px"},
         ),
     ],
