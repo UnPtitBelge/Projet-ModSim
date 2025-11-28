@@ -6,7 +6,7 @@ class Plot:
         self.title = title
         self.xlabel = xlabel
         self.ylabel = ylabel
-        self.fig, self.ax = plt.subplots()
+        self.fig, self.ax = plt.sublots()
 
     def set_labels(self):
         self.ax.set_title(self.title)
