@@ -68,29 +68,105 @@ def create_app() -> Dash:
         app.layout = html.Div(
             [
                 dcc.Location(id="url", refresh=True),
-                html.Nav(
+                html.Div(
                     [
-                        html.Span("Navigation:", style={"marginRight": "12px"}),
-                        *[
-                            html.A(
-                                page["name"],
-                                href=page["path"],
-                                style={"marginRight": "16px"},
-                            )
-                            for page in sorted(
-                                dash.page_registry.values(),
-                                key=lambda p: p.get("order", 0),
-                            )
-                        ],
-                    ],
-                    style={
-                        "padding": "10px 16px",
-                        "backgroundColor": "#f5f5f5",
-                        "borderBottom": "1px solid #ddd",
-                        "marginBottom": "12px",
-                    },
+                        # Sidebar vertical à gauche
+                        html.Div(
+                            [
+                                html.H3("Menu", style={"margin": "0 0 12px 0", "fontWeight": "600"}),
+                                # Liens principaux hors stabilité
+                                *[
+                                    html.A(
+                                        page["name"],
+                                        href=page["path"],
+                                        style={
+                                            "display": "block",
+                                            "padding": "8px 10px",
+                                            "color": "#333",
+                                            "textDecoration": "none",
+
+                                        },
+                                    )
+                                    for page in sorted(
+                                        [
+                                            p for p in dash.page_registry.values()
+                                            if (not p.get("path", "").startswith("/stabilite")) and (p.get("path", "") != "/about")
+                                        ],
+                                        key=lambda p: p.get("order", 0),
+                                    )
+                                ],
+                                # Sous-menu déroulant Stabilité
+                                html.Details(
+                                    [
+                                        html.Summary("Stabilité", style={"cursor": "pointer", "fontWeight": "600", "padding": "8px 10px"}),
+                                        html.Div(
+                                            [
+                                                *[
+                                                    html.A(
+                                                        subpage["name"],
+                                                        href=subpage["path"],
+                                                        style={
+                                                            "display": "block",
+                                                            "padding": "6px 10px",
+                                                            "color": "#444",
+                                                            "textDecoration": "none",
+                                                            "marginLeft": "8px",
+                                                        },
+                                                    )
+                                                    for subpage in sorted(
+                                                        [
+                                                            p for p in dash.page_registry.values()
+                                                            if p.get("path", "").startswith("/stabilite")
+                                                        ],
+                                                        key=lambda p: p.get("order", 0),
+                                                    )
+                                                ]
+                                            ],
+                                            style={"marginTop": "6px"},
+                                        ),
+                                    ],
+                                    open=False,
+                                    style={
+                                    },
+                                ),
+                                html.A(
+                                    "À propos",
+                                    href="/about",
+                                    style={
+                                        "display": "block",
+                                        "padding": "8px 10px",
+                                        "color": "#333",
+                                        "textDecoration": "none",
+                                    },
+                                ),
+                            ],
+                            style={
+                                "position": "fixed",
+                                "top": "0",
+                                "left": "0",
+                                "bottom": "0",
+                                "width": "240px",
+                                "overflowY": "auto",
+                                "padding": "16px 12px",
+                                "backgroundColor": "#f7f7f9",
+                                "borderRight": "1px solid #ddd",
+
+
+
+                            },
+                        ),
+                        # Contenu principal décalé à droite
+                        html.Div(
+                            [
+                                dash.page_container,
+                            ],
+                            style={
+                                "marginLeft": "240px",
+                                "padding": "16px",
+                            },
+                        ),
+                    ]
                 ),
-                dash.page_container,
             ]
         )
         # log.debug("Layout principal avec pages multipage configuré.")  # supprimé

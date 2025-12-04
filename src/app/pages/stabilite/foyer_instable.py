@@ -1,5 +1,5 @@
 """
-Page de stabilité: zone supérieure droite (tau > 0, delta > tau^2/4)
+Page de stabilité: foyer instable (tau > 0, delta > tau^2/4)
 
 Cette page est enregistrée automatiquement par Dash (multipage natif).
 URL sans accents et avec tirets pour cohérence avec la navigation par clic.
@@ -11,33 +11,33 @@ from dash import html
 from src.app.logging_setup import get_logger
 
 log = get_logger(__name__)
-log.info("Enregistrement de la page /stabilite/zone-superieure-droite.")
+log.info("Enregistrement de la page /stabilite/foyer_instable.")
 
 dash.register_page(
     __name__,
-    path="/stabilite/zone-superieure-droite",
-    name="Stabilite (sup. droite)",
-    title="Stabilite – Zone superieure droite",
+    path="/stabilite/foyer_instable",
+    name="Stabilite (foyer instable)",
+    title="Stabilite – Foyer instable",
     order=11,
-    description="Informations sur la zone supérieure droite du diagramme de Poincaré.",
+    description="Informations sur le foyer instable du diagramme de Poincaré.",
 )
-log.debug("Début construction du layout de la page zone superieure droite...")
+log.debug("Début construction du layout de la page foyer instable...")
 
 layout = html.Div(
     [
         html.Small(
             [
-                html.A("Stabilite", href="/stabilite"),
+                html.A("Stabilité", href="/stabilite"),
                 "  /  ",
-                html.Span("Zone superieure droite"),
+                html.Span("Foyer instable"),
             ],
             style={"color": "#666"},
         ),
-        html.H2("Zone superieure droite"),
+        html.H2("Foyer instable"),
         html.P(
             "Cette zone correspond aux points situés au-dessus de la parabole Δ = τ²/4 avec τ > 0."
         ),
-        html.H3("Definition geometrique"),
+        html.H3("Définition géométrique"),
         html.Ul(
             [
                 html.Li("tau > 0"),
@@ -45,9 +45,9 @@ layout = html.Div(
                 html.Li("Au-dessus de la parabole, a droite de l'axe vertical tau = 0"),
             ]
         ),
-        html.H3("Modele et racines caractéristiques"),
+        html.H3("Modèle et racines caractéristiques"),
         html.P(
-            "On considere l'equation caracteristique associee: "
+            "On considère l’équation caractéristique associée: "
             "lambda^2 + tau·lambda + delta = 0."
         ),
         html.Ul(
@@ -75,7 +75,7 @@ layout = html.Div(
         ),
         html.H3("Reponse temporelle (forme indicative)"),
         html.P(
-            "Pour x'' + tau x' + delta x = 0, lorsque tau^2 < 4·delta (zone superieure), la reponse libre s'ecrit:"
+            "Pour x'' + tau x' + delta x = 0, lorsque tau^2 < 4·delta (foyer), la reponse libre s'ecrit:"
         ),
         html.Pre(
             "x(t) = e^{alpha t} [ A cos(omega t) + B sin(omega t) ]",
@@ -89,26 +89,26 @@ layout = html.Div(
         ),
         html.Ul(
             [
-                html.Li("alpha = -tau/2  (ici: alpha < 0, amortissement)"),
+                html.Li("α = -τ/2  (ici: α < 0, amortissement)"),
                 html.Li(
-                    "omega = sqrt(delta - (tau^2)/4)  (frequence pseudo-oscillatoire)"
+                    "ω = sqrt(Δ - (τ^2)/4)  (fréquence pseudo-oscillatoire)"
                 ),
             ]
         ),
-        html.H3("Exemple numerique (placeholder)"),
-        html.Ul(
-            [
-                html.Li("Choisir tau = 2, delta = 2  ⇒ delta > tau^2/4 = 1"),
-                html.Li("alpha = -2/2 = -1 < 0  ⇒ decroissance exponentielle"),
-                html.Li("omega = sqrt(2 - 1) = 1  ⇒ oscillations a frequence 1 rad/s"),
-            ]
-        ),
+
+
+
+
+
+
+
+
         html.Hr(),
         html.Div(
             [
-                html.A("← Retour au sommaire Stabilite", href="/stabilite"),
+                html.A("← Retour au sommaire Stabilité", href="/stabilite"),
                 html.Span("  |  "),
-                html.A("Retour au diagramme de Poincare", href="/poincare"),
+                html.A("Retour au diagramme de Poincaré", href="/poincare"),
             ],
             style={"marginTop": "10px"},
         ),
@@ -121,4 +121,4 @@ layout = html.Div(
         "fontSize": "0.95rem",
     },
 )
-log.info("Layout de la page zone superieure droite construit.")
+log.info("Layout de la page foyer instable construit.")

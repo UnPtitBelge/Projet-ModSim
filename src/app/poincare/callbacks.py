@@ -36,14 +36,38 @@ class ZoneColors:
     click: str = "rgba(150, 30, 30, 0.65)"
 
 
-# Labels par défaut (français)
+# Labels par défaut (français) — par indices (fallback)
 DEFAULT_ZONE_LABELS: Dict[int, str] = {
-    0: "Parabole",
-    1: "Zone supérieure gauche",
-    2: "Zone supérieure droite",
-    3: "Zone inférieure gauche",
-    4: "Zone inférieure droite",
-    5: "Zone inférieure",
+    1: "Foyer stable",
+    2: "Foyer instable",
+    3: "Noeud stable",
+    4: "Noeud instable",
+    5: "Selle",
+    6: "Noeud stable dégénéré",
+    7: "Noeud instable dégénéré",
+    8: "Centre",
+    9: "Ligne de points d'équilibre stable",
+    10: "Ligne de points d'équilibre instable",
+    11: "Mouvement uniforme",
+}
+
+# Labels par meta — robuste aux changements d'indices
+LABEL_BY_META: Dict[str, str] = {
+    # Zones
+    "ulp": "Foyer stable",
+    "urp": "Foyer instable",
+    "llp": "Noeud stable",
+    "lrp": "Noeud instable",
+    "lxa": "Selle",
+    # Parabole (parts)
+    "parabola_left": "Parabole (partie gauche) → Noeud stable dégénéré",
+    "parabola_right": "Parabole (partie droite) → Noeud instable dégénéré",
+    # Axes
+    "y": "Centre",
+    "x_left": "Droite en x (partie gauche) → Ligne de points d'équilibre stable",
+    "x_right": "Droite en x (partie droite) → Ligne de points d'équilibre instable",
+    # Origine
+    "origin": "Origine (τ=0, Δ=0) → Mouvement uniforme",
 }
 
 
@@ -114,28 +138,102 @@ def register_callbacks(
         click_curve = extract_curve(clickData)
         log.debug("Indices détectés: hover=%s click=%s", hover_curve, click_curve)
 
-        for idx in range(1, 6):
-            fill = color_cfg.base
+        # Coloriser uniquement les zones (par meta), pas les axes/parabole/point
+        for idx, trace in enumerate(fig_any.data):
+            meta = getattr(trace, "meta", None)
             state = "base"
-            if idx == hover_curve:
-                fill = color_cfg.hover
-                state = "hover"
-            if idx == click_curve:
-                fill = color_cfg.click
-                state = "click"
-            log.debug(
-                "Application couleur zone index=%d état=%s couleur=%s", idx, state, fill
-            )
 
-            trace: Any = fig_any.data[idx]
-            if hasattr(trace, "fillcolor"):
-                trace.fillcolor = fill
-            line_obj = getattr(trace, "line", None)
-            if line_obj is not None and hasattr(line_obj, "width"):
-                try:
-                    line_obj.width = 0
-                except Exception:
-                    pass
+            # Déterminer l'état (base / hover / click) pour cette trace
+            if hover_curve == idx:
+                state = "hover"
+            if click_curve == idx:
+                state = "click"
+
+            # 1) Zones (polygones) — meta: ulp, urp, llp, lrp, lxa
+            if meta in {"ulp", "urp", "llp", "lrp", "lxa"}:
+                fill = color_cfg.base
+                if state == "hover":
+                    fill = color_cfg.hover
+                if state == "click":
+                    fill = color_cfg.click
+                log.debug(
+                    "Colorisation zone index=%d meta=%s état=%s couleur=%s",
+                    idx,
+                    meta,
+                    state,
+                    fill,
+                )
+                if hasattr(trace, "fillcolor"):
+                    trace.fillcolor = fill
+                # Masquer les bordures pour rester homogène
+                line_obj = getattr(trace, "line", None)
+                if line_obj is not None and hasattr(line_obj, "width"):
+                    try:
+                        line_obj.width = 0
+                    except Exception:
+                        pass
+                continue
+
+            # 2) Lignes (parabole gauche/droite, axes x/y) — accentuer sur hover/click
+            if meta in {"parabola_left", "parabola_right", "y", "x_left", "x_right"}:
+                line_obj = getattr(trace, "line", None)
+                marker_obj = getattr(trace, "marker", None)
+                if line_obj is not None or marker_obj is not None:
+                    try:
+                        # Accentuer largeur et couleur des lignes, et taille/couleur des marqueurs selon l'état
+                        if state == "hover":
+                            if line_obj is not None:
+                                line_obj.width = 8
+                                if hasattr(line_obj, "color"):
+                                    line_obj.color = color_cfg.hover
+                            if marker_obj is not None:
+                                base_size = getattr(marker_obj, "size", None) or 6
+                                marker_obj.size = max(base_size, 9)
+                                # Harmoniser la couleur du marqueur avec l'état
+                                marker_obj.color = color_cfg.hover
+                        elif state == "click":
+                            if line_obj is not None:
+                                line_obj.width = 10
+                                if hasattr(line_obj, "color"):
+                                    line_obj.color = color_cfg.click
+                            if marker_obj is not None:
+                                base_size = getattr(marker_obj, "size", None) or 6
+                                marker_obj.size = max(base_size, 11)
+                                marker_obj.color = color_cfg.click
+                        else:
+                            # État de base: conserver les valeurs existantes (ligne et marqueur)
+                            pass
+                        log.debug("Accentuation ligne/markers index=%d meta=%s état=%s", idx, meta, state)
+                    except Exception:
+                        pass
+                continue
+
+            # 3) Point à l'origine — accentuer taille/bordure sur hover/click
+            if meta == "origin":
+                marker_obj = getattr(trace, "marker", None)
+                if marker_obj is not None:
+                    try:
+                        base_size = getattr(marker_obj, "size", None) or 10
+                        base_line = getattr(marker_obj, "line", None)
+                        # Initialiser la ligne si absente
+                        if base_line is None:
+                            marker_obj.line = dict(width=0, color=color_cfg.base)
+                            base_line = marker_obj.line
+                        if state == "hover":
+                            marker_obj.size = max(base_size, 16)
+                            base_line["width"] = 3
+                            base_line["color"] = color_cfg.hover
+                        elif state == "click":
+                            marker_obj.size = max(base_size, 20)
+                            base_line["width"] = 5
+                            base_line["color"] = color_cfg.click
+                        else:
+                            # État de base: laisser les valeurs existantes
+                            pass
+                        log.debug("Accentuation point origine index=%d état=%s", idx, state)
+                    except Exception:
+                        pass
+                continue
 
         return fig_any
 
@@ -144,16 +242,28 @@ def register_callbacks(
     @app.callback(Output("url", "pathname"), Input(graph_id, "clickData"))
     def navigate_on_click(clickData):
         """
-        Navigation multipage déclenchée uniquement sur clic (zones 1..5).
+        Navigation multipage déclenchée sur clic: zones, parabole gauche/droite, axes x/y et origine.
         """
         if not clickData or not clickData.get("points"):
             return no_update
-        curve = clickData["points"][0].get("curveNumber")
+        pt = clickData["points"][0]
+        curve = pt.get("curveNumber")
+        # Tentative par meta (robuste)
+        try:
+            meta = getattr(base_figure.data[curve], "meta", None)
+        except Exception:
+            meta = None
+        if meta is not None:
+            target = PATH_BY_META.get(str(meta))
+            if target:
+                log.info("Navigation via meta=%s vers %s (curve=%d)", meta, target, curve)
+                return target
+        # Fallback par index
         target = ZONE_PATH_MAP.get(curve)
         if target:
-            log.info("Navigation déclenchée vers %s (zone index=%d)", target, curve)
+            log.info("Navigation via index vers %s (curve=%d)", target, curve)
             return target
-        log.debug("Clic sans route associée (curve=%s).", curve)
+        log.debug("Clic sans route associée (curve=%s meta=%s).", curve, meta)
         return no_update
 
     @app.callback(Output(hover_output_id, "children"), Input(graph_id, "hoverData"))
@@ -161,31 +271,70 @@ def register_callbacks(
         if not hoverData or not hoverData.get("points"):
             log.debug("Hover sorti de zone ou vide.")
             return "Survolez une zone pour voir les détails."
-        curve = hoverData["points"][0].get("curveNumber")
-        log.debug("Hover sur zone curveNumber=%s", curve)
-        return f"Vous survolez : {labels.get(curve, 'Zone inconnue')}"
+        pt = hoverData["points"][0]
+        curve = pt.get("curveNumber")
+        # Essayer de récupérer le meta de la trace pour une identification robuste
+        meta = None
+        try:
+            meta = app._callback_list and app  # placeholder to avoid static check
+        except Exception:
+            meta = None
+        # Récupérer le meta depuis la figure de base (plus fiable)
+        try:
+            meta = getattr(base_figure.data[curve], "meta", None)
+        except Exception:
+            meta = None
+        label = LABEL_BY_META.get(str(meta)) if meta is not None else None
+        label = label or labels.get(curve, "Zone inconnue")
+        log.debug("Hover sur curve=%s meta=%s label=%s", curve, meta, label)
+        return f"Vous survolez : {label}"
 
     @app.callback(Output(click_output_id, "children"), Input(graph_id, "clickData"))
     def click_info(clickData):
         if not clickData or not clickData.get("points"):
             log.debug("Clic hors zone ou vide.")
             return "Cliquez sur une zone pour voir les détails."
-        curve = clickData["points"][0].get("curveNumber")
-        log.info(
-            "Clic sur zone curveNumber=%s label=%s",
-            curve,
-            labels.get(curve, "Inconnue"),
-        )
-        return f"Vous avez cliqué sur : {labels.get(curve, 'Zone inconnue')}"
+        pt = clickData["points"][0]
+        curve = pt.get("curveNumber")
+        try:
+            meta = getattr(base_figure.data[curve], "meta", None)
+        except Exception:
+            meta = None
+        label = LABEL_BY_META.get(str(meta)) if meta is not None else None
+        label = label or labels.get(curve, "Zone inconnue")
+        log.info("Clic sur curve=%s meta=%s label=%s", curve, meta, label)
+        return f"Vous avez cliqué sur : {label}"
 
 
 # Mapping curveNumber -> pathname (sans accents) pour navigation vers pages de stabilité
 ZONE_PATH_MAP: Dict[int, str] = {
-    1: "/stabilite/zone-superieure-gauche",
-    2: "/stabilite/zone-superieure-droite",
-    3: "/stabilite/zone-inferieure-gauche",
-    4: "/stabilite/zone-inferieure-droite",
-    5: "/stabilite/zone-sous-axe-x",
+    1: "/stabilite/foyer_stable",
+    2: "/stabilite/foyer_instable",
+    3: "/stabilite/noeud_stable",
+    4: "/stabilite/noeud_instable",
+    5: "/stabilite/selle",
+    # Fallbacks si indices utilisés pour axes/parabole/point (à ajuster selon figure)
+    6: "/stabilite/noeud_stable_degenere",     # parabole gauche (exemple)
+    7: "/stabilite/noeud_instable_degenere",   # parabole droite (exemple)
+    8: "/stabilite/centre",                    # y line (centre)
+    9: "/stabilite/ligne_pe_stable",           # x left
+    10: "/stabilite/ligne_pe_instable",        # x right
+    11: "/stabilite/mouvement_uniforme",       # origin
+}
+
+# Mapping par meta — navigation robuste
+PATH_BY_META: Dict[str, str] = {
+    "ulp": "/stabilite/foyer_stable",
+    "urp": "/stabilite/foyer_instable",
+    "llp": "/stabilite/noeud_stable",
+    "lrp": "/stabilite/noeud_instable",
+    "lxa": "/stabilite/selle",
+    "parabola_left": "/stabilite/noeud_stable_degenere",
+    "parabola_right": "/stabilite/noeud_instable_degenere",
+    "y": "/stabilite/centre",
+    "x_left": "/stabilite/ligne_pe_stable",
+    "x_right": "/stabilite/ligne_pe_instable",
+    "origin": "/stabilite/mouvement_uniforme",
 }
 
 

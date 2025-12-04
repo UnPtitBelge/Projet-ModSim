@@ -1,8 +1,8 @@
 """
-Page de stabilite: zone superieure gauche (tau < 0, delta > tau^2/4)
+Page de stabilité: foyer stable (tau < 0, delta > tau^2/4)
 
-Cette page est enregistree automatiquement par Dash (multipage natif).
-URL sans accents et avec tirets pour coherence avec la navigation par clic.
+Cette page est enregistrée automatiquement par Dash (multipage natif).
+URL sans accents et avec tirets pour cohérence avec la navigation par clic.
 """
 
 import dash
@@ -11,34 +11,34 @@ from dash import html
 from src.app.logging_setup import get_logger
 
 log = get_logger(__name__)
-log.info("Enregistrement de la page /stabilite/zone-superieure-gauche.")
+log.info("Enregistrement de la page /stabilite/foyer_stable.")
 
 dash.register_page(
     __name__,
-    path="/stabilite/zone-superieure-gauche",
-    name="Stabilite (sup. gauche)",
-    title="Stabilite – Zone superieure gauche",
+    path="/stabilite/foyer_stable",
+    name="Stabilité (foyer stable)",
+    title="Stabilité – Foyer stable",
     order=10,
-    description="Informations sur la zone superieure gauche du diagramme de Poincare.",
+    description="Informations sur le foyer stable du diagramme de Poincaré.",
 )
 
-log.debug("Construction du layout de la page zone superieure gauche...")
+log.debug("Construction du layout de la page foyer stable...")
 
 layout = html.Div(
     [
         html.Small(
             [
-                html.A("Stabilite", href="/stabilite"),
+                html.A("Stabilité", href="/stabilite"),
                 "  /  ",
-                html.Span("Zone superieure gauche"),
+                html.Span("Foyer stable"),
             ],
             style={"color": "#666"},
         ),
-        html.H2("Zone superieure gauche"),
+        html.H2("Foyer stable"),
         html.P(
-            "Cette zone correspond aux points situes au-dessus de la parabole Δ = τ²/4 avec τ < 0."
+            "Cette zone correspond aux points situés au-dessus de la parabole Δ = τ²/4 avec τ < 0."
         ),
-        html.H3("Definition geometrique"),
+        html.H3("Définition géométrique"),
         html.Ul(
             [
                 html.Li("tau < 0"),
@@ -46,9 +46,9 @@ layout = html.Div(
                 html.Li("Au-dessus de la parabole, a gauche de l'axe vertical tau = 0"),
             ]
         ),
-        html.H3("Modele et racines caracteristiques"),
+        html.H3("Modèle et racines caractéristiques"),
         html.P(
-            "On considere l'equation caracteristique associee: "
+            "On considère l’équation caractéristique associée: "
             "lambda^2 + tau·lambda + delta = 0."
         ),
         html.Ul(
@@ -67,16 +67,16 @@ layout = html.Div(
         html.Ul(
             [
                 html.Li(
-                    "Racines complexes avec partie reelle positive ⇒ spirale divergente (instable)."
+                    "Racines complexes avec partie réelle positive ⇒ spirale divergente (instable)."
                 ),
                 html.Li(
-                    "Oscillations dont l'amplitude croit exponentiellement (instabilite oscillatoire)."
+                    "Oscillations dont l’amplitude croît exponentiellement (instabilité oscillatoire)."
                 ),
             ]
         ),
         html.H3("Reponse temporelle (forme indicative)"),
         html.P(
-            "Pour x'' + tau x' + delta x = 0, lorsque tau^2 < 4·delta (zone superieure), la reponse libre s'ecrit:"
+            "Pour x'' + τ x' + Δ x = 0, lorsque τ^2 < 4·Δ (foyer), la réponse libre s’écrit:"
         ),
         html.Pre(
             "x(t) = e^{alpha t} [ A cos(omega t) + B sin(omega t) ]",
@@ -90,26 +90,19 @@ layout = html.Div(
         ),
         html.Ul(
             [
-                html.Li("alpha = -tau/2  (ici: alpha > 0, croissance)"),
+                html.Li("α = -τ/2  (ici: α > 0, croissance)"),
                 html.Li(
-                    "omega = sqrt(delta - (tau^2)/4)  (frequence pseudo-oscillatoire)"
+                    "ω = sqrt(Δ - (τ^2)/4)  (fréquence pseudo-oscillatoire)"
                 ),
             ]
         ),
-        html.H3("Exemple numerique (placeholder)"),
-        html.Ul(
-            [
-                html.Li("Choisir tau = -2, delta = 2  ⇒ delta > tau^2/4 = 1"),
-                html.Li("alpha = -(-2)/2 = 1 > 0  ⇒ croissance exponentielle"),
-                html.Li("omega = sqrt(2 - 1) = 1  ⇒ oscillations a frequence 1 rad/s"),
-            ]
-        ),
+
         html.Hr(),
         html.Div(
             [
-                html.A("← Retour au sommaire Stabilite", href="/stabilite"),
+                html.A("← Retour au sommaire Stabilité", href="/stabilite"),
                 html.Span("  |  "),
-                html.A("Retour au diagramme de Poincare", href="/poincare"),
+                html.A("Retour au diagramme de Poincaré", href="/poincare"),
             ],
             style={"marginTop": "10px"},
         ),
@@ -123,4 +116,4 @@ layout = html.Div(
     },
 )
 
-log.info("Layout de la page zone superieure gauche construit.")
+log.info("Layout de la page foyer stable construit.")

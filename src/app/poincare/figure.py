@@ -7,11 +7,11 @@ la figure de `src/temp/poincare_temp.py`:
 
 IMPORTANT (indices de traces attendus par les callbacks):
 0  parabole (ligne) — conservé pour compatibilité avec callbacks existants
-1  zone supérieure gauche
-2  zone supérieure droite
-3  zone inférieure gauche
-4  zone inférieure droite
-5  zone sous l'axe x
+1  foyer stable
+2  foyer instable
+3  noeud stable
+4  noeud instable
+5  selle
 6+ éléments décoratifs additionnels (axes, parabole en surcouche) — ignorés par les callbacks
 
 API principale: build_poincare_figure(config=None) -> plotly.graph_objs.Figure
@@ -52,6 +52,7 @@ class PoincareConfig:
     color_lower_axis: str = "rgba(211,211,211,0.5)"  # gris pastel
     # Mise en page
     plot_bgcolor: str = "white"
+    origin_gap_ratio: float = 2.0 / max(N_SAMPLES, 1)
 
 
 def _core_arrays(cfg: PoincareConfig):
@@ -80,30 +81,16 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
 
     # Données de base
     x, y_parab = _core_arrays(cfg)
-    x_left = x[x <= 0]
-    y_left = y_parab[x <= 0]
-    x_right = x[x >= 0]
-    y_right = y_parab[x >= 0]
+    x_left = x[x < 0]
+    y_left = y_parab[x < 0]
+    x_right = x[x > 0]
+    y_right = y_parab[x > 0]
 
     val_max = max(abs(cfg.tau_min), abs(cfg.tau_max))
     log.debug("val_max calculé=%s", val_max)
+    gap = max(cfg.origin_gap_ratio * val_max, 0.0)
 
     fig = go.Figure()
-
-    # 0. Parabole (INDEX 0)
-    fig.add_trace(
-        go.Scatter(
-            x=x,
-            y=y_parab,
-            mode="lines",
-            line=dict(color=cfg.main_line_color, width=cfg.line_width),
-            name="parabola line",
-            meta="parabola",
-            hoverinfo="none",
-            showlegend=False,
-        )
-    )
-    log.debug("Trace parabole ajoutée (index 0).")
 
     def add_zone(zone_x, zone_y, fillcolor, name, meta):
         fig.add_trace(
@@ -116,8 +103,10 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
                 line=dict(color="rgba(0,0,0,0)"),
                 name=name,
                 meta=meta,
-                hoverinfo="none",
-                hoveron="points+fills",
+                hoverinfo="text",
+                text=[name] * len(zone_x),
+                hovertemplate="%{text}<br>τ=%{x:.3f}, Δ=%{y:.3f}<extra></extra>",
+                hoveron="fills",
                 showlegend=False,
             )
         )
@@ -125,65 +114,129 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
 
     ul_x = np.concatenate([[0.0], x_left[::-1], [0.0]])
     ul_y = np.concatenate([[0.0], y_left[::-1], [y_left[0] if len(y_left) else 0.0]])
-    add_zone(ul_x, ul_y, cfg.color_upper_left, "upper left parabola", "ulp")
+    add_zone(ul_x, ul_y, cfg.color_upper_left, "Foyer stable", "ulp")
 
     ur_x = np.concatenate([[0.0], x_right, [0.0]])
     ur_y = np.concatenate([[0.0], y_right, [y_right[-1] if len(y_right) else 0.0]])
-    add_zone(ur_x, ur_y, cfg.color_upper_right, "upper right parabola", "urp")
+    add_zone(ur_x, ur_y, cfg.color_upper_right, "Foyer instable", "urp")
 
     ll_x = np.concatenate([[-val_max], x_left, [0.0]])
     ll_y = np.concatenate([[y_left[-1] if len(y_left) else 0.0], y_left, [0.0]])
-    add_zone(ll_x, ll_y, cfg.color_lower_left, "lower left parabola", "llp")
+    add_zone(ll_x, ll_y, cfg.color_lower_left, "Noeud stable", "llp")
 
     lr_x = np.concatenate([[0.0], x_right, [val_max]])
     lr_y = np.concatenate([[y_right[0] if len(y_right) else 0.0], y_right, [0.0]])
-    add_zone(lr_x, lr_y, cfg.color_lower_right, "lower right parabola", "lrp")
+    add_zone(lr_x, lr_y, cfg.color_lower_right, "Noeud instable", "lrp")
 
     lxa_x = [-val_max, val_max, val_max, -val_max]
     lxa_y = [0.0, 0.0, -val_max, -val_max]
-    add_zone(lxa_x, lxa_y, cfg.color_lower_axis, "lower x axis", "lxa")
+    add_zone(lxa_x, lxa_y, cfg.color_lower_axis, "Selle", "lxa")
 
+    # Échantillonnage dense de la ligne Y pour améliorer hover/click
+    y_line = np.linspace(gap, val_max, cfg.samples)
+    x_line = np.zeros_like(y_line)
     fig.add_trace(
         go.Scatter(
-            x=[0.0, 0.0],
-            y=[0.0, val_max],
-            mode="lines",
+            x=x_line,
+            y=y_line,
+            mode="lines+markers",
+            marker=dict(size=6, color=cfg.main_line_color),
             line=dict(color=cfg.main_line_color, width=cfg.line_width),
-            name="y line",
+            name="Droite en y (τ = 0)",
             meta="y",
-            hoverinfo="none",
+            hoverinfo="text",
+            text=["Centre"] * len(y_line),
+            hovertemplate="%{text}<extra></extra>",
             showlegend=False,
         )
     )
-    log.debug("Trace axe Y ajoutée (index %d).", len(fig.data) - 1)
+    log.debug("Trace axe Y (échantillonnée) ajoutée (index %d).", len(fig.data) - 1)
 
+    # Échantillonnage dense de la ligne X (partie gauche) pour améliorer hover/click
+    x_left_line = np.linspace(-val_max, -gap, cfg.samples)
+    y_left_line = np.zeros_like(x_left_line)
     fig.add_trace(
         go.Scatter(
-            x=[-val_max, val_max],
-            y=[0.0, 0.0],
-            mode="lines",
+            x=x_left_line,
+            y=y_left_line,
+            mode="lines+markers",
+            marker=dict(size=6, color=cfg.main_line_color),
             line=dict(color=cfg.main_line_color, width=cfg.line_width),
-            name="x line",
-            meta="x",
-            hoverinfo="none",
+            name="Droite en x (partie gauche)",
+            meta="x_left",
+            hoverinfo="text",
+            text=["Ligne de points d'équilibre stable"] * len(x_left_line),
+            hovertemplate="%{text}<extra></extra>",
             showlegend=False,
         )
     )
-    log.debug("Trace axe X ajoutée (index %d).", len(fig.data) - 1)
+
+    # Échantillonnage dense de la ligne X (partie droite) pour améliorer hover/click
+    x_right_line = np.linspace(gap, val_max, cfg.samples)
+    y_right_line_const = np.zeros_like(x_right_line)
+    fig.add_trace(
+        go.Scatter(
+            x=x_right_line,
+            y=y_right_line_const,
+            mode="lines+markers",
+            marker=dict(size=6, color=cfg.main_line_color),
+            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            name="Droite en x (partie droite)",
+            meta="x_right",
+            hoverinfo="text",
+            text=["Ligne de points d'équilibre instable"] * len(x_right_line),
+            hovertemplate="%{text}<extra></extra>",
+            showlegend=False,
+        )
+    )
+
+    log.debug("Trace axe X (échantillonnée) ajoutée (index %d).", len(fig.data) - 1)
 
     fig.add_trace(
         go.Scatter(
-            x=x,
-            y=y_parab,
+            x=x_left,
+            y=y_left,
             mode="lines",
             line=dict(color=cfg.main_line_color, width=cfg.line_width),
-            name="parabola overlay",
-            meta="parabola_top",
-            hoverinfo="none",
+            name="Parabole (partie gauche)",
+            meta="parabola_left",
+            hoverinfo="text",
+            text=["Noeud stable dégénéré"] * len(x_left),
+            hovertemplate="%{text}<extra></extra>",
+            showlegend=False,
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=x_right,
+            y=y_right,
+            mode="lines",
+            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            name="Parabole (partie droite)",
+            meta="parabola_right",
+            hoverinfo="text",
+            text=["Noeud instable dégénéré"] * len(x_right),
+            hovertemplate="%{text}<extra></extra>",
             showlegend=False,
         )
     )
     log.debug("Trace parabole overlay ajoutée (index %d).", len(fig.data) - 1)
+
+    fig.add_trace(
+        go.Scatter(
+            x=[0.0],
+            y=[0.0],
+            mode="markers",
+            marker=dict(line=dict(color="rgba(0,0,0,0)", width=cfg.line_width**2)),
+            name="Origine (0, 0)",
+            meta="origin",
+            hoverinfo="text",
+            text=["Mouvement uniforme"],
+            hovertemplate="%{text}<extra></extra>",
+            showlegend=False,
+        )
+    )
 
     fig.update_layout(
         xaxis=dict(

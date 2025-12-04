@@ -7,11 +7,11 @@ Cette page:
 - propose des liens vers chaque page détaillée déjà existante
 
 Les sous-pages attendues (doivent déjà être présentes):
-    /stabilite/zone-superieure-gauche
-    /stabilite/zone-superieure-droite
-    /stabilite/zone-inferieure-gauche
-    /stabilite/zone-inferieure-droite
-    /stabilite/zone-sous-axe-x
+    /stabilite/foyer_stable
+    /stabilite/foyer_instable
+    /stabilite/noeud_stable
+    /stabilite/noeud_instable
+    /stabilite/selle
 """
 
 from __future__ import annotations
@@ -35,30 +35,63 @@ dash.register_page(
 
 # Description synthétique de chaque zone (adapté au contenu des pages détaillées)
 _ZONES = [
+    # Cas basiques (zones principales)
     {
-        "label": "Zone superieure gauche",
-        "href": "/stabilite/zone-superieure-gauche",
-        "resume": "tau < 0, delta > tau^2/4 — racines complexes, partie réelle positive (instable oscillatoire).",
-    },
-    {
-        "label": "Zone superieure droite",
-        "href": "/stabilite/zone-superieure-droite",
+        "label": "Foyer stable",
+        "href": "/stabilite/foyer_stable",
         "resume": "tau > 0, delta > tau^2/4 — racines complexes, partie réelle négative (stable oscillatoire amorti).",
     },
     {
-        "label": "Zone inferieure gauche",
-        "href": "/stabilite/zone-inferieure-gauche",
-        "resume": "tau < 0, 0 < delta < tau^2/4 — deux racines réelles positives (instable non oscillatoire).",
+        "label": "Foyer instable",
+        "href": "/stabilite/foyer_instable",
+        "resume": "tau < 0, delta > tau^2/4 — racines complexes, partie réelle positive (instable oscillatoire).",
     },
     {
-        "label": "Zone inferieure droite",
-        "href": "/stabilite/zone-inferieure-droite",
+        "label": "Noeud stable",
+        "href": "/stabilite/noeud_stable",
         "resume": "tau > 0, 0 < delta < tau^2/4 — deux racines réelles négatives (stable non oscillatoire).",
     },
     {
-        "label": "Zone sous axe x",
-        "href": "/stabilite/zone-sous-axe-x",
+        "label": "Noeud instable",
+        "href": "/stabilite/noeud_instable",
+        "resume": "tau < 0, 0 < delta < tau^2/4 — deux racines réelles positives (instable non oscillatoire).",
+    },
+    {
+        "label": "Selle",
+        "href": "/stabilite/selle",
         "resume": "delta < 0 — racines réelles de signes opposés (selle, instabilité mixte).",
+    },
+
+    # Cas sur les axes et dégénérés (affichés même si contenus en préparation)
+    {
+        "label": "Centre",
+        "href": "/stabilite/centre",
+        "resume": "tau = 0, delta > 0 — racines purement imaginaires (oscillations non amorties).",
+    },
+    {
+        "label": "Mouvement uniforme",
+        "href": "/stabilite/mouvement_uniforme",
+        "resume": "tau = 0, delta = 0 — racines nulles (mouvement à vitesse constante, solution polynomiale).",
+    },
+    {
+        "label": "Noeud stable dégénéré",
+        "href": "/stabilite/noeud_stable_degenere",
+        "resume": "tau^2 = 4·delta avec tau > 0 — racines réelles égales négatives (stabilité, réponse (C1 + C2·t)·e^{λt}).",
+    },
+    {
+        "label": "Noeud instable dégénéré",
+        "href": "/stabilite/noeud_instable_degenere",
+        "resume": "tau^2 = 4·delta avec tau < 0 — racines réelles égales positives (instabilité, réponse (C1 + C2·t)·e^{λt}).",
+    },
+    {
+        "label": "Ligne de points d’équilibre stable",
+        "href": "/stabilite/ligne_pe_stable",
+        "resume": "Continuum de points d’équilibre avec stabilité locale (contenu en préparation).",
+    },
+    {
+        "label": "Ligne de points d’équilibre instable",
+        "href": "/stabilite/ligne_pe_instable",
+        "resume": "Continuum de points d’équilibre avec instabilité locale (contenu en préparation).",
     },
 ]
 
