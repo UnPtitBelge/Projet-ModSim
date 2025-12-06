@@ -42,9 +42,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Position d'équilibre pour un système dynamique, ou après une petite perturbation, le système tend à revenir vers cet état:",
-                    style={"margin": "0 0 4px 0"},
-                ),
+                    "Position d'équilibre pour un système dynamique, ou après une petite perturbation, le système tend à revenir vers cet état:"                ),
                 html.Ul(
                     [
                         html.Li("$\\tau$ > 0"),
@@ -52,8 +50,7 @@ _ZONES = [
                         html.Li("Racines complexes"),
                         html.Li("Partie réelle négative"),
                         html.Li("Comportement: stable oscillatoire amorti"),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
@@ -64,8 +61,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Point fixe d'un système dynamique dont trajectoires s’éloignent de l’origine en suivant des spirales:",
-                    style={"margin": "0 0 4px 0"},
+                    "Point fixe d'un système dynamique dont trajectoires s’éloignent de l’origine en suivant des spirales:"
                 ),
                 html.Ul(
                     [
@@ -74,8 +70,7 @@ _ZONES = [
                         html.Li("Racines complexes"),
                         html.Li("Partie réelle positive"),
                         html.Li("Comportement: instable oscillatoire"),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
@@ -86,8 +81,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Etat d’équilibre asymptotiquement stable:",
-                    style={"margin": "0 0 4px 0"},
+                    "Etat d’équilibre asymptotiquement stable:"
                 ),
                 html.Ul(
                     [
@@ -95,8 +89,7 @@ _ZONES = [
                         html.Li("0 < $\\Delta$ < $\\tau^2/4$"),
                         html.Li("Deux racines réelles négatives"),
                         html.Li("Stable non oscillatoire"),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
@@ -116,8 +109,7 @@ _ZONES = [
                         html.Li("0 < $\\Delta$ < $\\tau^2/4$"),
                         html.Li("Deux racines réelles positives"),
                         html.Li("Instable non oscillatoire"),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
@@ -128,8 +120,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Point d’équilibre instable où le système possède à la fois une direction attractive et une direction répulsive: ",
-                    style={"margin": "0 0 4px 0"},
+                    "Point d’équilibre instable où le système possède à la fois une direction attractive et une direction répulsive: "
                 ),
                 html.Ul(
                     [
@@ -137,8 +128,7 @@ _ZONES = [
                         html.Li("Racines réelles de signes opposés"),
                         html.Li("Instabilité mixte"),
                         html.Li("Selle"),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
@@ -150,8 +140,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Point d'équilibre avec oscillations non amorties :", # TODO
-                    style={"margin": "0 0 4px 0"},
+                    "Point d'équilibre avec oscillations non amorties :" # TODO
                 ),
                 html.Ul(
                     [
@@ -159,8 +148,7 @@ _ZONES = [
                         html.Li("$\\Delta$ > 0"),
                         html.Li("Racines purement imaginaires"),
                         html.Li("Oscillations non amorties"),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
@@ -171,8 +159,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Cas dégénéré avec racines nulles :", # TODO
-                    style={"margin": "0 0 4px 0"},
+                    "Cas dégénéré avec racines nulles :" # TODO
                 ),
                 html.Ul(
                     [
@@ -182,8 +169,7 @@ _ZONES = [
                         html.Li(
                             "Mouvement à vitesse constante et solution polynomiale"
                         ),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
@@ -194,16 +180,14 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Cas dégénéré avec racines réelles égales négatives :", # TODO
-                    style={"margin": "0 0 4px 0"},
+                    "Cas dégénéré avec racines réelles égales négatives :" # TODO
                 ),
                 html.Ul(
                     [
                         html.Li("$\\tau^2 = 4\\cdot\\Delta$ avec $\\tau$ > 0"),
                         html.Li("Racines réelles égales négatives"),
                         html.Li("Stabilité = (C1 + C2·t)·e^{λt}"),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
@@ -214,16 +198,14 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Cas dégénéré avec racines réelles égales positives :", # TODO
-                    style={"margin": "0 0 4px 0"},
+                    "Cas dégénéré avec racines réelles égales positives :" # TODO
                 ),
                 html.Ul(
                     [
                         html.Li("$\\tau^2 = 4\\cdot\\Delta$ avec $\\tau$ < 0"),
                         html.Li("Racines réelles égales positives"),
                         html.Li("Instabilité = (C1 + C2·t)·e^{λt}"),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
@@ -234,8 +216,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Continuum de points d’équilibre avec stabilité locale :", # TODO
-                    style={"margin": "0 0 4px 0"},
+                    "Continuum de points d’équilibre avec stabilité locale :" # TODO
                 ),
                 html.Ul(
                     [
@@ -243,8 +224,7 @@ _ZONES = [
                             "Continuum de points d’équilibre avec stabilité locale"
                         ),
                         html.Li("(contenu en préparation)"),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
@@ -255,8 +235,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Continuum de points d’équilibre avec instabilité locale :", # TODO
-                    style={"margin": "0 0 4px 0"},
+                    "Continuum de points d’équilibre avec instabilité locale :" # TODO
                 ),
                 html.Ul(
                     [
@@ -264,8 +243,7 @@ _ZONES = [
                             "Continuum de points d’équilibre avec instabilité locale"
                         ),
                         html.Li("(contenu en préparation)"),
-                    ],
-                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                    ]
                 ),
             ]
         ),
