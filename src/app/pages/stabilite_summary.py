@@ -42,7 +42,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Point d'équilibre avec oscillations amorties :", # TODO
+                    "Position d'équilibre pour un système dynamique, ou après une petite perturbation, le système tend à revenir vers cet état:",
                     style={"margin": "0 0 4px 0"},
                 ),
                 html.Ul(
@@ -86,7 +86,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Point d'équilibre sans oscillations, qui attire les trajectoires :", # TODO
+                    "Etat d’équilibre asymptotiquement stable:",
                     style={"margin": "0 0 4px 0"},
                 ),
                 html.Ul(
@@ -107,7 +107,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Point d'équilibre sans oscillations, qui repousse les trajectoires :", # TODO
+                    "Etat d’équilibre instable:", 
                     style={"margin": "0 0 4px 0"},
                 ),
                 html.Ul(
@@ -128,7 +128,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Point d'équilibre avec directions stables et instables :", # TODO
+                    "Point d’équilibre instable où le système possède à la fois une direction attractive et une direction répulsive: ",
                     style={"margin": "0 0 4px 0"},
                 ),
                 html.Ul(
