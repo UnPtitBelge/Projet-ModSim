@@ -39,109 +39,236 @@ _ZONES = [
     {
         "label": "Foyer stable",
         "href": "/stabilite/foyer_stable",
-        "resume": html.Ul([
-            html.Li("$\\tau$ > 0"),
-            html.Li("$\\Delta$ > $\\tau^2/4$"),
-            html.Li("Racines complexes"),
-            html.Li("Partie réelle négative"),
-            html.Li("Comportement: stable oscillatoire amorti"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Point d'équilibre avec oscillations amorties :", # TODO
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li("$\\tau$ > 0"),
+                        html.Li("$\\Delta$ > $\\tau^2/4$"),
+                        html.Li("Racines complexes"),
+                        html.Li("Partie réelle négative"),
+                        html.Li("Comportement: stable oscillatoire amorti"),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
     {
         "label": "Foyer instable",
         "href": "/stabilite/foyer_instable",
-        "resume": html.Ul([
-            html.Li("$\\tau$ < 0"),
-            html.Li("$\\Delta$ > $\\tau^2/4$"),
-            html.Li("Racines complexes"),
-            html.Li("Partie réelle positive"),
-            html.Li("Comportement: instable oscillatoire"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Point fixe d'un système dynamique dont trajectoires s’éloignent de l’origine en suivant des spirales:",
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li("$\\tau$ < 0"),
+                        html.Li("$\\Delta$ > $\\tau^2/4$"),
+                        html.Li("Racines complexes"),
+                        html.Li("Partie réelle positive"),
+                        html.Li("Comportement: instable oscillatoire"),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
     {
         "label": "Noeud stable",
         "href": "/stabilite/noeud_stable",
-        "resume": html.Ul([
-            html.Li("$\\tau$ > 0"),
-            html.Li("0 < $\\Delta$ < $\\tau^2/4$"),
-            html.Li("Deux racines réelles négatives"),
-            html.Li("Stable non oscillatoire"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Point d'équilibre sans oscillations, qui attire les trajectoires :", # TODO
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li("$\\tau$ > 0"),
+                        html.Li("0 < $\\Delta$ < $\\tau^2/4$"),
+                        html.Li("Deux racines réelles négatives"),
+                        html.Li("Stable non oscillatoire"),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
     {
         "label": "Noeud instable",
         "href": "/stabilite/noeud_instable",
-        "resume": html.Ul([
-            html.Li("$\\tau$ < 0"),
-            html.Li("0 < $\\Delta$ < $\\tau^2/4$"),
-            html.Li("Deux racines réelles positives"),
-            html.Li("Instable non oscillatoire"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Point d'équilibre sans oscillations, qui repousse les trajectoires :", # TODO
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li("$\\tau$ < 0"),
+                        html.Li("0 < $\\Delta$ < $\\tau^2/4$"),
+                        html.Li("Deux racines réelles positives"),
+                        html.Li("Instable non oscillatoire"),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
     {
         "label": "Selle",
         "href": "/stabilite/selle",
-        "resume": html.Ul([
-            html.Li("$\\Delta$ < 0"),
-            html.Li("Racines réelles de signes opposés"),
-            html.Li("Instabilité mixte"),
-            html.Li("Selle"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Point d'équilibre avec directions stables et instables :", # TODO
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li("$\\Delta$ < 0"),
+                        html.Li("Racines réelles de signes opposés"),
+                        html.Li("Instabilité mixte"),
+                        html.Li("Selle"),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
     # Cas sur les axes et dégénérés (affichés même si contenus en préparation)
     {
         "label": "Centre",
         "href": "/stabilite/centre",
-        "resume": html.Ul([
-            html.Li("$\\tau$ = 0"),
-            html.Li("$\\Delta$ > 0"),
-            html.Li("Racines purement imaginaires"),
-            html.Li("Oscillations non amorties"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Point d'équilibre avec oscillations non amorties :", # TODO
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li("$\\tau$ = 0"),
+                        html.Li("$\\Delta$ > 0"),
+                        html.Li("Racines purement imaginaires"),
+                        html.Li("Oscillations non amorties"),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
     {
         "label": "Mouvement uniforme",
         "href": "/stabilite/mouvement_uniforme",
-        "resume": html.Ul([
-            html.Li("$\\tau$ = 0"),
-            html.Li("$\\Delta$ = 0"),
-            html.Li("Racines nulles"),
-            html.Li("Mouvement à vitesse constante et solution polynomiale"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Cas dégénéré avec racines nulles :", # TODO
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li("$\\tau$ = 0"),
+                        html.Li("$\\Delta$ = 0"),
+                        html.Li("Racines nulles"),
+                        html.Li(
+                            "Mouvement à vitesse constante et solution polynomiale"
+                        ),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
     {
         "label": "Noeud stable dégénéré",
         "href": "/stabilite/noeud_stable_degenere",
-        "resume": html.Ul([
-            html.Li("$\\tau^2 = 4\\cdot\\Delta$ avec $\\tau$ > 0"),
-            html.Li("Racines réelles égales négatives"),
-            html.Li("Stabilité = (C1 + C2·t)·e^{λt}"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Cas dégénéré avec racines réelles égales négatives :", # TODO
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li("$\\tau^2 = 4\\cdot\\Delta$ avec $\\tau$ > 0"),
+                        html.Li("Racines réelles égales négatives"),
+                        html.Li("Stabilité = (C1 + C2·t)·e^{λt}"),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
     {
         "label": "Noeud instable dégénéré",
         "href": "/stabilite/noeud_instable_degenere",
-        "resume": html.Ul([
-            html.Li("$\\tau^2 = 4\\cdot\\Delta$ avec $\\tau$ < 0"),
-            html.Li("Racines réelles égales positives"),
-            html.Li("Instabilité = (C1 + C2·t)·e^{λt}"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Cas dégénéré avec racines réelles égales positives :", # TODO
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li("$\\tau^2 = 4\\cdot\\Delta$ avec $\\tau$ < 0"),
+                        html.Li("Racines réelles égales positives"),
+                        html.Li("Instabilité = (C1 + C2·t)·e^{λt}"),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
     {
         "label": "Ligne de points d’équilibre stable",
         "href": "/stabilite/ligne_pe_stable",
-        "resume": html.Ul([
-            html.Li("Continuum de points d’équilibre avec stabilité locale"),
-            html.Li("(contenu en préparation)"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Continuum de points d’équilibre avec stabilité locale :", # TODO
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li(
+                            "Continuum de points d’équilibre avec stabilité locale"
+                        ),
+                        html.Li("(contenu en préparation)"),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
     {
         "label": "Ligne de points d’équilibre instable",
         "href": "/stabilite/ligne_pe_instable",
-        "resume": html.Ul([
-            html.Li("Continuum de points d’équilibre avec instabilité locale"),
-            html.Li("(contenu en préparation)"),
-        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
+        "resume": html.Div(
+            [
+                html.P(
+                    "Continuum de points d’équilibre avec instabilité locale :", # TODO
+                    style={"margin": "0 0 4px 0"},
+                ),
+                html.Ul(
+                    [
+                        html.Li(
+                            "Continuum de points d’équilibre avec instabilité locale"
+                        ),
+                        html.Li("(contenu en préparation)"),
+                    ],
+                    style={"margin": "4px 0", "paddingLeft": "20px"},
+                ),
+            ]
+        ),
     },
 ]
 
