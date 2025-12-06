@@ -1,38 +1,10 @@
 """
-Simplified logging setup for the Projet-ModSim application.
+Logging setup for Projet-ModSim.
 
-Goals:
-- No environment variables.
-- Always log to a dedicated file: <project_root>/logs/app.log
-- Console output kept minimal (WARNING and above).
-- File log retains informative detail (INFO and above).
-- Idempotent initialization (safe to call multiple times).
-- Rotating file to avoid uncontrolled growth.
-
-Usage:
-    from src.app.logging_setup import init_logging, get_logger
-    init_logging()  # do this once early (e.g., in app.py)
-    log = get_logger(__name__)
-    log.info("Application started")
-
-Customization:
-You can optionally pass parameters to init_logging(file_level=..., console_level=..., file_path=...)
-if you need different verbosity or a custom path.
-
-Log Levels:
-- File handler: INFO (default) → keeps operational trace.
-- Console handler: WARNING (default) → only crucial events (warnings, errors, critical).
-
-Rotation:
-- Max file size: 1,000,000 bytes
-- Backup count: 5 (app.log.1 .. app.log.5)
-
-Thread-safety:
-A lock ensures only one initialization sequence runs even under concurrency.
-
-Reconfiguration:
-Call reconfigure_logging(...) to change levels or path at runtime.
-
+- Logs to logs/app.log (rotating: 1_000_000 bytes, 5 backups)
+- Defaults: Console WARNING+, File INFO+
+- Idempotent, thread-safe initialization
+- Reconfigure via reconfigure_logging(...)
 """
 
 from __future__ import annotations

@@ -1,19 +1,4 @@
-"""
-Poincaré diagram subpackage.
-
-Building blocks:
-- build_poincare_figure / PoincareConfig
-- register_callbacks (interactivity)
-- build_layout (Dash layout)
-- constants (bounds, colors, labels)
-- zones (geometry helpers)
-
-Quick start:
-    from src.app.poincare import build_poincare_figure
-    fig = build_poincare_figure()
-
-The runnable Dash entry point lives in src/app/app.py.
-"""
+"""Poincaré subpackage: re-exports figure building, layout, callbacks, constants, and zones."""
 
 from __future__ import annotations
 

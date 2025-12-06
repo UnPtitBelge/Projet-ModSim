@@ -1,3 +1,5 @@
+"""Analyzer package exports: System, StabilityAnalyzer, Plot, PoincarePlot."""
+
 from .analyzer import StabilityAnalyzer
 from .plot import Plot, PoincarePlot
 from .system import System

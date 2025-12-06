@@ -1,9 +1,13 @@
+"""Provides `StabilityAnalyzer` to run minimal stability analysis workflows for a `System`."""
+
 from .system import System
 
 
 class StabilityAnalyzer:
-    def __init__(self, sytem: System):
-        self.system = sytem
+    """Analyze stability for a given `System`."""
+
+    def __init__(self, system: System):
+        self.system = system
 
     def analyze(self):
         """Analyze the stability of the given system."""

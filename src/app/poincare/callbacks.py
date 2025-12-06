@@ -1,20 +1,5 @@
 """
-Callbacks pour le diagramme de Poincaré : survol et clic (mise en évidence des zones).
-
-API:
-    ZoneColors              dataclass des couleurs (base, hover, click)
-    DEFAULT_ZONE_LABELS     mapping curveNumber -> label (fr)
-    register_callbacks(...) attache les callbacks à l'application Dash
-
-Principe:
-- On duplique la figure immuable (base_figure) à chaque interaction.
-- Priorité des couleurs : clic > hover > base.
-- Indices de traces: 0 parabole, 1..5 zones.
-
-Les IDs attendus dans le layout:
-    Graph        : "poincare-graph"
-    Survol texte : "output-temp-hover"
-    Clic texte   : "output-temp-click"
+Callbacks du diagramme de Poincaré (survol et clic) mettant en évidence les zones et fournissant la navigation multipage.
 """
 
 from __future__ import annotations
@@ -203,7 +188,12 @@ def register_callbacks(
                         else:
                             # État de base: conserver les valeurs existantes (ligne et marqueur)
                             pass
-                        log.debug("Accentuation ligne/markers index=%d meta=%s état=%s", idx, meta, state)
+                        log.debug(
+                            "Accentuation ligne/markers index=%d meta=%s état=%s",
+                            idx,
+                            meta,
+                            state,
+                        )
                     except Exception:
                         pass
                 continue
@@ -230,15 +220,16 @@ def register_callbacks(
                         else:
                             # État de base: laisser les valeurs existantes
                             pass
-                        log.debug("Accentuation point origine index=%d état=%s", idx, state)
+                        log.debug(
+                            "Accentuation point origine index=%d état=%s", idx, state
+                        )
                     except Exception:
                         pass
                 continue
 
         return fig_any
 
-    # Navigation serveur réintroduite : la redirection est gérée par une callback
-    # mettant à jour dcc.Location (id="url") pour déclencher le rendu multipage.
+    # Navigation multipage déclenchée par mise à jour de dcc.Location (id="url").
     @app.callback(Output("url", "pathname"), Input(graph_id, "clickData"))
     def navigate_on_click(clickData):
         """
@@ -256,7 +247,9 @@ def register_callbacks(
         if meta is not None:
             target = PATH_BY_META.get(str(meta))
             if target:
-                log.info("Navigation via meta=%s vers %s (curve=%d)", meta, target, curve)
+                log.info(
+                    "Navigation via meta=%s vers %s (curve=%d)", meta, target, curve
+                )
                 return target
         # Fallback par index
         target = ZONE_PATH_MAP.get(curve)
@@ -314,12 +307,12 @@ ZONE_PATH_MAP: Dict[int, str] = {
     4: "/stabilite/noeud_instable",
     5: "/stabilite/selle",
     # Fallbacks si indices utilisés pour axes/parabole/point (à ajuster selon figure)
-    6: "/stabilite/noeud_stable_degenere",     # parabole gauche (exemple)
-    7: "/stabilite/noeud_instable_degenere",   # parabole droite (exemple)
-    8: "/stabilite/centre",                    # y line (centre)
-    9: "/stabilite/ligne_pe_stable",           # x left
-    10: "/stabilite/ligne_pe_instable",        # x right
-    11: "/stabilite/mouvement_uniforme",       # origin
+    6: "/stabilite/noeud_stable_degenere",  # parabole gauche (exemple)
+    7: "/stabilite/noeud_instable_degenere",  # parabole droite (exemple)
+    8: "/stabilite/centre",  # y line (centre)
+    9: "/stabilite/ligne_pe_stable",  # x left
+    10: "/stabilite/ligne_pe_instable",  # x right
+    11: "/stabilite/mouvement_uniforme",  # origin
 }
 
 # Mapping par meta — navigation robuste

@@ -1,14 +1,4 @@
-"""
-Rich API for the Poincaré diagram.
-
-Provides:
-- create_app() / get_app() for the Dash application
-- build_poincare_figure(), PoincareConfig
-- register_callbacks
-
-Lazy import of app.py avoids runpy warnings and keeps the package extensible
-for future visualizations (e.g. phase, bifurcation).
-"""
+"""App package: provides helpers to create/get the Dash app and re‑exports Poincaré utilities."""
 
 from __future__ import annotations
 
@@ -16,7 +6,6 @@ from importlib import import_module
 from typing import Any
 
 from .poincare.callbacks import register_callbacks
-# Re-export figure construction and callbacks directly (these are pure modules).
 from .poincare.figure import PoincareConfig, build_poincare_figure
 
 __version__ = "0.1.1"
@@ -38,7 +27,7 @@ def _load_app_module():
     Using import_module instead of a direct relative import avoids importing
     `src.app.app` during package initialization, preventing runpy warnings.
     """
-    # __name__ == 'src.app' here, so f"{__name__}.app" -> 'src.app.app'
+
     return import_module(f"{__name__}.app")
 
 

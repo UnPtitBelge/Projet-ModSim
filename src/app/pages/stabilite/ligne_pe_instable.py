@@ -1,17 +1,18 @@
-"""
-Page de stabilité: ligne de points d’équilibre instable
-
-Cette page est enregistrée automatiquement par Dash (multipage natif).
-URL sans accents et avec tirets pour cohérence avec la navigation par clic.
-
-"""
+"""Page Stabilité – Ligne de PE instable: enregistre /stabilite/ligne_pe_instable et construit le layout descriptif."""
 
 from __future__ import annotations
 
 import dash
-from dash import html
+from dash import dcc, html
 
+# from src.app.app import app  # removed to avoid circular import; use dash.get_app() instead
 from src.app.logging_setup import get_logger
+from src.app.stabilite.base_layout import build_stability_layout
+from src.app.stabilite.ligne_pe_instable.layout import (
+    register_callbacks as _register_callbacks,
+)
+from src.app.style.components.layout import app_container, page_text_container
+from src.app.style.text import TEXT
 
 log = get_logger(__name__)
 log.info("Enregistrement de la page /stabilite/ligne_pe_instable.")
@@ -25,52 +26,9 @@ dash.register_page(
     description="Informations sur la ligne de points d’équilibre instable (placeholder).",
 )
 
-log.debug("Construction du layout de la page ligne de points d’equilibre instable...")
+log.debug("Construction du layout de la page ligne de points d’équilibre instable...")
 
-layout = html.Div(
-    [
-        html.Small(
-            [
-                html.A("Stabilité", href="/stabilite"),
-                "  /  ",
-                html.Span("Ligne de points d’équilibre instable"),
-            ],
-            style={"color": "#666"},
-        ),
-        html.H2("Ligne de points d’equilibre instable"),
-        html.P(
-            "Aperçu des situations présentant un continuum de points d’équilibre instable."
-        ),
-        html.Div(
-            [
-                html.H3("À venir"),
-                html.P(
-                    [
-                        "Contenu détaillé en préparation. Consultez la ",
-                        html.A("roadmap du projet (PDF)", href="/docs/projet_2025_2026.pdf"),
-                        ".",
-                    ]
-                ),
-            ],
-            style={"marginTop": "12px"}
-        ),
-        html.Hr(),
-        html.Div(
-            [
-                html.A("← Retour au sommaire Stabilité", href="/stabilite"),
-                html.Span("  |  "),
-                html.A("Retour au diagramme de Poincaré", href="/poincare"),
-            ],
-            style={"marginTop": "10px"},
-        ),
-    ],
-    style={
-        "maxWidth": "900px",
-        "padding": "24px",
-        "fontFamily": "Arial, sans-serif",
-        "lineHeight": "1.45",
-        "fontSize": "0.95rem",
-    },
-)
+layout = build_stability_layout("ligne_pe_instable")
+_register_callbacks(dash.get_app())
 
-log.info("Layout de la page ligne de points d’equilibre instable construit.")
+log.info("Layout de la page ligne de points d’équilibre instable construit.")

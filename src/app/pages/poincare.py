@@ -1,18 +1,3 @@
-"""
-Page multipage native Dash : Diagramme de Poincaré.
-
-Cette page :
-- enregistre sa route ("/")
-- construit la figure (parabole + zones)
-- expose un layout avec les IDs attendus par les callbacks:
-    "poincare-graph", "output-temp-hover", "output-temp-click"
-
-Les callbacks ne sont pas définis ici : ils sont attachés via
-`register_callbacks` dans le module principal ou dans le module callbacks.
-
-Cette page utilise un cache interne pour éviter de recalculer la figure à chaque import.
-"""
-
 from __future__ import annotations
 
 import dash

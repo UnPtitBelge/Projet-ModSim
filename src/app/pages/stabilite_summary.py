@@ -61,7 +61,6 @@ _ZONES = [
         "href": "/stabilite/selle",
         "resume": "delta < 0 — racines réelles de signes opposés (selle, instabilité mixte).",
     },
-
     # Cas sur les axes et dégénérés (affichés même si contenus en préparation)
     {
         "label": "Centre",

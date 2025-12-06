@@ -1,25 +1,15 @@
 """
-Construit la figure Plotly du diagramme de Poincaré afin de reproduire fidèlement
-la figure de `src/temp/poincare_temp.py`:
-- 5 zones (polygones) aux mêmes formes et couleurs
-- Parabole et axes tracés avec les mêmes couleurs/épaisseurs
-- Axes masqués et marges nulles
+Figure Plotly du diagramme de Poincaré.
 
-IMPORTANT (indices de traces attendus par les callbacks):
-0  parabole (ligne) — conservé pour compatibilité avec callbacks existants
-1  foyer stable
-2  foyer instable
-3  noeud stable
-4  noeud instable
-5  selle
-6+ éléments décoratifs additionnels (axes, parabole en surcouche) — ignorés par les callbacks
+Indices de traces (pour callbacks):
+0: parabole (ligne)
+1: foyer stable
+2: foyer instable
+3: noeud stable
+4: noeud instable
+5: selle
 
-API principale: build_poincare_figure(config=None) -> plotly.graph_objs.Figure
-
-Logging:
-- DEBUG: paramètres de construction (bornes, échantillons)
-- INFO : nombre de traces finales
-- DEBUG: couleurs appliquées à chaque zone
+API: build_poincare_figure(config=None) -> plotly.graph_objs.Figure
 """
 
 from __future__ import annotations
@@ -30,6 +20,7 @@ import numpy as np
 import plotly.graph_objs as go
 
 from src.app.logging_setup import get_logger
+from src.app.style.plot.theme import FIGURE_THEME, apply_to_figure
 
 from .constants import N_SAMPLES, TAU_MAX, TAU_MIN
 
@@ -41,17 +32,17 @@ class PoincareConfig:
     tau_max: float = TAU_MAX
     samples: int = N_SAMPLES
 
-    # Styles (adaptés à poincare_temp.py)
-    line_width: int = 6
-    main_line_color: str = "rgba(100,149,237,0.9)"  # CornflowerBlue
-    # Couleurs des zones
-    color_upper_left: str = "rgba(255,165,0,0.3)"  # orange pastel
-    color_upper_right: str = "rgba(0,191,255,0.3)"  # bleu ciel transparent
-    color_lower_left: str = "rgba(255,182,193,0.4)"  # rose pastel
-    color_lower_right: str = "rgba(100,149,237,0.2)"  # bleu pastel
-    color_lower_axis: str = "rgba(211,211,211,0.5)"  # gris pastel
+    # Styles (thématisés)
+    line_width: int = FIGURE_THEME.line_width
+    main_line_color: str = FIGURE_THEME.line_color
+    # Couleurs des zones (thématisées)
+    color_upper_left: str = FIGURE_THEME.zone_upper_left
+    color_upper_right: str = FIGURE_THEME.zone_upper_right
+    color_lower_left: str = FIGURE_THEME.zone_lower_left
+    color_lower_right: str = FIGURE_THEME.zone_lower_right
+    color_lower_axis: str = FIGURE_THEME.zone_lower_axis
     # Mise en page
-    plot_bgcolor: str = "white"
+    plot_bgcolor: str = FIGURE_THEME.plot_bgcolor
     origin_gap_ratio: float = 2.0 / max(N_SAMPLES, 1)
 
 
@@ -249,6 +240,8 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
         margin=dict(l=0, r=0, t=0, b=0),
         hovermode="closest",
     )
+    # Appliquer le thème centralisé (couleurs, typos, etc.)
+    apply_to_figure(fig)
     log.info("Figure Poincaré construite avec %d traces.", len(fig.data))
     return fig
 

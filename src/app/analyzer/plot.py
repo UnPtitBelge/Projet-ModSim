@@ -1,12 +1,16 @@
+"""Minimal plotting utilities for analyzer: generic Plot and PoincarePlot."""
+
 import matplotlib.pyplot as plt
 
 
 class Plot:
+    """Base plotting wrapper around matplotlib (figure/axes, labels, show/save)."""
+
     def __init__(self, title="", xlabel="", ylabel=""):
         self.title = title
         self.xlabel = xlabel
         self.ylabel = ylabel
-        self.fig, self.ax = plt.sublots()
+        self.fig, self.ax = plt.subplots()
 
     def set_labels(self):
         self.ax.set_title(self.title)
@@ -21,6 +25,8 @@ class Plot:
 
 
 class PoincarePlot(Plot):
+    """Plot for Poincaré diagram using trace (tr) and determinant (det)."""
+
     def __init__(
         self, det, tr, title="Diagramme de Poincaré", xlabel="Tr A", ylabel="Det A"
     ):

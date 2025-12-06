@@ -1,27 +1,11 @@
-"""
-Page d'accueil (home) de l'application multipage Projet-ModSim.
-
-Cette page fournit :
-- Une introduction générale au diagramme de Poincaré et à l'analyse de stabilité
-- Des liens rapides vers les pages principales (Diagramme, Sommaire stabilité, À propos)
-- Un aperçu pédagogique des paramètres Tau (τ) et Delta (Δ)
-- Un chemin d'exploration conseillé
-
-Usage:
-    Dash découvre automatiquement cette page grâce à dash.register_page lorsque
-    l'application est lancée avec use_pages=True dans app.py.
-
-Note:
-    La route racine "/" est déjà utilisée par la page du diagramme de Poincaré.
-    Cette page d'accueil est donc exposée sous le chemin "/home".
-"""
-
 from __future__ import annotations
 
 import dash
 from dash import html
 
-# Enregistrement de la page (multipage)
+from src.app.style.components.layout import app_container, page_text_container
+from src.app.style.text import TEXT
+
 dash.register_page(
     __name__,
     path="/",
@@ -31,16 +15,21 @@ dash.register_page(
     order=-1,  # affiche l'accueil avant les autres pages dans la barre de navigation
 )
 
-# Contenu principal
+
 layout = html.Div(
     [
-        html.H1("Accueil – Analyse de stabilité de systèmes du second ordre"),
+        html.H1(
+            "Accueil – Analyse de stabilité de systèmes du second ordre",
+            style=TEXT["h1"],
+        ),
+        html.Div(
+            "$$\\lambda^2 + \\tau\\lambda + \\Delta = 0$$", style={"marginTop": "8px"}
+        ),
         html.P(
             (
                 "Bienvenue dans l'application d'exploration du diagramme de Poincaré. "
                 "Cet outil interactif permet de visualiser et comprendre les zones de stabilité "
-                "associées à l'équation caractéristique λ² + τλ + Δ = 0 pour des systèmes linéaires continus "
-                "d'ordre deux. Les paramètres τ (Tau) et Δ (Delta) structurent la dynamique des solutions."
+                "pour des systèmes linéaires continus d'ordre deux."
             )
         ),
         html.H2("Objectifs pédagogiques"),
@@ -50,11 +39,14 @@ layout = html.Div(
                     "Visualiser la séparation des régimes (oscillatoire, amorti, divergent)."
                 ),
                 html.Li(
-                    "Relier la position (τ, Δ) aux racines du polynôme caractéristique."
+                    "Relier la position $(\\tau, \\Delta)$ aux racines du polynôme caractéristique."
+                ),
+                html.Div(
+                    "$$\\text{Position sur le plan } (\\tau,\\Delta) \\Rightarrow \\text{ nature des racines } \\lambda$$"
                 ),
                 html.Li("Identifier rapidement les zones de stabilité locale."),
                 html.Li(
-                    "Explorer les effets des variations de τ et Δ via une représentation géométrique."
+                    "Explorer les effets des variations de $\\tau$ et $\\Delta$ via une représentation géométrique."
                 ),
             ]
         ),
@@ -68,13 +60,15 @@ layout = html.Div(
                 html.Li(html.A("À propos du projet", href="/about")),
             ]
         ),
-        html.H2("Tau (τ) et Delta (Δ) – rappel"),
+        html.H2("Rappel des paramètres"),
+        html.Div("$$\\lambda^2 + \\tau\\lambda + \\Delta = 0$$"),
+        html.Div("$$\\Delta = \\tau^2/4$$"),
         html.P(
             (
-                "Dans l'équation λ² + τλ + Δ = 0, les racines λ déterminent la nature de la réponse temporelle. "
-                "La parabole Δ = τ²/4 sépare les régimes à racines réelles (sous) des régimes à racines complexes "
-                "(au-dessus). Le signe de τ contrôle la partie réelle des racines complexes (amortissement vs divergence). "
-                "Le signe de Δ influence la nature 'selle' (Δ < 0) ou ‘non oscillatoire’ (Δ > 0, sous la parabole)."
+                "Les racines $\\lambda$ déterminent la nature de la réponse temporelle. "
+                "La relation ci-dessus sépare les régimes à racines réelles (sous) et complexes (au-dessus). "
+                "Le signe de $\\tau$ contrôle la partie réelle (amortissement vs divergence) et "
+                "le signe de $\\Delta$ influence la nature 'selle' ($\\Delta < 0$) ou ‘non oscillatoire’ ($\\Delta > 0$)."
             )
         ),
         html.H2("Chemin recommandé"),
@@ -129,17 +123,12 @@ layout = html.Div(
         ),
     ],
     style={
-        "maxWidth": "960px",
+        **app_container(),
+        **page_text_container(960),
         "padding": "32px 36px",
-        "fontFamily": "Arial, sans-serif",
-        "lineHeight": "1.5",
-        "fontSize": "0.95rem",
     },
 )
 
 
 def get_home_layout():
-    """
-    Fournit le layout de la page d'accueil (utilitaire externe éventuel).
-    """
     return layout

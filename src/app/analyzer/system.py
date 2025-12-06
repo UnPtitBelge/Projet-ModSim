@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class System:
-    """Class that define a system to be analyzed. It can be linear or non-linear and continuous or discrete."""
+    """Container for a dynamical system to analyze (linear/non-linear, continuous/discrete)."""
 
     def __init__(
         self,
@@ -22,7 +22,7 @@ class System:
         self.initial_conditions = initial_conditions
 
     def calculate_equilibrium_points(self):
-        """Calculate the equilibrium points of the system."""
+        """Compute equilibrium points (dx/dt = 0) based on defined equations."""
         # Placeholder for equilibrium point calculation logic
         print("Calculating equilibrium points...")
         # Implement actual calculation here
@@ -30,7 +30,7 @@ class System:
         return equilibrium_points
 
     def phase_diagram(self):
-        """Generate the phase diagram of the system."""
+        """Generate phase diagram data from the system equations."""
         # Placeholder for phase diagram generation logic
         print("Generating phase diagram...")
         # Implement actual phase diagram generation here
@@ -38,7 +38,7 @@ class System:
         return phase_diagram_data
 
     def simulate(self, time_span: tuple[float, float], time_steps: int):
-        """Simulate the system over a given time span."""
+        """Simulate trajectories over time_span with time_steps resolution."""
         # Placeholder for simulation logic
         print(
             f"Simulating system from {time_span[0]} to {time_span[1]} with {time_steps} steps..."
@@ -54,15 +54,15 @@ class System:
         return self.__str__()
 
     def add_equation(self, equation: str):
-        """Add an equation to the system."""
+        """Append an equation to the model."""
         self.equations.append(equation)
 
     def set_initial_conditions(self, initial_conditions: list[float]):
-        """Set the initial conditions for the system."""
+        """Set initial state vector."""
         self.initial_conditions = initial_conditions
 
     def summary(self):
-        """Print a summary of the system."""
+        """Print a concise summary of configuration and parameters."""
         print("System Summary:")
         print(f"  Linear: {self.is_linear}")
         print(f"  Continuous: {self.is_continuous}")
