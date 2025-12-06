@@ -17,7 +17,7 @@ Les sous-pages attendues (doivent déjà être présentes):
 from __future__ import annotations
 
 import dash
-from dash import html
+from dash import dcc, html
 
 from src.app.logging_setup import get_logger
 
@@ -39,58 +39,109 @@ _ZONES = [
     {
         "label": "Foyer stable",
         "href": "/stabilite/foyer_stable",
-        "resume": "tau > 0, delta > tau^2/4 — racines complexes, partie réelle négative (stable oscillatoire amorti).",
+        "resume": html.Ul([
+            html.Li("$\\tau$ > 0"),
+            html.Li("$\\Delta$ > $\\tau^2/4$"),
+            html.Li("Racines complexes"),
+            html.Li("Partie réelle négative"),
+            html.Li("Comportement: stable oscillatoire amorti"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
     {
         "label": "Foyer instable",
         "href": "/stabilite/foyer_instable",
-        "resume": "tau < 0, delta > tau^2/4 — racines complexes, partie réelle positive (instable oscillatoire).",
+        "resume": html.Ul([
+            html.Li("$\\tau$ < 0"),
+            html.Li("$\\Delta$ > $\\tau^2/4$"),
+            html.Li("Racines complexes"),
+            html.Li("Partie réelle positive"),
+            html.Li("Comportement: instable oscillatoire"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
     {
         "label": "Noeud stable",
         "href": "/stabilite/noeud_stable",
-        "resume": "tau > 0, 0 < delta < tau^2/4 — deux racines réelles négatives (stable non oscillatoire).",
+        "resume": html.Ul([
+            html.Li("$\\tau$ > 0"),
+            html.Li("0 < $\\Delta$ < $\\tau^2/4$"),
+            html.Li("Deux racines réelles négatives"),
+            html.Li("Stable non oscillatoire"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
     {
         "label": "Noeud instable",
         "href": "/stabilite/noeud_instable",
-        "resume": "tau < 0, 0 < delta < tau^2/4 — deux racines réelles positives (instable non oscillatoire).",
+        "resume": html.Ul([
+            html.Li("$\\tau$ < 0"),
+            html.Li("0 < $\\Delta$ < $\\tau^2/4$"),
+            html.Li("Deux racines réelles positives"),
+            html.Li("Instable non oscillatoire"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
     {
         "label": "Selle",
         "href": "/stabilite/selle",
-        "resume": "delta < 0 — racines réelles de signes opposés (selle, instabilité mixte).",
+        "resume": html.Ul([
+            html.Li("$\\Delta$ < 0"),
+            html.Li("Racines réelles de signes opposés"),
+            html.Li("Instabilité mixte"),
+            html.Li("Selle"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
     # Cas sur les axes et dégénérés (affichés même si contenus en préparation)
     {
         "label": "Centre",
         "href": "/stabilite/centre",
-        "resume": "tau = 0, delta > 0 — racines purement imaginaires (oscillations non amorties).",
+        "resume": html.Ul([
+            html.Li("$\\tau$ = 0"),
+            html.Li("$\\Delta$ > 0"),
+            html.Li("Racines purement imaginaires"),
+            html.Li("Oscillations non amorties"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
     {
         "label": "Mouvement uniforme",
         "href": "/stabilite/mouvement_uniforme",
-        "resume": "tau = 0, delta = 0 — racines nulles (mouvement à vitesse constante, solution polynomiale).",
+        "resume": html.Ul([
+            html.Li("$\\tau$ = 0"),
+            html.Li("$\\Delta$ = 0"),
+            html.Li("Racines nulles"),
+            html.Li("Mouvement à vitesse constante et solution polynomiale"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
     {
         "label": "Noeud stable dégénéré",
         "href": "/stabilite/noeud_stable_degenere",
-        "resume": "tau^2 = 4·delta avec tau > 0 — racines réelles égales négatives (stabilité, réponse (C1 + C2·t)·e^{λt}).",
+        "resume": html.Ul([
+            html.Li("$\\tau^2 = 4\\cdot\\Delta$ avec $\\tau$ > 0"),
+            html.Li("Racines réelles égales négatives"),
+            html.Li("Stabilité = (C1 + C2·t)·e^{λt}"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
     {
         "label": "Noeud instable dégénéré",
         "href": "/stabilite/noeud_instable_degenere",
-        "resume": "tau^2 = 4·delta avec tau < 0 — racines réelles égales positives (instabilité, réponse (C1 + C2·t)·e^{λt}).",
+        "resume": html.Ul([
+            html.Li("$\\tau^2 = 4\\cdot\\Delta$ avec $\\tau$ < 0"),
+            html.Li("Racines réelles égales positives"),
+            html.Li("Instabilité = (C1 + C2·t)·e^{λt}"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
     {
         "label": "Ligne de points d’équilibre stable",
         "href": "/stabilite/ligne_pe_stable",
-        "resume": "Continuum de points d’équilibre avec stabilité locale (contenu en préparation).",
+        "resume": html.Ul([
+            html.Li("Continuum de points d’équilibre avec stabilité locale"),
+            html.Li("(contenu en préparation)"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
     {
         "label": "Ligne de points d’équilibre instable",
         "href": "/stabilite/ligne_pe_instable",
-        "resume": "Continuum de points d’équilibre avec instabilité locale (contenu en préparation).",
+        "resume": html.Ul([
+            html.Li("Continuum de points d’équilibre avec instabilité locale"),
+            html.Li("(contenu en préparation)"),
+        ], style={"margin": "4px 0", "paddingLeft": "20px"}),
     },
 ]
 
