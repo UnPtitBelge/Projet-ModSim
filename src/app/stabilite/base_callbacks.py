@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional
 
 import plotly.graph_objects as go
-from dash import Dash, Input, Output, State, html
+from dash import Dash, Input, Output, State, html, no_update
 
 from .base_layout import stability_ids
 
@@ -63,14 +63,18 @@ def register_stability_callbacks(app: Dash, page_key: str) -> None:
         Input(ids["explication"], "id"),
         State(ids["graph"], "figure"),
         State(ids["phase"], "figure"),
+        State(ids["explication"], "children"),
         prevent_initial_call=False,
     )
     def _update_explication(
         _explication_id: Optional[str],
         graph_fig: Optional[go.Figure],
         phase_fig: Optional[go.Figure],
+        existing_children,
     ):
-        # Placeholder strict nécessaire
-        return [
-            html.P("à compléter"),
-        ]
+        # Preserve pre-built pedagogic content when already provided in layout
+        if existing_children:
+            return no_update
+
+        # Placeholder strict nécessaire si rien n'est fourni
+        return [html.P("à compléter")]

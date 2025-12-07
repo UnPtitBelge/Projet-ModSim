@@ -28,7 +28,7 @@ def stability_ids(page_key: str) -> Dict[str, str]:
     }
 
 
-def build_stability_layout(page_key: str) -> html.Div:
+def build_stability_layout(page_key: str, layout_pedagogic_fn=None) -> html.Div:
     """
     Create a minimal base layout for stability pages with three sections:
     - Graphique interactif (dcc.Graph)
@@ -36,9 +36,15 @@ def build_stability_layout(page_key: str) -> html.Div:
     - Explication pédagogique (html.Div)
 
     The function only provides the strict necessary placeholders, keeping code simple.
+    If layout_pedagogic_fn is provided, it will be used to populate the pedagogic section directly.
     """
     ids = stability_ids(page_key)
     title = page_key.capitalize()
+
+    # Determine pedagogic content
+    pedagogic_content = html.Div(["à compléter"])
+    if layout_pedagogic_fn is not None:
+        pedagogic_content = layout_pedagogic_fn()
 
     return html.Div(
         [
@@ -60,7 +66,7 @@ def build_stability_layout(page_key: str) -> html.Div:
             html.Div(
                 [
                     html.H3("Explication pédagogique"),
-                    html.Div(id=ids["explication"], children=["à compléter"]),
+                    html.Div(pedagogic_content, id=ids["explication"]),
                 ],
                 style={"marginTop": "12px"},
             ),

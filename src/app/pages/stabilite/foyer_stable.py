@@ -6,8 +6,9 @@ from dash import dcc, html
 # from src.app.app import app  # removed to avoid circular import; use dash.get_app() instead
 from src.app.logging_setup import get_logger
 from src.app.stabilite.base_layout import build_stability_layout
-from src.app.stabilite.foyer_stable.layout import (
+from src.app.stabilite.foyer_stable import (
     register_callbacks as _register_callbacks,
+    layout_pedagogic,
 )
 
 log = get_logger(__name__)
@@ -23,7 +24,7 @@ dash.register_page(
 )
 
 log.debug("Construction du layout de la page foyer stable...")
-layout = build_stability_layout("foyer_stable")
+layout = build_stability_layout("foyer_stable", layout_pedagogic)
 _register_callbacks(dash.get_app())
 
 log.info("Layout de la page foyer stable construit.")

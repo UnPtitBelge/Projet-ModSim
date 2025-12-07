@@ -8,8 +8,9 @@ from dash import html
 # from src.app.app import app  # removed to avoid circular import; use dash.get_app() instead
 from src.app.logging_setup import get_logger
 from src.app.stabilite.base_layout import build_stability_layout
-from src.app.stabilite.mouvement_uniforme.layout import (
+from src.app.stabilite.mouvement_uniforme import (
     register_callbacks as _register_callbacks,
+    layout_pedagogic,
 )
 
 log = get_logger(__name__)
@@ -26,7 +27,7 @@ dash.register_page(
 
 log.debug("Construction du layout de la page mouvement uniforme...")
 
-layout = build_stability_layout("mouvement_uniforme")
+layout = build_stability_layout("mouvement_uniforme", layout_pedagogic)
 _register_callbacks(dash.get_app())
 
 log.info("Layout de la page mouvement uniforme construit.")
