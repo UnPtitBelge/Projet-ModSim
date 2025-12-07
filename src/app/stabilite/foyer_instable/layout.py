@@ -1,6 +1,7 @@
 from __future__ import annotations
+from typing import Optional
 
-from dash import html  # type: ignore
+from dash import html, Input, Output  # type: ignore
 
 from src.app.stabilite.base_callbacks import register_stability_callbacks
 from src.app.stabilite.base_layout import build_stability_layout, stability_ids
@@ -41,4 +42,31 @@ def register_callbacks(app) -> None:
     Enregistre les callbacks de base pour remplir les placeholders de la page Centre.
     Strict nécessaire: figures et explication "à compléter".
     """
-    register_stability_callbacks(app, PAGE_KEY)
+    ids = stability_ids(PAGE_KEY)
+
+    @app.callback(
+        Output(ids["explication"], "children"),
+        Input(ids["explication"], "id"),
+        prevent_initial_call=False,
+    )
+    def _update_explication(_explication_id: str):
+        return [
+            html.P("Un foyer instable est un point d'équilibre où les trajectoires s'éloignent en suivant des spirales autour de celui-ci lorsqu'une petite perturbation se produit."),
+            html.H4("Exemple de la vie réelle :"),
+            html.Ul(
+                [
+                    html.Li("Le pendule inversé: Lorsqu'on place un pendule en position verticale avec le poids vers le haut, cette position est instable et lorsqu'on le perturbe légèrement, il bascule et s'éloigne de cette position d'équilibre instable."),
+                    html.Li("La balle sur un sommet: Une balle placée au sommet d'une colline est en équilibre instable. La moindre perturbation la fait rouler vers le bas, s'éloignant ainsi de sa position d'équilibre."),
+                ]
+            ),
+            html.H4("Caractéristiques mathématiques:"),
+            html.Ul(
+                [
+                    html.Li("$\\tau$ < 0"),
+                    html.Li("$\\Delta$ > $\\tau^2/4$"),
+                    html.Li("Racines complexes"),
+                    html.Li("Partie réelle positive"),
+                    html.Li("Comportement: instable oscillatoire"),
+                ]
+            ),
+        ]
