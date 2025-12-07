@@ -51,26 +51,21 @@ def register_callbacks(app) -> None:
     )
     def _update_explication(_explication_id: str):
         return [
-            html.P(
-                ""
-            ),
+            html.P("Etat d’équilibre asymptotiquement stable où les trajectoires convergent vers le point fixe sans oscillations."),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(
                 [
-                    html.Li(""
-                    ),
-                    html.Li(""
-                    ),
+                    html.Li("Une bille placée au bord d'une cuvette, qui va rouler vers le fond de celle-ci et s'y stabiliser sans oscillations lorsqu'on la perturbe légèrement, le fond de la cuvette représentant un noeud stable."),
+                    html.Li("Le cruise control d'une voiture : Lorsqu'on active le cruise control, le système ajuste automatiquement la vitesse de la voiture pour maintenir la vitesse cible constante. Si la voiture ralentit légèrement, le système augmente la puissance pour revenir à la vitesse définie, et vice versa, assurant ainsi une stabilité sans oscillations autour de la vitesse choisie."),
                 ]
             ),
             html.H4("Caractéristiques mathématiques:"),
             html.Ul(
                 [
-                    html.Li(""),
-                    html.Li(""),
-                    html.Li(""),
-                    html.Li(""),
-                    html.Li(""),
+                    html.Li("$\\tau$ > 0"),
+                    html.Li("0 < $\\Delta$ < $\\tau^2/4$"),
+                    html.Li("Deux racines réelles négatives"),
+                    html.Li("Stable non oscillatoire"),
                 ]
             ),
         ]

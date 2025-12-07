@@ -51,12 +51,18 @@ def register_callbacks(app) -> None:
     )
     def _update_explication(_explication_id: str):
         return [
-            html.P("Un foyer instable est un point d'équilibre où les trajectoires s'éloignent en suivant des spirales autour de celui-ci lorsqu'une petite perturbation se produit."),
+            html.P(
+                "Un foyer instable est un point d'équilibre où les trajectoires s'éloignent en suivant des spirales autour de celui-ci lorsqu'une petite perturbation se produit."
+            ),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(
                 [
-                    html.Li("Le pendule inversé: Lorsqu'on place un pendule en position verticale avec le poids vers le haut, cette position est instable et lorsqu'on le perturbe légèrement, il bascule et s'éloigne de cette position d'équilibre instable."),
-                    html.Li("La balle sur un sommet: Une balle placée au sommet d'une colline est en équilibre instable. La moindre perturbation la fait rouler vers le bas, s'éloignant ainsi de sa position d'équilibre."),
+                    html.Li(
+                        "Le pendule inversé: Lorsqu'on place un pendule en position verticale avec le poids vers le haut, cette position est instable et lorsqu'on le perturbe légèrement, il bascule et s'éloigne de cette position d'équilibre instable."
+                    ),
+                    html.Li(
+                        "Le larsen acoustique: Est un équilibre instable quand un microphone capte le son d'un haut-parleur et que celui-ci est trop proche mais que le son n'est pas assez fort pour perturber l'équilibre. Cependant, dès qu'une petite perturbation augmente le volume, le son devient de plus en plus fort, s'éloignant ainsi de l'état initial instable."
+                    ),
                 ]
             ),
             html.H4("Caractéristiques mathématiques:"),
