@@ -88,10 +88,114 @@ def section_card(padding_px: int = 18) -> Dict[str, str]:
     }
 
 
+def side_by_side_container(width_percent: int = 48, margin_right_percent: int = 4) -> Dict[str, str]:
+    """Container for placing elements side-by-side (e.g., two graphs or two cards)."""
+    return {
+        "width": f"{width_percent}%",
+        "display": "inline-block",
+        "marginRight": f"{margin_right_percent}%",
+        "verticalAlign": "top",
+    }
+
+
+def side_by_side_last(width_percent: int = 48) -> Dict[str, str]:
+    """Last element in side-by-side layout (no right margin)."""
+    return {
+        "width": f"{width_percent}%",
+        "display": "inline-block",
+        "verticalAlign": "top",
+    }
+
+
+def code_display(padding_px: int = 12) -> Dict[str, str]:
+    """Container for code or preformatted text display."""
+    return {
+        "padding": f"{padding_px}px",
+        "backgroundColor": PALETTE.bg,
+        "borderRadius": "8px",
+        "border": f"1px solid {PALETTE.border}",
+        "fontFamily": "monospace",
+        "fontSize": "0.9rem",
+    }
+
+
+def nav_button(kind: str = "primary", padding_px: int = 12, padding_horizontal: int = 24) -> Dict[str, str]:
+    """
+    Navigation button style (for html.A links styled as buttons).
+    
+    Args:
+        kind: "primary" (filled) or "secondary" (outlined)
+        padding_px: vertical padding
+        padding_horizontal: horizontal padding
+    """
+    if kind == "primary":
+        return {
+            "display": "inline-block",
+            "padding": f"{padding_px}px {padding_horizontal}px",
+            "backgroundColor": PALETTE.primary,
+            "color": PALETTE.surface,
+            "textDecoration": "none",
+            "borderRadius": "8px",
+            "fontWeight": "600",
+            "marginRight": "12px",
+        }
+    else:  # secondary
+        return {
+            "display": "inline-block",
+            "padding": f"{padding_px}px {padding_horizontal}px",
+            "backgroundColor": PALETTE.surface,
+            "color": PALETTE.primary,
+            "textDecoration": "none",
+            "borderRadius": "8px",
+            "fontWeight": "600",
+            "border": f"2px solid {PALETTE.primary}",
+            "marginRight": "12px",
+        }
+
+
+def spacing_section(spacing_type: str = "top") -> Dict[str, str]:
+    """
+    Standardized spacing for sections.
+    
+    Args:
+        spacing_type: "top", "bottom", "both", "small"
+    """
+    spacing_map = {
+        "top": {"marginTop": "24px"},
+        "bottom": {"marginBottom": "24px"},
+        "both": {"marginTop": "24px", "marginBottom": "24px"},
+        "small": {"marginTop": "16px"},
+    }
+    return spacing_map.get(spacing_type, {})
+
+
+def back_link() -> Dict[str, str]:
+    """Back/return link style."""
+    return {
+        "marginBottom": "16px",
+        "padding": "8px 12px",
+        "backgroundColor": PALETTE.bg,
+        "color": PALETTE.primary,
+        "textDecoration": "none",
+        "borderRadius": "8px",
+        "fontSize": f"{TYPOGRAPHY.size_sm}rem",
+        "fontWeight": str(TYPOGRAPHY.weight_semibold),
+        "border": f"1px solid {PALETTE.border}",
+        "transition": "all 0.2s ease",
+        "display": "inline-block",
+    }
+
+
 __all__ = [
     "app_container",
     "content_wrapper",
     "page_text_container",
     "graph_container",
     "section_card",
+    "side_by_side_container",
+    "side_by_side_last",
+    "code_display",
+    "nav_button",
+    "spacing_section",
+    "back_link",
 ]

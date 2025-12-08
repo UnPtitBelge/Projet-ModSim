@@ -5,7 +5,10 @@ from typing import Dict
 from dash import Input, Output, callback, dcc, html
 
 from src.app.style.components.layout import (content_wrapper, graph_container,
-                                             section_card)
+                                             section_card, back_link, 
+                                             side_by_side_container, side_by_side_last,
+                                             spacing_section, nav_button, code_display,
+                                             app_container)
 from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
 from src.app.style.typography import TYPOGRAPHY
@@ -64,21 +67,6 @@ def build_stability_layout(
     if layout_pedagogic_fn is not None:
         pedagogic_content = layout_pedagogic_fn()
 
-    # Back link style
-    back_link_style = {
-        "display": "inline-block",
-        "marginBottom": "16px",
-        "padding": "8px 12px",
-        "backgroundColor": PALETTE.bg,
-        "color": PALETTE.primary,
-        "textDecoration": "none",
-        "borderRadius": "8px",
-        "fontSize": f"{TYPOGRAPHY.size_sm}rem",
-        "fontWeight": str(TYPOGRAPHY.weight_semibold),
-        "border": f"1px solid {PALETTE.border}",
-        "transition": "all 0.2s ease",
-    }
-
     return html.Div(
         [
             # Back link to Poincaré
@@ -87,7 +75,7 @@ def build_stability_layout(
                     html.A(
                         "← Retour au diagramme de Poincaré",
                         href="/poincare",
-                        style=back_link_style,
+                        style=back_link(),
                     )
                 ],
                 style={"marginBottom": "16px"},
@@ -143,23 +131,15 @@ def build_stability_layout(
                             html.Div(
                                 id=ids["ode_display"],
                                 style={
-                                    "padding": "12px",
-                                    "backgroundColor": PALETTE.bg,
-                                    "borderRadius": "8px",
-                                    "border": f"1px solid {PALETTE.border}",
+                                    **code_display(),
                                     "marginTop": "0.5rem",
                                     "marginBottom": "1rem",
-                                    "fontFamily": "monospace",
-                                    "fontSize": "0.9rem",
                                 },
                             ),
                             html.Div(
                                 id=ids["eigenvalue_display"],
                                 style={
-                                    "padding": "12px",
-                                    "backgroundColor": PALETTE.bg,
-                                    "borderRadius": "8px",
-                                    "border": f"1px solid {PALETTE.border}",
+                                    **code_display(),
                                     "marginTop": "1rem",
                                 },
                             ),
@@ -187,12 +167,7 @@ def build_stability_layout(
                                 style=section_card(),
                             ),
                         ],
-                        style={
-                            "width": "48%",
-                            "display": "inline-block",
-                            "marginRight": "4%",
-                            "verticalAlign": "top",
-                        },
+                        style=side_by_side_container(),
                     ),
                     # Diagramme de phase
                     html.Div(
@@ -210,14 +185,10 @@ def build_stability_layout(
                                 style=section_card(),
                             ),
                         ],
-                        style={
-                            "width": "48%",
-                            "display": "inline-block",
-                            "verticalAlign": "top",
-                        },
+                        style=side_by_side_last(),
                     ),
                 ],
-                style={"marginTop": "24px"},
+                style=spacing_section("top"),
             ),
             # Section: Explication pédagogique
             html.Div(
@@ -235,37 +206,22 @@ def build_stability_layout(
                             html.A(
                                 "→ Accéder au diagramme de Poincaré",
                                 href="/poincare",
-                                style={
-                                    "display": "inline-block",
-                                    "padding": "12px 24px",
-                                    "backgroundColor": PALETTE.primary,
-                                    "color": PALETTE.surface,
-                                    "textDecoration": "none",
-                                    "borderRadius": "8px",
-                                    "fontWeight": "600",
-                                    "marginRight": "12px",
-                                },
+                                style=nav_button("primary"),
                             ),
                             html.A(
                                 "→ Voir le sommaire de stabilité",
                                 href="/stabilite",
-                                style={
-                                    "display": "inline-block",
-                                    "padding": "12px 24px",
-                                    "backgroundColor": PALETTE.surface,
-                                    "color": PALETTE.primary,
-                                    "textDecoration": "none",
-                                    "borderRadius": "8px",
-                                    "fontWeight": "600",
-                                    "border": f"2px solid {PALETTE.primary}",
-                                },
+                                style=nav_button("secondary"),
                             ),
                         ],
-                        style={"marginTop": "24px"},
+                        style=spacing_section("top"),
                     ),
                 ],
                 style=section_card(),
             ),
         ],
-        style=content_wrapper(),
+        style={
+            **app_container(),
+            **content_wrapper(),
+        },
     )

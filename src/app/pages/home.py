@@ -4,7 +4,7 @@ import dash
 from dash import html
 
 from src.app.style.components.layout import (app_container, content_wrapper,
-                                             section_card)
+                                             section_card, nav_button, spacing_section)
 from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
 
@@ -158,33 +158,15 @@ layout = html.Div(
                         html.A(
                             "→ Accéder au diagramme de Poincaré",
                             href="/poincare",
-                            style={
-                                "display": "inline-block",
-                                "padding": "12px 24px",
-                                "backgroundColor": PALETTE.primary,
-                                "color": PALETTE.surface,
-                                "textDecoration": "none",
-                                "borderRadius": "8px",
-                                "fontWeight": "600",
-                                "marginRight": "12px",
-                            },
+                            style=nav_button("primary"),
                         ),
                         html.A(
                             "→ Voir le sommaire",
                             href="/stabilite",
-                            style={
-                                "display": "inline-block",
-                                "padding": "12px 24px",
-                                "backgroundColor": PALETTE.surface,
-                                "color": PALETTE.primary,
-                                "textDecoration": "none",
-                                "borderRadius": "8px",
-                                "fontWeight": "600",
-                                "border": f"2px solid {PALETTE.primary}",
-                            },
+                            style=nav_button("secondary"),
                         ),
                     ],
-                    style={"marginTop": "24px"},
+                    style=spacing_section("top"),
                 ),
             ],
             style=section_card(),

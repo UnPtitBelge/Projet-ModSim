@@ -1,7 +1,7 @@
 from dash import dcc, html
 
 from src.app.logging_setup import get_logger
-from src.app.style.components.layout import app_container, graph_container
+from src.app.style.components.layout import graph_container, section_card
 from src.app.style.text import TEXT
 
 
@@ -10,9 +10,14 @@ def build_layout(figure):
     log.debug("Début construction du layout du diagramme de Poincaré.")
     layout = html.Div(
         [
-            html.H2(
+            html.Div(
+                [
+            html.H1(
                 "Analyse et découverte de la notion de stabilité pour des systèmes linéaires continus d'ordre deux",
-                style=TEXT["h2"],
+                style=TEXT["h1"],
+            ),
+                ],
+                style=section_card(),
             ),
             html.Div(
                 [
@@ -48,15 +53,9 @@ def build_layout(figure):
                         style={"marginTop": "8px", **TEXT["muted"]},
                     ),
                 ],
-                style={
-                    "maxWidth": "860px",
-                },
+                style=section_card(),
             ),
         ],
-        style={
-            **app_container(),
-            "padding": "24px",
-        },
     )
     log.info("Layout du diagramme de Poincaré construit.")
     return layout

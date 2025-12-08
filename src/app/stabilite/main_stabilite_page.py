@@ -14,8 +14,10 @@ import plotly.graph_objects as go
 from dash import Dash, Input, Output, State, dcc, html
 from scipy.integrate import odeint
 
-from src.app.style.components.layout import (content_wrapper, graph_container,
-                                             section_card)
+from src.app.style.components.layout import (app_container, content_wrapper, graph_container,
+                                             section_card, side_by_side_container,
+                                             side_by_side_last, spacing_section,
+                                             nav_button)
 from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
 from src.app.style.typography import TYPOGRAPHY
@@ -195,12 +197,7 @@ def build_layout() -> html.Div:
                                 style=section_card(),
                             ),
                         ],
-                        style={
-                            "width": "48%",
-                            "display": "inline-block",
-                            "marginRight": "4%",
-                            "verticalAlign": "top",
-                        },
+                        style=side_by_side_container(),
                     ),
                     # Diagramme de phase
                     html.Div(
@@ -221,14 +218,10 @@ def build_layout() -> html.Div:
                                 style=section_card(),
                             ),
                         ],
-                        style={
-                            "width": "48%",
-                            "display": "inline-block",
-                            "verticalAlign": "top",
-                        },
+                        style=side_by_side_last(),
                     ),
                 ],
-                style={"marginTop": "24px"},
+                style=spacing_section("top"),
             ),
             # Sections pédagogiques côte à côte
             html.Div(
@@ -329,10 +322,6 @@ def build_layout() -> html.Div:
                         ],
                         style={
                             **section_card(),
-                            "width": "48%",
-                            "display": "inline-block",
-                            "verticalAlign": "top",
-                            "marginRight": "2%",
                         },
                     ),
                     # Section pédagogique : Impact des paramètres
@@ -430,9 +419,6 @@ def build_layout() -> html.Div:
                         ],
                         style={
                             **section_card(),
-                            "width": "48%",
-                            "display": "inline-block",
-                            "verticalAlign": "top",
                         },
                     ),
                 ],
@@ -659,25 +645,19 @@ def build_layout() -> html.Div:
                             html.A(
                                 "→ Accéder au diagramme de Poincaré",
                                 href="/poincare",
-                                style={
-                                    "display": "inline-block",
-                                    "padding": "12px 24px",
-                                    "backgroundColor": PALETTE.primary,
-                                    "color": PALETTE.surface,
-                                    "textDecoration": "none",
-                                    "borderRadius": "8px",
-                                    "fontWeight": "600",
-                                    "marginRight": "12px",
-                                },
+                                style=nav_button("primary"),
                             ),
                         ],
-                        style={"marginTop": "24px"},
+                        style=spacing_section("top"),
                     ),
                 ],
                 style=section_card(),
             ),
         ],
-        style=content_wrapper(),
+        style={
+            **app_container(),
+            **content_wrapper(),
+        },
     )
 
 
