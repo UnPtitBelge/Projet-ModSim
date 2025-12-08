@@ -31,11 +31,11 @@ def get_ids() -> dict[str, str]:
 def create_figure() -> go.Figure:
     """
     Crée le diagramme de phase pour un mouvement uniforme.
-    
+
     Exemple: a=0, b=1, c=0, d=0
     Système: dx₁/dt = x₂
              dx₂/dt = 0
-    
+
     Cela représente un mouvement uniforme: la dérivée seconde est nulle,
     donc la trajectoire est une droite (mouvement à vitesse constante).
     """

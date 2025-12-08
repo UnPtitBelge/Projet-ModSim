@@ -178,31 +178,31 @@ layout = html.Div(
         html.Div(
             [
                 html.A(
-                    "← Retour à l'accueil",
-                    href="/",
-                    style={
-                        "display": "inline-block",
-                        "padding": "10px 20px",
-                        "backgroundColor": PALETTE.surface,
-                        "color": PALETTE.primary,
-                        "textDecoration": "none",
-                        "borderRadius": "8px",
-                        "border": f"2px solid {PALETTE.primary}",
-                        "fontWeight": "600",
-                        "marginRight": "12px",
-                    },
-                ),
-                html.A(
-                    "→ Accéder au diagramme",
+                    "→ Accéder au diagramme de Poincaré",
                     href="/poincare",
                     style={
                         "display": "inline-block",
-                        "padding": "10px 20px",
+                        "padding": "12px 24px",
                         "backgroundColor": PALETTE.primary,
                         "color": PALETTE.surface,
                         "textDecoration": "none",
                         "borderRadius": "8px",
                         "fontWeight": "600",
+                        "marginRight": "12px",
+                    },
+                ),
+                html.A(
+                    "→ Voir le sommaire de stabilité",
+                    href="/stabilite",
+                    style={
+                        "display": "inline-block",
+                        "padding": "12px 24px",
+                        "backgroundColor": PALETTE.surface,
+                        "color": PALETTE.primary,
+                        "textDecoration": "none",
+                        "borderRadius": "8px",
+                        "fontWeight": "600",
+                        "border": f"2px solid {PALETTE.primary}",
                     },
                 ),
             ],

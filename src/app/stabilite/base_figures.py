@@ -82,14 +82,14 @@ def _build_phase_diagram_figure(
 ) -> go.Figure:
     """
     Internal helper: constructs the phase diagram figure with trajectories and vector field.
-    
+
     Système: dx₁/dt = a*x₁ + b*x₂
              dx₂/dt = c*x₁ + d*x₂
-    
+
     Args:
         a, b, c, d: Matrix coefficients
         title: Figure title
-        
+
     Returns:
         Plotly figure with phase portrait
     """
@@ -277,7 +277,7 @@ def _build_phase_diagram_figure(
         xaxis_title="x₁",
         yaxis_title="x₂",
         hovermode="closest",
-        width=800,
+        width=None,
         height=700,
         xaxis=dict(range=x_range, scaleanchor="y", scaleratio=1),
         yaxis=dict(range=y_range, scaleanchor="x", scaleratio=1),
@@ -393,8 +393,8 @@ def create_system_graph(
         xaxis_title="Temps (t)",
         yaxis_title="Valeur",
         hovermode="x unified",
-        width=800,
-        height=500,
+        width=None,
+        height=700,
         template="plotly_white",
         legend=dict(x=0.02, y=0.98),
     )

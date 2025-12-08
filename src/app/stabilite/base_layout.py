@@ -200,6 +200,45 @@ def build_stability_layout(
                 ],
                 style=section_card(),
             ),
+            # Section: Navigation
+            html.Div(
+                [
+                    html.Div(
+                        [
+                            html.A(
+                                "→ Accéder au diagramme de Poincaré",
+                                href="/poincare",
+                                style={
+                                    "display": "inline-block",
+                                    "padding": "12px 24px",
+                                    "backgroundColor": PALETTE.primary,
+                                    "color": PALETTE.surface,
+                                    "textDecoration": "none",
+                                    "borderRadius": "8px",
+                                    "fontWeight": "600",
+                                    "marginRight": "12px",
+                                },
+                            ),
+                            html.A(
+                                "→ Voir le sommaire de stabilité",
+                                href="/stabilite",
+                                style={
+                                    "display": "inline-block",
+                                    "padding": "12px 24px",
+                                    "backgroundColor": PALETTE.surface,
+                                    "color": PALETTE.primary,
+                                    "textDecoration": "none",
+                                    "borderRadius": "8px",
+                                    "fontWeight": "600",
+                                    "border": f"2px solid {PALETTE.primary}",
+                                },
+                            ),
+                        ],
+                        style={"marginTop": "24px"},
+                    ),
+                ],
+                style=section_card(),
+            ),
         ],
         style=content_wrapper(),
     )

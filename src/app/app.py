@@ -140,7 +140,6 @@ def create_app() -> Dash:
                                             "Stabilité",
                                             style={
                                                 "cursor": "pointer",
-                                                "fontWeight": "600",
                                                 "fontStyle": "normal",
                                                 "padding": "8px 10px",
                                             },
@@ -168,7 +167,7 @@ def create_app() -> Dash:
                                             style={"marginTop": "6px"},
                                         ),
                                     ],
-                                    open=False,
+                                    open=True,
                                     style={},
                                 ),
                                 html.A(

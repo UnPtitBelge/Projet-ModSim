@@ -6,6 +6,8 @@ from dash import html  # type: ignore
 from src.app.poincare.callbacks import register_callbacks
 from src.app.poincare.figure import get_cached_poincare_figure
 from src.app.poincare.layout import build_layout
+from src.app.style.components.layout import content_wrapper, section_card
+from src.app.style.palette import PALETTE
 
 # Enregistrement de la page (native multipage)
 dash.register_page(
@@ -24,21 +26,55 @@ _base_figure = get_cached_poincare_figure()
 # (contient déjà le Graph + zones + panneaux de sortie)
 _layout_core = build_layout(_base_figure)
 
-# Possibilité d’envelopper pour ajouter des éléments spécifiques à la page
+# Possibilité d'envelopper pour ajouter des éléments spécifiques à la page
 layout = html.Div(
     [
-        _layout_core,
         html.Div(
             [
-                html.Small(
-                    "Page Poincaré – multipage natif Dash. Ajoutez d'autres pages dans src/app/pages/.",
-                    style={"color": "#555"},
-                )
+                _layout_core,
+                # Section: Navigation
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.A(
+                                    "→ Voir le sommaire de stabilité",
+                                    href="/stabilite",
+                                    style={
+                                        "display": "inline-block",
+                                        "padding": "12px 24px",
+                                        "backgroundColor": PALETTE.surface,
+                                        "color": PALETTE.primary,
+                                        "textDecoration": "none",
+                                        "borderRadius": "8px",
+                                        "fontWeight": "600",
+                                        "border": f"2px solid {PALETTE.primary}",
+                                    },
+                                ),
+                                html.A(
+                                    "→ Analyser la stabilité",
+                                    href="/stabilite",
+                                    style={
+                                        "display": "inline-block",
+                                        "padding": "12px 24px",
+                                        "backgroundColor": PALETTE.primary,
+                                        "color": PALETTE.surface,
+                                        "textDecoration": "none",
+                                        "borderRadius": "8px",
+                                        "fontWeight": "600",
+                                        "marginLeft": "12px",
+                                    },
+                                ),
+                            ],
+                            style={"marginTop": "24px"},
+                        ),
+                    ],
+                    style=section_card(),
+                ),
             ],
-            style={"marginTop": "12px"},
+            style=content_wrapper(),
         ),
     ],
-    style={"padding": "8px"},
 )
 # Attacher les callbacks spécifiques à cette page (hover / click sur la figure)
 # Utilise l'instance Dash active récupérée via dash.get_app()

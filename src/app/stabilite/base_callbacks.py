@@ -106,11 +106,15 @@ def register_stability_callbacks(
             if b > 0:
                 x1_terms.append(f"+ {format_coeff(b)}x₂" if format_coeff(b) else "+ x₂")
             else:
-                x1_terms.append(f"- {format_coeff(-b)}x₂" if format_coeff(-b) else "- x₂")
+                x1_terms.append(
+                    f"- {format_coeff(-b)}x₂" if format_coeff(-b) else "- x₂"
+                )
         if a > 0:
             x1_terms.insert(0, f"{format_coeff(a)}x₁" if format_coeff(a) else "x₁")
         elif a < 0:
-            x1_terms.insert(0, f"- {format_coeff(-a)}x₁" if format_coeff(-a) else "- x₁")
+            x1_terms.insert(
+                0, f"- {format_coeff(-a)}x₁" if format_coeff(-a) else "- x₁"
+            )
         else:
             pass
 
@@ -119,11 +123,15 @@ def register_stability_callbacks(
             if c > 0:
                 x2_terms.append(f"+ {format_coeff(c)}x₁" if format_coeff(c) else "+ x₁")
             else:
-                x2_terms.append(f"- {format_coeff(-c)}x₁" if format_coeff(-c) else "- x₁")
+                x2_terms.append(
+                    f"- {format_coeff(-c)}x₁" if format_coeff(-c) else "- x₁"
+                )
         if d > 0:
             x2_terms.insert(0, f"{format_coeff(d)}x₂" if format_coeff(d) else "x₂")
         elif d < 0:
-            x2_terms.insert(0, f"- {format_coeff(-d)}x₂" if format_coeff(-d) else "- x₂")
+            x2_terms.insert(
+                0, f"- {format_coeff(-d)}x₂" if format_coeff(-d) else "- x₂"
+            )
         else:
             pass
 
