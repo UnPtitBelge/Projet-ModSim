@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, Callable
 
 import plotly.graph_objects as go
 from dash import Dash, Input, Output, State, html, no_update
@@ -23,9 +23,15 @@ def _empty_figure(title: str = "à compléter") -> go.Figure:
     return fig
 
 
-def register_stability_callbacks(app: Dash, page_key: str) -> None:
+def register_stability_callbacks(app: Dash, page_key: str, 
+                                create_phase_fig: Optional[Callable[[], go.Figure]] = None) -> None:
     """
     Register minimal callbacks for a stability page.
+    
+    Args:
+        app: Dash application
+        page_key: Page key for stability page
+        create_phase_fig: Optional function to create the phase diagram figure
 
     Strict nécessaire:
     - Remplit le graphique interactif avec une figure placeholder.
@@ -47,14 +53,16 @@ def register_stability_callbacks(app: Dash, page_key: str) -> None:
         # Placeholder minimal
         return _empty_figure("Graphique interactif – à compléter")
 
-    # Diagramme de phase (placeholder)
+    # Diagramme de phase
     @app.callback(
         Output(ids["phase"], "figure"),
         Input(ids["phase"], "id"),
         prevent_initial_call=False,
     )
     def _update_phase_diagram(_phase_id: Optional[str]) -> go.Figure:
-        # Placeholder minimal
+        # Utiliser la fonction personnalisée si fournie, sinon placeholder
+        if create_phase_fig is not None:
+            return create_phase_fig()
         return _empty_figure("Diagramme de phase – à compléter")
 
     # Explication pédagogique (placeholder)

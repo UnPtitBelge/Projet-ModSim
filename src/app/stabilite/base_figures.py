@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 from typing import Iterable, Optional, Tuple
-
+import numpy as np
+from scipy.integrate import odeint
 import plotly.graph_objects as go
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def _base_placeholder(title: str) -> go.Figure:
@@ -65,4 +69,208 @@ def phase_with_equilibria(
 
     # Axes sobres, sans titres (strict nécessaire)
     fig.update_layout(xaxis_title="", yaxis_title="")
+    return fig
+
+
+def create_phase_diagram(a: float, b: float, c: float, d: float, 
+                        title: str = "Diagramme de phase") -> go.Figure:
+    """
+    Crée un diagramme de phase pour un système 2D linéaire.
+    
+    Système: dx/dt = a*x + b*y
+             dy/dt = c*x + d*y
+    
+    Args:
+        a, b, c, d: Paramètres de la matrice Jacobienne
+        title: Titre du diagramme
+    
+    Returns:
+        Figure Plotly avec trajectoires et champ vectoriel
+    """
+    fig = go.Figure()
+    
+    # Définir le système
+    def system(state, t):
+        x_var, y_var = state
+        return [a*x_var + b*y_var, c*x_var + d*y_var]
+    
+    # Générer les conditions initiales espacées de 1.5
+    initial_conditions = []
+    for x0 in np.arange(-3, 3.5, 1.5):
+        for y0 in np.arange(-3, 3.5, 1.5):
+            initial_conditions.append((x0, y0))
+    
+    # Détecter le type de système
+    trace = a + d
+    det = a * d - b * c
+    
+    # Cas particuliers
+    is_centre = (trace == 0 and det > 0)
+    is_mouvement_uniforme = (trace == 0 and det == 0)
+    is_selle = (det < 0)
+    is_unstable = trace > 0 or (det < 0 and trace > 0)
+    
+    # Adapter le temps d'intégration
+    if is_mouvement_uniforme:
+        t = np.linspace(0, 4, 40)
+    elif is_selle:
+        t = np.linspace(0, 2, 35)
+    elif is_centre:
+        t = np.linspace(0, 2*np.pi, 50)
+    elif is_unstable:
+        t = np.linspace(0, 1.5, 30)
+    else:
+        t = np.linspace(0, 8, 50)
+    
+    # Générer les trajectoires
+    x_min, x_max = 0, 0
+    y_min, y_max = 0, 0
+    trajectories = []
+    
+    for x0, y0 in initial_conditions:
+        try:
+            traj = odeint(system, [x0, y0], t, full_output=False)
+            trajectories.append(traj)
+            x_min = min(x_min, np.min(traj[:, 0]))
+            x_max = max(x_max, np.max(traj[:, 0]))
+            y_min = min(y_min, np.min(traj[:, 1]))
+            y_max = max(y_max, np.max(traj[:, 1]))
+        except:
+            pass
+    
+    # Ajouter le point d'équilibre
+    fig.add_trace(go.Scatter(
+        x=[0], y=[0],
+        mode='markers',
+        marker=dict(size=10, color='red', symbol='diamond'),
+        name='Équilibre',
+        hoverinfo='text',
+        hovertext='(0, 0)',
+        showlegend=True
+    ))
+    
+    # Calculer les marges
+    margin_x = (x_max - x_min) * 0.1 if x_max != x_min else 0.5
+    margin_y = (y_max - y_min) * 0.1 if y_max != y_min else 0.5
+    
+    # Définir les limites
+    x_range = [x_min - margin_x, x_max + margin_x]
+    y_range = [y_min - margin_y, y_max + margin_y]
+    
+    # Adapter les limites selon le type
+    standard_range = 3.6
+    
+    if is_mouvement_uniforme:
+        x_range = [-5, 5]
+        y_range = [-standard_range, standard_range]
+    elif is_selle or is_centre or is_unstable:
+        x_range = [-standard_range, standard_range]
+        y_range = [-standard_range, standard_range]
+    
+    # Créer une grille de flèches
+    grid_density = 15
+    x_arrow_positions = np.linspace(x_range[0], x_range[1], grid_density)
+    y_arrow_positions = np.linspace(y_range[0], y_range[1], grid_density)
+    
+    # Vectoriser le calcul des normes
+    X, Y = np.meshgrid(x_arrow_positions, y_arrow_positions)
+    velocities_x = a * X + b * Y
+    velocities_y = c * X + d * Y
+    norms = np.sqrt(velocities_x**2 + velocities_y**2).flatten()
+    
+    valid_norms = norms[norms > 0.01]
+    if len(valid_norms) > 0:
+        norm_min = np.min(valid_norms)
+        norm_max = np.max(valid_norms)
+        norm_range = norm_max - norm_min if norm_max != norm_min else 1
+    else:
+        norm_min, norm_max, norm_range = 0, 1, 1
+    
+    norm_min_log = np.log(norm_min + 1)
+    norm_max_log = np.log(norm_max + 1)
+    norm_range_log = norm_max_log - norm_min_log if norm_max_log != norm_min_log else 1
+    
+    # Ajouter les flèches
+    for x_pos in x_arrow_positions:
+        for y_pos in y_arrow_positions:
+            dx = a * x_pos + b * y_pos
+            dy = c * x_pos + d * y_pos
+            norm = np.sqrt(dx**2 + dy**2)
+            
+            if norm > 0.01:
+                dx_norm = dx / norm
+                dy_norm = dy / norm
+                
+                norm_log = np.log(norm + 1)
+                intensity_normalized = (norm_log - norm_min_log) / norm_range_log if norm_range_log > 0 else 0.5
+                intensity_normalized = np.clip(intensity_normalized, 0, 1)
+                intensity_amplified = intensity_normalized ** 0.5
+                
+                offset = 0.2 + intensity_amplified * 0.4
+                
+                x_tail = x_pos - dx_norm * offset
+                y_tail = y_pos - dy_norm * offset
+                angle = np.arctan2(dy_norm, dx_norm)
+                
+                # Ajouter la tige
+                fig.add_trace(go.Scatter(
+                    x=[x_tail, x_pos],
+                    y=[y_tail, y_pos],
+                    mode='lines',
+                    line=dict(color='#1f77b4', width=1),
+                    hoverinfo='skip',
+                    showlegend=False
+                ))
+                
+                # Ajouter la tête
+                head_angle = np.pi / 6
+                head_length = 0.15
+                
+                angle_left = angle + head_angle
+                angle_right = angle - head_angle
+                
+                p1_x = x_pos - head_length * np.cos(angle_left)
+                p1_y = y_pos - head_length * np.sin(angle_left)
+                p2_x = x_pos - head_length * np.cos(angle_right)
+                p2_y = y_pos - head_length * np.sin(angle_right)
+                
+                fig.add_trace(go.Scatter(
+                    x=[x_pos, p1_x],
+                    y=[y_pos, p1_y],
+                    mode='lines',
+                    line=dict(color='#1f77b4', width=1.5),
+                    hoverinfo='skip',
+                    showlegend=False
+                ))
+                
+                fig.add_trace(go.Scatter(
+                    x=[x_pos, p2_x],
+                    y=[y_pos, p2_y],
+                    mode='lines',
+                    line=dict(color='#1f77b4', width=1.5),
+                    hoverinfo='skip',
+                    showlegend=False
+                ))
+    
+    # Configurer le layout
+    fig.update_layout(
+        title=title,
+        xaxis_title='x',
+        yaxis_title='y',
+        hovermode='closest',
+        width=800,
+        height=700,
+        xaxis=dict(
+            range=x_range,
+            scaleanchor='y',
+            scaleratio=1
+        ),
+        yaxis=dict(
+            range=y_range,
+            scaleanchor='x',
+            scaleratio=1
+        ),
+        template='plotly_white'
+    )
+    
     return fig

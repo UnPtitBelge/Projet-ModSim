@@ -33,8 +33,8 @@ def create_app() -> Dash:
     <script>
       window.MathJax = {
         tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']],
-          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          inlineMath: [['$', '$']],
+          displayMath: [['$$', '$$']],
           processEscapes: true,
           packages: {'[+]': ['ams']},
           tags: 'ams'
@@ -141,6 +141,7 @@ def create_app() -> Dash:
                                             style={
                                                 "cursor": "pointer",
                                                 "fontWeight": "600",
+                                                "fontStyle": "normal",
                                                 "padding": "8px 10px",
                                             },
                                         ),

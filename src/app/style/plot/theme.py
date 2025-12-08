@@ -34,18 +34,26 @@ class FigureTheme:
     # Lines and markers (defaults applied to accent traces)
     line_width: int = 6
     line_color: str = PALETTE.primary
+    line_color_hover: str = PALETTE.primary_light  # Subtle change on hover
     marker_size: int = 6
     marker_color: str = PALETTE.primary
 
-    # Zone fills (soft transparencies aligned to the global palette)
-    zone_upper_left: str = "rgba(245, 158, 11, 0.28)"  # Amber 500 @ ~28%
-    zone_upper_right: str = "rgba(99, 102, 241, 0.28)"  # Indigo 500 @ ~28%
-    zone_lower_left: str = "rgba(16, 185, 129, 0.30)"  # Emerald 500 @ 30%
-    zone_lower_right: str = "rgba(79, 70, 229, 0.20)"  # Indigo 600 @ 20%
-    zone_lower_axis: str = "rgba(226, 232, 240, 0.45)"  # Slate 200 @ 45%
+    # Zone fills (reference PALETTE for consistency - darker for better contrast)
+    zone_upper_left: str = PALETTE.zone_upper_left
+    zone_upper_right: str = PALETTE.zone_upper_right
+    zone_lower_left: str = PALETTE.zone_lower_left
+    zone_lower_right: str = PALETTE.zone_lower_right
+    zone_lower_axis: str = PALETTE.zone_lower_axis
+    
+    # Zone hover states (subtle increase in opacity)
+    zone_upper_left_hover: str = PALETTE.zone_upper_left_hover
+    zone_upper_right_hover: str = PALETTE.zone_upper_right_hover
+    zone_lower_left_hover: str = PALETTE.zone_lower_left_hover
+    zone_lower_right_hover: str = PALETTE.zone_lower_right_hover
+    zone_lower_axis_hover: str = PALETTE.zone_lower_axis_hover
 
     # Backgrounds
-    plot_bgcolor: str = PALETTE.surface
+    plot_bgcolor: str = PALETTE.plot_bg
     paper_bgcolor: str = PALETTE.surface
 
     # Base font
@@ -72,6 +80,7 @@ def apply_to_figure(fig: Any, theme: Optional[FigureTheme] = None) -> None:
     - Layout backgrounds and font
     - Accent lines/markers for common meta (parabola, axes)
     - Hide polygon borders for zone fills
+    - Subtle hover effects on lines and zones
     """
     t = theme or FIGURE_THEME
 

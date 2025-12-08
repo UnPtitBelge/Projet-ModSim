@@ -6,8 +6,9 @@ from dash import Input, Output, html
 
 from src.app.stabilite.base_callbacks import register_stability_callbacks
 from src.app.stabilite.base_layout import build_stability_layout, stability_ids
+from src.app.stabilite.base_figures import create_phase_diagram
 
-# Clé de page pour "Centre"
+# Clé de page pour "Foyer stable"
 PAGE_KEY = "foyer_stable"
 
 __all__ = [
@@ -20,13 +21,20 @@ __all__ = [
 
 def get_ids() -> dict[str, str]:
     """
-    Retourne les IDs normalisés des placeholders pour la page Centre.
+    Retourne les IDs normalisés des placeholders pour la page Foyer stable.
     - graph: ID du graphique interactif
     - phase: ID du diagramme de phase
     - explication: ID du bloc d'explication pédagogique
     """
     return stability_ids(PAGE_KEY)
 
+
+def create_figure() -> go.Figure:
+    """
+    Crée le diagramme de phase pour un foyer stable.
+    Paramètres: a=-1, b=1, c=-1, d=-1
+    """
+    return create_phase_diagram(a=-1, b=1, c=-1, d=-1, title="Foyer stable")
 
 def layout_pedagogic() -> html.Div:
     """
@@ -64,4 +72,4 @@ def register_callbacks(app) -> None:
     """
     Enregistre les callbacks personnalisés pour la page Foyer stable.
     """
-    register_stability_callbacks(app, PAGE_KEY)
+    register_stability_callbacks(app, PAGE_KEY, create_figure)

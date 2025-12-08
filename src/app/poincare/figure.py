@@ -21,6 +21,7 @@ import plotly.graph_objs as go
 
 from src.app.logging_setup import get_logger
 from src.app.style.plot.theme import FIGURE_THEME, apply_to_figure
+from src.app.style.palette import PALETTE
 
 from .constants import N_SAMPLES, TAU_MAX, TAU_MIN
 
@@ -219,8 +220,12 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
             x=[0.0],
             y=[0.0],
             mode="markers",
-            marker=dict(line=dict(color="rgba(0,0,0,0)", width=cfg.line_width**2)),
-            name="Origine (0, 0)",
+            marker=dict(
+                size=12,
+                color=PALETTE.mouvement_uniforme,
+                line=dict(color="rgba(0,0,0,0)", width=0)
+            ),
+            name="Mouvement uniforme",
             meta="origin",
             hoverinfo="text",
             text=["Mouvement uniforme"],

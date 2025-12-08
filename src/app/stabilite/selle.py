@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import plotly.graph_objects as go
 from dash import html  # type: ignore
 
 from src.app.stabilite.base_callbacks import register_stability_callbacks
 from src.app.stabilite.base_layout import build_stability_layout, stability_ids
+from src.app.stabilite.base_figures import create_phase_diagram
 
 # Clé de page pour "Selle"
 PAGE_KEY = "selle"
@@ -24,6 +26,14 @@ def get_ids() -> dict[str, str]:
     - explication: ID du bloc d'explication pédagogique
     """
     return stability_ids(PAGE_KEY)
+
+
+def create_figure() -> go.Figure:
+    """
+    Crée le diagramme de phase pour une selle.
+    Paramètres: a=1, b=0, c=0, d=-1
+    """
+    return create_phase_diagram(a=1, b=0, c=0, d=-1, title="Selle")
 
 
 def layout_pedagogic() -> html.Div:
@@ -60,7 +70,7 @@ def layout_pedagogic() -> html.Div:
 
 def register_callbacks(app) -> None:
     """
-    Enregistre les callbacks de base pour remplir les placeholders de la page Centre.
+    Enregistre les callbacks de base pour remplir les placeholders de la page Selle.
     Strict nécessaire: figures et explication "à compléter".
     """
-    register_stability_callbacks(app, PAGE_KEY)
+    register_stability_callbacks(app, PAGE_KEY, create_figure)

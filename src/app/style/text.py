@@ -23,6 +23,7 @@ H1 = {
     "lineHeight": f"{TYPOGRAPHY.lh_tight}",
     "color": PALETTE.text,
     "fontWeight": str(TYPOGRAPHY.weight_bold),
+    "fontStyle": "normal",
     "margin": "0 0 16px 0",
     "letterSpacing": "-0.02em",
 }
@@ -33,6 +34,7 @@ H2 = {
     "lineHeight": f"{TYPOGRAPHY.lh_tight}",
     "color": PALETTE.text,
     "fontWeight": str(TYPOGRAPHY.weight_semibold),
+    "fontStyle": "normal",
     "margin": "24px 0 12px 0",
     "letterSpacing": "-0.01em",
 }
@@ -43,6 +45,7 @@ H3 = {
     "lineHeight": f"{TYPOGRAPHY.lh_snug}",
     "color": PALETTE.text,
     "fontWeight": str(TYPOGRAPHY.weight_semibold),
+    "fontStyle": "normal",
     "margin": "20px 0 10px 0",
 }
 
@@ -53,6 +56,7 @@ P = {
     "lineHeight": f"{TYPOGRAPHY.lh_normal}",
     "color": PALETTE.text,
     "fontWeight": str(TYPOGRAPHY.weight_regular),
+    "fontStyle": "normal",
     "margin": "0 0 12px 0",
 }
 
@@ -67,6 +71,7 @@ SMALL = {
     "lineHeight": f"{TYPOGRAPHY.lh_snug}",
     "color": PALETTE.text_muted,
     "fontWeight": str(TYPOGRAPHY.weight_regular),
+    "fontStyle": "normal",
 }
 
 # Monospace code block

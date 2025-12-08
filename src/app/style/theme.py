@@ -26,33 +26,34 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict
 
-# ---- Palette (Soft Modern) ---------------------------------------------------
+# Import the centralized palette
+from src.app.style.palette import PALETTE as MAIN_PALETTE
 
 
 @dataclass(frozen=True)
 class Palette:
-    # Brand / primary
-    primary: str = "#4F46E5"  # Indigo 600
-    primary_light: str = "#6366F1"  # Indigo 500
-    primary_dark: str = "#4338CA"  # Indigo 700
+    # Brand / primary (warm tones)
+    primary: str = "#EA580C"  # Warm Orange
+    primary_light: str = "#F97316"  # Orange 500
+    primary_dark: str = "#D63803"  # Darker Orange
 
     # Secondary / success
-    secondary: str = "#10B981"  # Emerald 500
+    secondary: str = "#DC2626"  # Warm Red
 
     # Accents
     accent_amber: str = "#F59E0B"  # Amber 500
     accent_red: str = "#EF4444"  # Red 500
 
     # Greys
-    bg: str = "#F8FAFC"  # Gray 50
-    surface: str = "#FFFFFF"  # White
-    text: str = "#0F172A"  # Slate 900
-    text_muted: str = "#475569"  # Slate 600
-    border: str = "#E2E8F0"  # Slate 200
+    bg: str = "#FEF5F1"  # Warm off-white (slightly peachy)
+    surface: str = "#FFFBF8"  # Warm white (slightly warm)
+    text: str = "#3E2723"  # Dark brown (warmer than slate)
+    text_muted: str = "#78614B"  # Warm brown-grey
+    border: str = "#E8DDD4"  # Warm beige (warmer than slate)
 
     # Utility
-    overlay: str = "rgba(15, 23, 42, 0.06)"  # Slate 900 @ 6%
-    shadow: str = "rgba(15, 23, 42, 0.08)"  # Slate 900 @ 8%
+    overlay: str = "rgba(62, 39, 35, 0.06)"  # Dark brown @ 6%
+    shadow: str = "rgba(62, 39, 35, 0.08)"  # Dark brown @ 8%
 
 
 PALETTE = Palette()
@@ -106,6 +107,7 @@ class text:
         "lineHeight": TYPO.lh_tight,
         "color": PALETTE.text,
         "fontWeight": TYPO.weight_bold,
+        "fontStyle": "normal",
         "margin": "0 0 16px 0",
         "letterSpacing": "-0.02em",
     }
@@ -115,6 +117,7 @@ class text:
         "lineHeight": TYPO.lh_tight,
         "color": PALETTE.text,
         "fontWeight": TYPO.weight_semibold,
+        "fontStyle": "normal",
         "margin": "24px 0 12px 0",
         "letterSpacing": "-0.01em",
     }
@@ -124,6 +127,7 @@ class text:
         "lineHeight": TYPO.lh_snug,
         "color": PALETTE.text,
         "fontWeight": TYPO.weight_semibold,
+        "fontStyle": "normal",
         "margin": "20px 0 10px 0",
     }
 
@@ -134,6 +138,7 @@ class text:
         "lineHeight": TYPO.lh_normal,
         "color": PALETTE.text,
         "fontWeight": TYPO.weight_regular,
+        "fontStyle": "normal",
         "margin": "0 0 12px 0",
     }
     muted = {
@@ -146,6 +151,7 @@ class text:
         "lineHeight": TYPO.lh_snug,
         "color": PALETTE.text_muted,
         "fontWeight": TYPO.weight_regular,
+        "fontStyle": "normal",
     }
 
     # Monospace block
