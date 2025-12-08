@@ -3,132 +3,195 @@ from __future__ import annotations
 import dash
 from dash import html
 
-from src.app.style.components.layout import app_container, page_text_container
+from src.app.style.components.layout import (app_container, content_wrapper,
+                                             section_card)
+from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
 
 dash.register_page(
     __name__,
     path="/",
     name="Accueil",
-    title="Accueil – Projet ModSim",
-    description="Page d'accueil, introduction et navigation globale.",
-    order=-1,  # affiche l'accueil avant les autres pages dans la barre de navigation
+    title="Accueil – Stabilité des systèmes linéaires",
+    description="Support pédagogique pour l'analyse de stabilité des systèmes linéaires continus d'ordre 2.",
+    order=-1,
 )
-
 
 layout = html.Div(
     [
-        html.H1(
-            "Accueil – Analyse de stabilité de systèmes du second ordre",
-            style=TEXT["h1"],
+        html.Div(
+            [
+                html.H1(
+                    "Analyse de stabilité des systèmes linéaires d'ordre 2",
+                    style=TEXT["h1"],
+                ),
+                html.P(
+                    (
+                        "Bienvenue dans ce dashboard pédagogique dédié à l'étude de la stabilité "
+                        "des systèmes linéaires continus d'ordre deux. Cet outil interactif vous permet "
+                        "de comprendre et visualiser les différents types de points d'équilibre "
+                        "et leur comportement dynamique."
+                    ),
+                    style=TEXT["p"],
+                ),
+            ],
+            style=section_card(),
         ),
         html.Div(
-            "$$\\lambda^2 + \\tau\\lambda + \\Delta = 0$$", style={"marginTop": "8px"}
-        ),
-        html.P(
-            (
-                "Bienvenue dans l'application d'exploration du diagramme de Poincaré. "
-                "Cet outil interactif permet de visualiser et comprendre les zones de stabilité "
-                "pour des systèmes linéaires continus d'ordre deux."
-            )
-        ),
-        html.H2("Objectifs pédagogiques"),
-        html.Ul(
             [
-                html.Li(
-                    "Visualiser la séparation des régimes (oscillatoire, amorti, divergent)."
-                ),
-                html.Li(
-                    "Relier la position $(\\tau, \\Delta)$ aux racines du polynôme caractéristique."
+                html.H2("Contexte théorique", style=TEXT["h2"]),
+                html.P(
+                    (
+                        "Pour un système linéaire d'ordre 2, l'équation caractéristique s'écrit :"
+                    ),
+                    style=TEXT["p"],
                 ),
                 html.Div(
-                    "$$\\text{Position sur le plan } (\\tau,\\Delta) \\Rightarrow \\text{ nature des racines } \\lambda$$"
+                    "$$\\lambda^2 - \\tau\\lambda + \\Delta = 0$$",
+                    style={"textAlign": "center", "margin": "16px 0"},
                 ),
-                html.Li("Identifier rapidement les zones de stabilité locale."),
-                html.Li(
-                    "Explorer les effets des variations de $\\tau$ et $\\Delta$ via une représentation géométrique."
+                html.P(
+                    (
+                        "où $\\tau$ est la trace de la matrice du système et $\\Delta$ son déterminant. "
+                        "Les racines $\\lambda$ de cette équation déterminent complètement "
+                        "la nature du point d'équilibre et sa stabilité."
+                    ),
+                    style=TEXT["p"],
                 ),
-            ]
-        ),
-        html.H2("Navigation rapide"),
-        html.Ul(
-            [
-                html.Li(
-                    html.A("Diagramme de Poincaré (page principale)", href="/poincare")
-                ),
-                html.Li(html.A("Sommaire des zones de stabilité", href="/stabilite")),
-                html.Li(html.A("À propos du projet", href="/about")),
-            ]
-        ),
-        html.H2("Rappel des paramètres"),
-        html.Div("$$\\lambda^2 + \\tau\\lambda + \\Delta = 0$$"),
-        html.Div("$$\\Delta = \\tau^2/4$$"),
-        html.P(
-            (
-                "Les racines $\\lambda$ déterminent la nature de la réponse temporelle. "
-                "La relation ci-dessus sépare les régimes à racines réelles (sous) et complexes (au-dessus). "
-                "Le signe de $\\tau$ contrôle la partie réelle (amortissement vs divergence) et "
-                "le signe de $\\Delta$ influence la nature 'selle' ($\\Delta < 0$) ou ‘non oscillatoire’ ($\\Delta > 0$)."
-            )
-        ),
-        html.H2("Chemin recommandé"),
-        html.Ol(
-            [
-                html.Li("Observer la forme générale du diagramme (page principale)."),
-                html.Li(
-                    "Cliquer sur différentes zones pour voir les descriptions spécifiques."
-                ),
-                html.Li(
-                    "Visiter le sommaire stabilité pour synthétiser les classifications."
-                ),
-                html.Li(
-                    "Lire la page À propos pour comprendre la structure du projet."
-                ),
-            ]
-        ),
-        html.H2("Ressources futures (placeholder)"),
-        html.Ul(
-            [
-                html.Li(
-                    "Ajout prévu : visualisation dynamique des trajectoires temporelles."
-                ),
-                html.Li("Comparaison multi-paramètres (surfaces 3D éventuelles)."),
-                html.Li("Export des zones ou figures en image."),
-            ]
-        ),
-        html.Hr(),
-        html.Div(
-            [
-                html.A(
-                    "→ Accéder au diagramme",
-                    href="/poincare",
-                    style={"marginRight": "18px"},
-                ),
-                html.A(
-                    "→ Sommaire stabilité",
-                    href="/stabilite",
-                    style={"marginRight": "18px"},
-                ),
-                html.A("→ À propos", href="/about"),
             ],
-            style={"marginTop": "8px"},
+            style=section_card(),
         ),
         html.Div(
-            "Projet-ModSim – Exploration de stabilité (version initiale)",
-            style={
-                "marginTop": "30px",
-                "fontSize": "0.8rem",
-                "color": "#666",
-            },
+            [
+                html.H2("Objectifs pédagogiques", style=TEXT["h2"]),
+                html.Ul(
+                    [
+                        html.Li(
+                            "Comprendre le lien entre les paramètres $(\\tau, \\Delta)$ et la stabilité du système",
+                            style=TEXT["p"],
+                        ),
+                        html.Li(
+                            "Identifier les 11 types de points d'équilibre dans le plan de Poincaré",
+                            style=TEXT["p"],
+                        ),
+                        html.Li(
+                            "Visualiser les portraits de phase associés à chaque type d'équilibre",
+                            style=TEXT["p"],
+                        ),
+                        html.Li(
+                            "Distinguer les comportements : oscillatoire, amorti, divergent, stable, instable",
+                            style=TEXT["p"],
+                        ),
+                    ],
+                ),
+            ],
+            style=section_card(),
+        ),
+        html.Div(
+            [
+                html.H2("Types de points d'équilibre étudiés", style=TEXT["h2"]),
+                html.P(
+                    "Ce dashboard couvre l'ensemble des cas possibles :",
+                    style=TEXT["p"],
+                ),
+                html.Ul(
+                    [
+                        html.Li("Foyer stable et instable", style=TEXT["p"]),
+                        html.Li("Nœud stable et instable", style=TEXT["p"]),
+                        html.Li("Nœud dégénéré stable et instable", style=TEXT["p"]),
+                        html.Li("Centre", style=TEXT["p"]),
+                        html.Li("Point selle", style=TEXT["p"]),
+                        html.Li(
+                            "Ligne de points d'équilibre stable et instable",
+                            style=TEXT["p"],
+                        ),
+                        html.Li("Mouvement uniforme", style=TEXT["p"]),
+                    ],
+                ),
+            ],
+            style=section_card(),
+        ),
+        html.Div(
+            [
+                html.H2("Navigation", style=TEXT["h2"]),
+                html.P(
+                    "Explorez le dashboard dans l'ordre suivant :",
+                    style=TEXT["p"],
+                ),
+                html.Ol(
+                    [
+                        html.Li(
+                            [
+                                html.A(
+                                    "Diagramme de Poincaré",
+                                    href="/poincare",
+                                    style={"color": PALETTE.primary},
+                                ),
+                                " : vue d'ensemble interactive des zones de stabilité",
+                            ],
+                            style=TEXT["p"],
+                        ),
+                        html.Li(
+                            "Cliquez sur une zone pour accéder aux détails du point d'équilibre correspondant",
+                            style=TEXT["p"],
+                        ),
+                        html.Li(
+                            [
+                                html.A(
+                                    "Sommaire des zones",
+                                    href="/stabilite",
+                                    style={"color": PALETTE.primary},
+                                ),
+                                " : synthèse complète des 11 types",
+                            ],
+                            style=TEXT["p"],
+                        ),
+                    ],
+                ),
+            ],
+            style=section_card(),
+        ),
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.A(
+                            "→ Accéder au diagramme de Poincaré",
+                            href="/poincare",
+                            style={
+                                "display": "inline-block",
+                                "padding": "12px 24px",
+                                "backgroundColor": PALETTE.primary,
+                                "color": PALETTE.surface,
+                                "textDecoration": "none",
+                                "borderRadius": "8px",
+                                "fontWeight": "600",
+                                "marginRight": "12px",
+                            },
+                        ),
+                        html.A(
+                            "→ Voir le sommaire",
+                            href="/stabilite",
+                            style={
+                                "display": "inline-block",
+                                "padding": "12px 24px",
+                                "backgroundColor": PALETTE.surface,
+                                "color": PALETTE.primary,
+                                "textDecoration": "none",
+                                "borderRadius": "8px",
+                                "fontWeight": "600",
+                                "border": f"2px solid {PALETTE.primary}",
+                            },
+                        ),
+                    ],
+                    style={"marginTop": "24px"},
+                ),
+            ],
+            style=section_card(),
         ),
     ],
     style={
         **app_container(),
-        **page_text_container(960),
-        "padding": "32px 36px",
+        **content_wrapper(),
     },
 )
-
-
-def get_home_layout():
-    return layout

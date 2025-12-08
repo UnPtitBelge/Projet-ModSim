@@ -4,8 +4,8 @@ import plotly.graph_objects as go
 from dash import html  # type: ignore
 
 from src.app.stabilite.base_callbacks import register_stability_callbacks
-from src.app.stabilite.base_layout import build_stability_layout, stability_ids
 from src.app.stabilite.base_figures import create_phase_diagram
+from src.app.stabilite.base_layout import build_stability_layout, stability_ids
 
 # Clé de page pour "Centre"
 PAGE_KEY = "ligne_pe_instable"
@@ -36,38 +36,63 @@ def create_figure() -> go.Figure:
     return create_phase_diagram(a=1, b=0, c=0, d=0, title="Ligne propre instable")
 
 
+def get_constraints() -> dict:
+    """
+    Retourne les contraintes pour les sliders pour une ligne de points d'équilibre instable.
+
+    Ligne PE instable:
+    - τ > 0 (trace positive)
+    - Δ = 0 (déterminant nul)
+    """
+    return {
+        "tau_min": 0.1,
+        "tau_max": 5.0,
+        "delta_min": -0.05,
+        "delta_max": 0.05,
+        "default_tau": 1.0,
+        "default_delta": 0.0,
+    }
+
+
 def layout_pedagogic() -> html.Div:
     """
     Retourne le contenu pédagogique pour la page Ligne propre instable.
     """
-    return html.Div([
-        html.P(
-            "Une ligne propre instable est un point d'équilibre où les trajectoires divergent linéairement le long d'une ligne (direction propre)."
-        ),
-        html.H4("Exemple de la vie réelle :"),
-        html.Ul(
-            [
-                html.Li(
-                    "Un bâton placé verticalement en équilibre instable: Une petite perturbation le fait tomber dans une direction préférentielle."
-                ),
-                html.Li(
-                    "La bifurcation pitchfork: Certains systèmes bifurquent vers plusieurs états instables à partir d'un point d'équilibre initial."
-                ),
-            ]
-        ),
-        html.H4("Caractéristiques mathématiques:"),
-        html.Ul(
-            [
-                html.Li("Deux racines réelles"),
-                html.Li("Au moins une racine positive"),
-                html.Li("Convergence sur une ligne, divergence dans autres directions"),
-            ]
-        ),
-    ])
+    return html.Div(
+        [
+            html.P(
+                "Une ligne propre instable est un point d'équilibre où les trajectoires divergent linéairement le long d'une ligne (direction propre)."
+            ),
+            html.H4("Exemple de la vie réelle :"),
+            html.Ul(
+                [
+                    html.Li(
+                        "Un bâton placé verticalement en équilibre instable: Une petite perturbation le fait tomber dans une direction préférentielle."
+                    ),
+                    html.Li(
+                        "La bifurcation pitchfork: Certains systèmes bifurquent vers plusieurs états instables à partir d'un point d'équilibre initial."
+                    ),
+                ]
+            ),
+            html.H4("Caractéristiques mathématiques:"),
+            html.Ul(
+                [
+                    html.Li("Deux racines réelles"),
+                    html.Li("Au moins une racine positive"),
+                    html.Li(
+                        "Convergence sur une ligne, divergence dans autres directions"
+                    ),
+                ]
+            ),
+        ]
+    )
+
 
 def register_callbacks(app) -> None:
     """
-    Enregistre les callbacks de base pour remplir les placeholders de la page Ligne propre instable.
-    Strict nécessaire: figures et explication "à compléter".
+    Enregistre les callbacks pour la page Ligne PE instable.
     """
-    register_stability_callbacks(app, PAGE_KEY, create_figure)
+    # Ligne PE instable: τ > 0, Δ = 0
+    register_stability_callbacks(
+        app, PAGE_KEY, tau=1.0, delta=0.0, create_phase_fig=create_figure
+    )

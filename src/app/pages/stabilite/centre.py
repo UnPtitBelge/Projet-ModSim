@@ -7,7 +7,8 @@ import dash
 # removed unused dash imports
 from src.app.logging_setup import get_logger
 from src.app.stabilite.base_layout import build_stability_layout
-from src.app.stabilite.centre import register_callbacks as _register_callbacks, layout_pedagogic
+from src.app.stabilite.centre import layout_pedagogic
+from src.app.stabilite.centre import register_callbacks as _register_callbacks
 
 # removed unused style component imports
 # removed unused text style import
@@ -26,7 +27,7 @@ dash.register_page(
 
 log.debug("Construction du layout de la page centre...")
 
-layout = build_stability_layout("centre", layout_pedagogic)
+layout = build_stability_layout("centre", layout_pedagogic, tau=0.0, delta=1.0)
 
 _register_callbacks(dash.get_app())
 

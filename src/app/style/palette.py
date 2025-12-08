@@ -46,17 +46,17 @@ class Palette:
     zone_lower_left: str = "rgba(74, 222, 128, 0.38)"  # Bright Green @ 38%
     zone_lower_right: str = "rgba(251, 146, 60, 0.32)"  # Orange @ 32%
     zone_lower_axis: str = "rgba(209, 213, 219, 0.45)"  # Cool Gray @ 45%
-    
+
     # Poincaré diagram background (clean and neutral)
     plot_bg: str = "#FAFAF8"  # Warm neutral off-white
-    
+
     # Poincaré diagram hover zones (subtle increase)
     zone_upper_left_hover: str = "rgba(245, 158, 11, 0.50)"  # Warm Amber @ 50%
     zone_upper_right_hover: str = "rgba(239, 68, 68, 0.50)"  # Warm Red @ 50%
     zone_lower_left_hover: str = "rgba(74, 222, 128, 0.53)"  # Bright Green @ 53%
     zone_lower_right_hover: str = "rgba(251, 146, 60, 0.47)"  # Orange @ 47%
     zone_lower_axis_hover: str = "rgba(209, 213, 219, 0.60)"  # Cool Gray @ 60%
-    
+
     # Mouvement uniforme point color
     mouvement_uniforme: str = "#F59E0B"  # Amber 500 (warm accent)
 

@@ -8,10 +8,9 @@ from dash import html
 # from src.app.app import app  # removed to avoid circular import; use dash.get_app() instead
 from src.app.logging_setup import get_logger
 from src.app.stabilite.base_layout import build_stability_layout
-from src.app.stabilite.noeud_instable_degenere import (
-    register_callbacks as _register_callbacks,
-    layout_pedagogic,
-)
+from src.app.stabilite.noeud_instable_degenere import layout_pedagogic
+from src.app.stabilite.noeud_instable_degenere import \
+    register_callbacks as _register_callbacks
 from src.app.style.components.layout import app_container, page_text_container
 from src.app.style.text import TEXT
 
@@ -29,7 +28,9 @@ dash.register_page(
 
 log.debug("Construction du layout de la page noeud instable dégénéré...")
 
-layout = build_stability_layout("noeud_instable_degenere", layout_pedagogic)
+layout = build_stability_layout(
+    "noeud_instable_degenere", layout_pedagogic, tau=2.0, delta=1.0
+)
 _register_callbacks(dash.get_app())
 
 log.info("Layout de la page noeud instable dégénéré construit.")

@@ -2,15 +2,12 @@ from __future__ import annotations
 
 from typing import Dict
 
-from dash import dcc, html, callback, Input, Output
+from dash import Input, Output, callback, dcc, html
 
-from src.app.style.components.layout import (
-    content_wrapper,
-    section_card,
-    graph_container,
-)
-from src.app.style.text import TEXT
+from src.app.style.components.layout import (content_wrapper, graph_container,
+                                             section_card)
 from src.app.style.palette import PALETTE
+from src.app.style.text import TEXT
 from src.app.style.typography import TYPOGRAPHY
 
 
@@ -27,25 +24,37 @@ def _slugify(page_key: str) -> str:
 
 def stability_ids(page_key: str) -> Dict[str, str]:
     """
-    Provide normalized IDs for the three standard placeholders on a stability page.
+    Provide normalized IDs for the standard placeholders on a stability page.
     """
     slug = _slugify(page_key)
     return {
         "graph": f"ph-{slug}-graph",
+        "system_graph": f"ph-{slug}-system-graph",
         "phase": f"ph-{slug}-phase",
         "explication": f"ph-{slug}-explication",
+        "eigenvalue_display": f"ph-{slug}-eigenvalue-display",
+        "ode_display": f"ph-{slug}-ode-display",
     }
 
 
-def build_stability_layout(page_key: str, layout_pedagogic_fn=None) -> html.Div:
+def build_stability_layout(
+    page_key: str,
+    layout_pedagogic_fn=None,
+    tau: float = 0.0,
+    delta: float = 0.0,
+) -> html.Div:
     """
-    Create a minimal base layout for stability pages with three sections:
-    - Graphique interactif (dcc.Graph)
+    Create a base layout for stability pages (static display).
+
+    - Affiche les valeurs propres calculées
     - Diagramme de phase (dcc.Graph)
     - Explication pédagogique (html.Div)
 
-    The function only provides the strict necessary placeholders, keeping code simple.
-    If layout_pedagogic_fn is provided, it will be used to populate the pedagogic section directly.
+    Args:
+        page_key: Unique identifier for the page
+        layout_pedagogic_fn: Function returning pedagogical content
+        tau: Trace value for this equilibrium type
+        delta: Determinant value for this equilibrium type
     """
     ids = stability_ids(page_key)
     title = page_key.replace("_", " ").title()
@@ -85,11 +94,89 @@ def build_stability_layout(page_key: str, layout_pedagogic_fn=None) -> html.Div:
             ),
             # Title
             html.H2(title, style=TEXT["h2"]),
-            # Section: Graphique interactif
+            # Section: Paramètres du système
             html.Div(
                 [
-                    html.H3("Graphique interactif", style=TEXT["h3"]),
-                    dcc.Graph(id=ids["graph"]),
+                    html.H3("Paramètres du système", style=TEXT["h3"]),
+                    html.Div(
+                        [
+                            html.Div(
+                                [
+                                    html.Strong(
+                                        "Trace (τ) : ", style={"color": PALETTE.text}
+                                    ),
+                                    html.Span(
+                                        f"τ = {tau:.2f}",
+                                        style={
+                                            "color": PALETTE.primary,
+                                            "fontWeight": "bold",
+                                        },
+                                    ),
+                                ],
+                                style={"marginBottom": "0.5rem"},
+                            ),
+                            html.Div(
+                                [
+                                    html.Strong(
+                                        "Déterminant (Δ) : ",
+                                        style={"color": PALETTE.text},
+                                    ),
+                                    html.Span(
+                                        f"Δ = {delta:.2f}",
+                                        style={
+                                            "color": PALETTE.primary,
+                                            "fontWeight": "bold",
+                                        },
+                                    ),
+                                ],
+                                style={"marginBottom": "0.5rem"},
+                            ),
+                            html.Div(
+                                [
+                                    html.Strong(
+                                        "Équation différentielle : ",
+                                        style={"color": PALETTE.text},
+                                    ),
+                                ],
+                                style={"marginBottom": "0.5rem"},
+                            ),
+                            html.Div(
+                                id=ids["ode_display"],
+                                style={
+                                    "padding": "12px",
+                                    "backgroundColor": PALETTE.bg,
+                                    "borderRadius": "8px",
+                                    "border": f"1px solid {PALETTE.border}",
+                                    "marginTop": "0.5rem",
+                                    "marginBottom": "1rem",
+                                    "fontFamily": "monospace",
+                                    "fontSize": "0.9rem",
+                                },
+                            ),
+                            html.Div(
+                                id=ids["eigenvalue_display"],
+                                style={
+                                    "padding": "12px",
+                                    "backgroundColor": PALETTE.bg,
+                                    "borderRadius": "8px",
+                                    "border": f"1px solid {PALETTE.border}",
+                                    "marginTop": "1rem",
+                                },
+                            ),
+                        ],
+                    ),
+                ],
+                style={**section_card(), "marginBottom": "20px"},
+            ),
+            # Section: Graphe temporel du système
+            html.Div(
+                [
+                    html.H3("Évolution temporelle", style=TEXT["h3"]),
+                    html.P(
+                        "Trajectoires x₁(t) et x₂(t) montrant l'évolution du système dans le temps.",
+                        style=TEXT["muted"],
+                    ),
+                    dcc.Graph(id=ids["system_graph"]),
                 ],
                 style={**section_card(), "marginBottom": "20px"},
             ),
@@ -97,6 +184,10 @@ def build_stability_layout(page_key: str, layout_pedagogic_fn=None) -> html.Div:
             html.Div(
                 [
                     html.H3("Diagramme de phase", style=TEXT["h3"]),
+                    html.P(
+                        "Portrait de phase montrant les trajectoires du système dynamique.",
+                        style=TEXT["muted"],
+                    ),
                     dcc.Graph(id=ids["phase"]),
                 ],
                 style={**section_card(), "marginBottom": "20px"},

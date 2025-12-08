@@ -44,7 +44,7 @@ class FigureTheme:
     zone_lower_left: str = PALETTE.zone_lower_left
     zone_lower_right: str = PALETTE.zone_lower_right
     zone_lower_axis: str = PALETTE.zone_lower_axis
-    
+
     # Zone hover states (subtle increase in opacity)
     zone_upper_left_hover: str = PALETTE.zone_upper_left_hover
     zone_upper_right_hover: str = PALETTE.zone_upper_right_hover

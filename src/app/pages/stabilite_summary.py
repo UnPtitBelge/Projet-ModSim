@@ -42,7 +42,8 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Position d'équilibre pour un système dynamique, ou après une petite perturbation, le système tend à revenir vers cet état:"                ),
+                    "Position d'équilibre pour un système dynamique, ou après une petite perturbation, le système tend à revenir vers cet état:"
+                ),
                 html.Ul(
                     [
                         html.Li("$\\tau$ > 0"),
@@ -80,9 +81,7 @@ _ZONES = [
         "href": "/stabilite/noeud_stable",
         "resume": html.Div(
             [
-                html.P(
-                    "Etat d’équilibre asymptotiquement stable:"
-                ),
+                html.P("Etat d’équilibre asymptotiquement stable:"),
                 html.Ul(
                     [
                         html.Li("$\\tau$ > 0"),
@@ -100,7 +99,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Etat d’équilibre instable:", 
+                    "Etat d’équilibre instable:",
                     style={"margin": "0 0 4px 0"},
                 ),
                 html.Ul(
@@ -139,9 +138,7 @@ _ZONES = [
         "href": "/stabilite/centre",
         "resume": html.Div(
             [
-                html.P(
-                    "Point d'équilibre avec oscillations non amorties :" # TODO
-                ),
+                html.P("Point d'équilibre avec oscillations non amorties :"),  # TODO
                 html.Ul(
                     [
                         html.Li("$\\tau$ = 0"),
@@ -158,9 +155,7 @@ _ZONES = [
         "href": "/stabilite/mouvement_uniforme",
         "resume": html.Div(
             [
-                html.P(
-                    "Cas dégénéré avec racines nulles :" # TODO
-                ),
+                html.P("Cas dégénéré avec racines nulles :"),  # TODO
                 html.Ul(
                     [
                         html.Li("$\\tau$ = 0"),
@@ -179,9 +174,7 @@ _ZONES = [
         "href": "/stabilite/noeud_stable_degenere",
         "resume": html.Div(
             [
-                html.P(
-                    "Cas dégénéré avec racines réelles égales négatives :" # TODO
-                ),
+                html.P("Cas dégénéré avec racines réelles égales négatives :"),  # TODO
                 html.Ul(
                     [
                         html.Li("$\\tau^2 = 4\\cdot\\Delta$ avec $\\tau$ > 0"),
@@ -197,9 +190,7 @@ _ZONES = [
         "href": "/stabilite/noeud_instable_degenere",
         "resume": html.Div(
             [
-                html.P(
-                    "Cas dégénéré avec racines réelles égales positives :" # TODO
-                ),
+                html.P("Cas dégénéré avec racines réelles égales positives :"),  # TODO
                 html.Ul(
                     [
                         html.Li("$\\tau^2 = 4\\cdot\\Delta$ avec $\\tau$ < 0"),
@@ -216,7 +207,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Continuum de points d’équilibre avec stabilité locale :" # TODO
+                    "Continuum de points d’équilibre avec stabilité locale :"  # TODO
                 ),
                 html.Ul(
                     [
@@ -235,7 +226,7 @@ _ZONES = [
         "resume": html.Div(
             [
                 html.P(
-                    "Continuum de points d’équilibre avec instabilité locale :" # TODO
+                    "Continuum de points d’équilibre avec instabilité locale :"  # TODO
                 ),
                 html.Ul(
                     [

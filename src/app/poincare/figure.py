@@ -20,8 +20,8 @@ import numpy as np
 import plotly.graph_objs as go
 
 from src.app.logging_setup import get_logger
-from src.app.style.plot.theme import FIGURE_THEME, apply_to_figure
 from src.app.style.palette import PALETTE
+from src.app.style.plot.theme import FIGURE_THEME, apply_to_figure
 
 from .constants import N_SAMPLES, TAU_MAX, TAU_MIN
 
@@ -223,7 +223,7 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
             marker=dict(
                 size=12,
                 color=PALETTE.mouvement_uniforme,
-                line=dict(color="rgba(0,0,0,0)", width=0)
+                line=dict(color="rgba(0,0,0,0)", width=0),
             ),
             name="Mouvement uniforme",
             meta="origin",

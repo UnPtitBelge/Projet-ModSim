@@ -8,10 +8,9 @@ from dash import dcc, html
 # from src.app.app import app  # removed to avoid circular import; use dash.get_app() instead
 from src.app.logging_setup import get_logger
 from src.app.stabilite.base_layout import build_stability_layout
-from src.app.stabilite.ligne_pe_instable import (
-    register_callbacks as _register_callbacks,
-    layout_pedagogic,
-)
+from src.app.stabilite.ligne_pe_instable import layout_pedagogic
+from src.app.stabilite.ligne_pe_instable import \
+    register_callbacks as _register_callbacks
 from src.app.style.components.layout import app_container, page_text_container
 from src.app.style.text import TEXT
 
@@ -29,7 +28,9 @@ dash.register_page(
 
 log.debug("Construction du layout de la page ligne de points d'équilibre instable...")
 
-layout = build_stability_layout("ligne_pe_instable", layout_pedagogic)
+layout = build_stability_layout(
+    "ligne_pe_instable", layout_pedagogic, tau=1.0, delta=0.0
+)
 _register_callbacks(dash.get_app())
 
-log.info("Layout de la page ligne de points d’équilibre instable construit.")
+log.info("Layout de la page ligne de points d'équilibre instable construit.")
