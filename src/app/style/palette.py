@@ -12,6 +12,39 @@ Conventions:
 
 from __future__ import annotations
 
+"""
+Color palette for the Projet-ModSim design system.
+
+Implements a cohesive warm color scheme suitable for technical/mathematical
+applications. All colors are defined in the PALETTE dataclass for easy
+access and maintenance.
+
+Color Categories:
+
+1. Core Colors (UI background & text):
+   - bg: #FEF5F1 (warm beige-peach background)
+   - surface: #FFFBF8 (warm white, cards/sections)
+   - primary: #EA580C (warm orange, accents/buttons)
+   - text: #3E2723 (dark brown, main text)
+
+2. Accessibility:
+   - border: #E8DDD4 (warm beige borders)
+   - muted: #9E8B7E (muted brown for secondary text)
+   - overlay: rgba(62, 39, 35, 0.06) (brown at 6% opacity)
+   - shadow: rgba(62, 39, 35, 0.08) (brown at 8% opacity)
+
+3. Poincaré Diagram Zones (stability regions):
+   - Upper left/right/lower regions with base, hover, and active states
+   - Warm oranges for highlighting
+   - Cool grays for axis regions
+
+4. Special:
+   - mouvement_uniforme: #F59E0B (amber accent)
+   - white, black: Standard values for overlays/text
+
+The palette is frozen (immutable) to prevent accidental modifications.
+"""
+
 from dataclasses import dataclass
 
 

@@ -1,18 +1,14 @@
-"""Page Stabilité – Ligne de points d’équilibre stable: enregistre /stabilite/ligne_pe_stable et construit le layout descriptif."""
+"""Page Stabilité – Ligne de points d'équilibre stable: enregistre /stabilite/ligne_pe_stable et construit le layout descriptif."""
 
 from __future__ import annotations
 
 import dash
-from dash import dcc, html
 
-# from src.app.app import app  # removed to avoid circular import; use dash.get_app() instead
 from src.app.logging_setup import get_logger
 from src.app.stabilite.base_layout import build_stability_layout
 from src.app.stabilite.ligne_pe_stable import layout_pedagogic
 from src.app.stabilite.ligne_pe_stable import \
     register_callbacks as _register_callbacks
-from src.app.style.components.layout import app_container, page_text_container
-from src.app.style.text import TEXT
 
 log = get_logger(__name__)
 log.info("Enregistrement de la page /stabilite/ligne_pe_stable.")

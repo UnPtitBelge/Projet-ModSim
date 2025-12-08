@@ -1,7 +1,6 @@
 """Page Stabilité – Nœud instable: enregistre /stabilite/noeud_instable et construit le layout descriptif."""
 
 import dash
-from dash import html
 
 # from src.app.app import app  # removed to avoid circular import; use dash.get_app() instead
 from src.app.logging_setup import get_logger

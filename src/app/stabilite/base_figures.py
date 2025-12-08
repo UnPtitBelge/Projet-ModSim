@@ -1,3 +1,20 @@
+"""
+Phase diagram generation for stability analysis visualizations.
+
+This module creates interactive phase portraits showing:
+1. System trajectories (solved ODEs)
+2. Vector field (direction field with arrows)
+3. Equilibrium points
+4. Separatrices (for saddles)
+
+Functions generate Plotly figures from system matrices defined by (τ, Δ) coordinates
+on the Poincaré diagram. Figures are cached for performance.
+
+System format:
+    dx₁/dt = a·x₁ + b·x₂
+    dx₂/dt = c·x₁ + d·x₂
+"""
+
 from __future__ import annotations
 
 import logging

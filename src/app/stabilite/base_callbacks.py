@@ -1,3 +1,16 @@
+"""
+Stability page callbacks for displaying equilibrium properties and dynamics.
+
+This module registers Dash callbacks that handle displaying computed properties for
+each equilibrium type (eigenvalues, phase diagrams, system equations, etc.).
+
+Callbacks are registered per-page using the page_key to create unique element IDs.
+Each stability page displays:
+- Eigenvalue information (type, values, nature)
+- System ODE equation
+- Phase portrait diagram
+"""
+
 from __future__ import annotations
 
 from typing import Callable, Optional

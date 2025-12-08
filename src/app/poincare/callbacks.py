@@ -1,5 +1,22 @@
 """
-Callbacks du diagramme de Poincaré (survol et clic) mettant en évidence les zones et fournissant la navigation multipage.
+Poincaré diagram callbacks for interactivity (hover, click) and zone navigation.
+
+This module manages user interactions with the Poincaré diagram:
+1. Hover effects: highlights zones under the cursor
+2. Click navigation: redirects to the corresponding stability page
+3. Zone identification: maps diagram regions to equilibrium types
+
+The Poincaré diagram plots τ (trace) vs Δ (determinant) to show stability regions.
+Clicking a zone navigates to the detailed page for that equilibrium type.
+
+Supported equilibrium types:
+- Foyer stable/instable (spiral convergence/divergence)
+- Nœud stable/instable (direct convergence/divergence)
+- Selle (saddle point)
+- Centre (periodic orbits)
+- Dégénérés (special cases)
+- Ligne de PE (linear families)
+- Mouvement uniforme (constant motion)
 """
 
 from __future__ import annotations

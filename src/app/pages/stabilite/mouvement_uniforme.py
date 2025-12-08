@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import dash
-from dash import html
 
-# from src.app.app import app  # removed to avoid circular import; use dash.get_app() instead
 from src.app.logging_setup import get_logger
 from src.app.stabilite.base_layout import build_stability_layout
 from src.app.stabilite.mouvement_uniforme import layout_pedagogic

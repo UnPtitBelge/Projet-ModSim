@@ -1,5 +1,23 @@
 """
-Utilities for eigenvalue calculations and visualizations.
+Eigenvalue utilities for system stability analysis.
+
+This module provides functions to:
+1. Convert Poincaré plane coordinates (τ, Δ) to matrix coefficients (a, b, c, d)
+2. Calculate eigenvalues from matrix coefficients
+3. Classify equilibrium types based on eigenvalues
+4. Format eigenvalue data for display in the UI
+
+The Poincaré plane divides 2D linear systems by their stability characteristics:
+- Horizontal axis: τ (trace = sum of diagonal elements)
+- Vertical axis: Δ (determinant = ad - bc)
+
+Different regions correspond to different equilibrium types:
+- Foyer stable/instable: complex conjugate eigenvalues
+- Nœud stable/instable: real eigenvalues (same sign)
+- Selle: real eigenvalues (opposite signs)
+- Centre: purely imaginary eigenvalues
+- Ligne de points d'équilibre: degenerate cases
+- Mouvement uniforme: at origin (no true equilibrium)
 """
 
 from __future__ import annotations
