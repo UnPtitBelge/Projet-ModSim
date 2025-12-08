@@ -168,29 +168,56 @@ def build_stability_layout(
                 ],
                 style={**section_card(), "marginBottom": "20px"},
             ),
-            # Section: Graphe temporel du système
+            # Section: Graphes côte à côte
             html.Div(
                 [
-                    html.H3("Évolution temporelle", style=TEXT["h3"]),
-                    html.P(
-                        "Trajectoires x₁(t) et x₂(t) montrant l'évolution du système dans le temps.",
-                        style=TEXT["muted"],
+                    # Graphe temporel
+                    html.Div(
+                        [
+                            html.Div(
+                                [
+                                    html.H3("Évolution temporelle", style=TEXT["h3"]),
+                                    html.Div(
+                                        [
+                                            dcc.Graph(id=ids["system_graph"]),
+                                        ],
+                                        style=graph_container(),
+                                    ),
+                                ],
+                                style=section_card(),
+                            ),
+                        ],
+                        style={
+                            "width": "48%",
+                            "display": "inline-block",
+                            "marginRight": "4%",
+                            "verticalAlign": "top",
+                        },
                     ),
-                    dcc.Graph(id=ids["system_graph"]),
-                ],
-                style={**section_card(), "marginBottom": "20px"},
-            ),
-            # Section: Diagramme de phase
-            html.Div(
-                [
-                    html.H3("Diagramme de phase", style=TEXT["h3"]),
-                    html.P(
-                        "Portrait de phase montrant les trajectoires du système dynamique.",
-                        style=TEXT["muted"],
+                    # Diagramme de phase
+                    html.Div(
+                        [
+                            html.Div(
+                                [
+                                    html.H3("Diagramme de phase", style=TEXT["h3"]),
+                                    html.Div(
+                                        [
+                                            dcc.Graph(id=ids["phase"]),
+                                        ],
+                                        style=graph_container(),
+                                    ),
+                                ],
+                                style=section_card(),
+                            ),
+                        ],
+                        style={
+                            "width": "48%",
+                            "display": "inline-block",
+                            "verticalAlign": "top",
+                        },
                     ),
-                    dcc.Graph(id=ids["phase"]),
                 ],
-                style={**section_card(), "marginBottom": "20px"},
+                style={"marginTop": "24px"},
             ),
             # Section: Explication pédagogique
             html.Div(

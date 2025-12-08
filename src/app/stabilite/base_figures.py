@@ -278,7 +278,7 @@ def _build_phase_diagram_figure(
         yaxis_title="x₂",
         hovermode="closest",
         width=None,
-        height=700,
+        height=500,
         xaxis=dict(range=x_range, scaleanchor="y", scaleratio=1),
         yaxis=dict(range=y_range, scaleanchor="x", scaleratio=1),
         template="plotly_white",
@@ -394,7 +394,7 @@ def create_system_graph(
         yaxis_title="Valeur",
         hovermode="x unified",
         width=None,
-        height=700,
+        height=500,
         template="plotly_white",
         legend=dict(x=0.02, y=0.98),
     )

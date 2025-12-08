@@ -230,196 +230,213 @@ def build_layout() -> html.Div:
                 ],
                 style={"marginTop": "24px"},
             ),
-            # Section pédagogique : Définitions des types de stabilité
+            # Sections pédagogiques côte à côte
             html.Div(
                 [
-                    html.H2("Définitions des types de stabilité", style=TEXT["h2"]),
+                    # Section pédagogique : Définitions des types de stabilité
                     html.Div(
                         [
-                            html.H3(
-                                "Stabilité asymptotique",
-                                style={**TEXT["h3"], "color": "#27ae60"},
-                            ),
-                            html.P(
+                            html.H2("Définitions des types de stabilité", style=TEXT["h2"]),
+                            html.Div(
                                 [
-                                    "Un point d'équilibre est ",
-                                    html.Strong("asymptotiquement stable"),
-                                    " si toutes les trajectoires démarrant près de ce point convergent vers lui lorsque ",
-                                    html.Em("t → ∞"),
-                                    ". Pour un système linéaire, cela se produit lorsque toutes les valeurs propres ont une ",
-                                    html.Strong("partie réelle négative"),
-                                    ".",
-                                ],
-                                style=TEXT["p"],
-                            ),
-                            html.Ul(
-                                [
-                                    html.Li(
-                                        "Foyer stable : valeurs propres complexes avec Re(λ) < 0 (spirale convergente)",
+                                    html.H3(
+                                        "Stabilité asymptotique",
+                                        style={**TEXT["h3"], "color": "#27ae60"},
+                                    ),
+                                    html.P(
+                                        [
+                                            "Un point d'équilibre est ",
+                                            html.Strong("asymptotiquement stable"),
+                                            " si toutes les trajectoires démarrant près de ce point convergent vers lui lorsque ",
+                                            html.Em("t → ∞"),
+                                            ". Pour un système linéaire, cela se produit lorsque toutes les valeurs propres ont une ",
+                                            html.Strong("partie réelle négative"),
+                                            ".",
+                                        ],
                                         style=TEXT["p"],
                                     ),
-                                    html.Li(
-                                        "Nœud stable : valeurs propres réelles négatives (convergence directe)",
+                                    html.Ul(
+                                        [
+                                            html.Li(
+                                                "Foyer stable : valeurs propres complexes avec Re(λ) < 0 (spirale convergente)",
+                                                style=TEXT["p"],
+                                            ),
+                                            html.Li(
+                                                "Nœud stable : valeurs propres réelles négatives (convergence directe)",
+                                                style=TEXT["p"],
+                                            ),
+                                        ],
+                                        style={"marginLeft": "20px"},
+                                    ),
+                                ],
+                                style={"marginBottom": "20px"},
+                            ),
+                            html.Div(
+                                [
+                                    html.H3(
+                                        "Stabilité (marginale)",
+                                        style={**TEXT["h3"], "color": "#f39c12"},
+                                    ),
+                                    html.P(
+                                        [
+                                            "Un point d'équilibre est ",
+                                            html.Strong("stable"),
+                                            " (mais pas asymptotiquement) si les trajectoires restent bornées près du point sans nécessairement y converger. "
+                                            "Cela se produit pour un ",
+                                            html.Strong("centre"),
+                                            " avec des valeurs propres purement imaginaires (oscillations non amorties).",
+                                        ],
                                         style=TEXT["p"],
                                     ),
                                 ],
-                                style={"marginLeft": "20px"},
+                                style={"marginBottom": "20px"},
+                            ),
+                            html.Div(
+                                [
+                                    html.H3(
+                                        "Instabilité", style={**TEXT["h3"], "color": "#e74c3c"}
+                                    ),
+                                    html.P(
+                                        [
+                                            "Un point d'équilibre est ",
+                                            html.Strong("instable"),
+                                            " si au moins une trajectoire s'éloigne du point. Cela se produit lorsqu'au moins une valeur propre a une ",
+                                            html.Strong("partie réelle positive"),
+                                            ".",
+                                        ],
+                                        style=TEXT["p"],
+                                    ),
+                                    html.Ul(
+                                        [
+                                            html.Li(
+                                                "Foyer instable : valeurs propres complexes avec Re(λ) > 0 (spirale divergente)",
+                                                style=TEXT["p"],
+                                            ),
+                                            html.Li(
+                                                "Nœud instable : valeurs propres réelles positives (divergence directe)",
+                                                style=TEXT["p"],
+                                            ),
+                                            html.Li(
+                                                "Selle : valeurs propres réelles de signes opposés (stabilité mixte)",
+                                                style=TEXT["p"],
+                                            ),
+                                        ],
+                                        style={"marginLeft": "20px"},
+                                    ),
+                                ],
+                                style={"marginBottom": "20px"},
                             ),
                         ],
-                        style={"marginBottom": "20px"},
+                        style={
+                            **section_card(),
+                            "width": "48%",
+                            "display": "inline-block",
+                            "verticalAlign": "top",
+                            "marginRight": "2%",
+                        },
                     ),
+                    # Section pédagogique : Impact des paramètres
                     html.Div(
                         [
-                            html.H3(
-                                "Stabilité (marginale)",
-                                style={**TEXT["h3"], "color": "#f39c12"},
-                            ),
+                            html.H2("Impact des paramètres τ et Δ", style=TEXT["h2"]),
                             html.P(
                                 [
-                                    "Un point d'équilibre est ",
-                                    html.Strong("stable"),
-                                    " (mais pas asymptotiquement) si les trajectoires restent bornées près du point sans nécessairement y converger. "
-                                    "Cela se produit pour un ",
-                                    html.Strong("centre"),
-                                    " avec des valeurs propres purement imaginaires (oscillations non amorties).",
+                                    "Pour un système linéaire ",
+                                    html.Span(
+                                        "$\\dot{\\mathbf{x}} = A\\mathbf{x}$",
+                                        className="tex2jax_process",
+                                    ),
+                                    ", le comportement est déterminé par les valeurs propres de la matrice A, "
+                                    "qui dépendent de sa trace τ = tr(A) et de son déterminant Δ = det(A).",
                                 ],
                                 style=TEXT["p"],
                             ),
-                        ],
-                        style={"marginBottom": "20px"},
-                    ),
-                    html.Div(
-                        [
-                            html.H3(
-                                "Instabilité", style={**TEXT["h3"], "color": "#e74c3c"}
-                            ),
-                            html.P(
+                            html.Div(
                                 [
-                                    "Un point d'équilibre est ",
-                                    html.Strong("instable"),
-                                    " si au moins une trajectoire s'éloigne du point. Cela se produit lorsqu'au moins une valeur propre a une ",
-                                    html.Strong("partie réelle positive"),
-                                    ".",
-                                ],
-                                style=TEXT["p"],
-                            ),
-                            html.Ul(
-                                [
-                                    html.Li(
-                                        "Foyer instable : valeurs propres complexes avec Re(λ) > 0 (spirale divergente)",
-                                        style=TEXT["p"],
-                                    ),
-                                    html.Li(
-                                        "Nœud instable : valeurs propres réelles positives (divergence directe)",
-                                        style=TEXT["p"],
-                                    ),
-                                    html.Li(
-                                        "Selle : valeurs propres réelles de signes opposés (stabilité mixte)",
-                                        style=TEXT["p"],
+                                    html.H3("Trace (τ) :", style=TEXT["h3"]),
+                                    html.Ul(
+                                        [
+                                            html.Li(
+                                                [
+                                                    html.Strong("τ > 0"),
+                                                    " : système avec tendance à l'instabilité (au moins une valeur propre peut avoir partie réelle positive)",
+                                                ],
+                                                style=TEXT["p"],
+                                            ),
+                                            html.Li(
+                                                [
+                                                    html.Strong("τ = 0"),
+                                                    " : cas marginal (centre, mouvement uniforme)",
+                                                ],
+                                                style=TEXT["p"],
+                                            ),
+                                            html.Li(
+                                                [
+                                                    html.Strong("τ < 0"),
+                                                    " : système avec tendance à la stabilité (valeurs propres avec partie réelle négative)",
+                                                ],
+                                                style=TEXT["p"],
+                                            ),
+                                        ],
+                                        style={"marginLeft": "20px"},
                                     ),
                                 ],
-                                style={"marginLeft": "20px"},
+                                style={"marginBottom": "20px"},
+                            ),
+                            html.Div(
+                                [
+                                    html.H3("Déterminant (Δ) :", style=TEXT["h3"]),
+                                    html.Ul(
+                                        [
+                                            html.Li(
+                                                [
+                                                    html.Strong("Δ < 0"),
+                                                    " : valeurs propres réelles de signes opposés → ",
+                                                    html.Strong("selle"),
+                                                    " (instable)",
+                                                ],
+                                                style=TEXT["p"],
+                                            ),
+                                            html.Li(
+                                                [
+                                                    html.Strong("Δ = 0"),
+                                                    " : au moins une valeur propre nulle (cas dégénéré)",
+                                                ],
+                                                style=TEXT["p"],
+                                            ),
+                                            html.Li(
+                                                [
+                                                    html.Strong("0 < Δ < τ²/4"),
+                                                    " : valeurs propres réelles de même signe → ",
+                                                    html.Strong("nœud"),
+                                                    " (stable si τ > 0, instable si τ < 0)",
+                                                ],
+                                                style=TEXT["p"],
+                                            ),
+                                            html.Li(
+                                                [
+                                                    html.Strong("Δ > τ²/4"),
+                                                    " : valeurs propres complexes conjuguées → ",
+                                                    html.Strong("foyer"),
+                                                    " (stable si τ > 0, instable si τ < 0)",
+                                                ],
+                                                style=TEXT["p"],
+                                            ),
+                                        ],
+                                        style={"marginLeft": "20px"},
+                                    ),
+                                ]
                             ),
                         ],
-                        style={"marginBottom": "20px"},
+                        style={
+                            **section_card(),
+                            "width": "48%",
+                            "display": "inline-block",
+                            "verticalAlign": "top",
+                        },
                     ),
                 ],
-                style=section_card(),
-            ),
-            # Section pédagogique : Impact des paramètres
-            html.Div(
-                [
-                    html.H2("Impact des paramètres τ et Δ", style=TEXT["h2"]),
-                    html.P(
-                        [
-                            "Pour un système linéaire ",
-                            html.Span(
-                                "$\\dot{\\mathbf{x}} = A\\mathbf{x}$",
-                                className="tex2jax_process",
-                            ),
-                            ", le comportement est déterminé par les valeurs propres de la matrice A, "
-                            "qui dépendent de sa trace τ = tr(A) et de son déterminant Δ = det(A).",
-                        ],
-                        style=TEXT["p"],
-                    ),
-                    html.Div(
-                        [
-                            html.H3("Trace (τ) :", style=TEXT["h3"]),
-                            html.Ul(
-                                [
-                                    html.Li(
-                                        [
-                                            html.Strong("τ > 0"),
-                                            " : système avec tendance à l'instabilité (au moins une valeur propre peut avoir partie réelle positive)",
-                                        ],
-                                        style=TEXT["p"],
-                                    ),
-                                    html.Li(
-                                        [
-                                            html.Strong("τ = 0"),
-                                            " : cas marginal (centre, mouvement uniforme)",
-                                        ],
-                                        style=TEXT["p"],
-                                    ),
-                                    html.Li(
-                                        [
-                                            html.Strong("τ < 0"),
-                                            " : système avec tendance à la stabilité (valeurs propres avec partie réelle négative)",
-                                        ],
-                                        style=TEXT["p"],
-                                    ),
-                                ],
-                                style={"marginLeft": "20px"},
-                            ),
-                        ],
-                        style={"marginBottom": "20px"},
-                    ),
-                    html.Div(
-                        [
-                            html.H3("Déterminant (Δ) :", style=TEXT["h3"]),
-                            html.Ul(
-                                [
-                                    html.Li(
-                                        [
-                                            html.Strong("Δ < 0"),
-                                            " : valeurs propres réelles de signes opposés → ",
-                                            html.Strong("selle"),
-                                            " (instable)",
-                                        ],
-                                        style=TEXT["p"],
-                                    ),
-                                    html.Li(
-                                        [
-                                            html.Strong("Δ = 0"),
-                                            " : au moins une valeur propre nulle (cas dégénéré)",
-                                        ],
-                                        style=TEXT["p"],
-                                    ),
-                                    html.Li(
-                                        [
-                                            html.Strong("0 < Δ < τ²/4"),
-                                            " : valeurs propres réelles de même signe → ",
-                                            html.Strong("nœud"),
-                                            " (stable si τ > 0, instable si τ < 0)",
-                                        ],
-                                        style=TEXT["p"],
-                                    ),
-                                    html.Li(
-                                        [
-                                            html.Strong("Δ > τ²/4"),
-                                            " : valeurs propres complexes conjuguées → ",
-                                            html.Strong("foyer"),
-                                            " (stable si τ > 0, instable si τ < 0)",
-                                        ],
-                                        style=TEXT["p"],
-                                    ),
-                                ],
-                                style={"marginLeft": "20px"},
-                            ),
-                        ]
-                    ),
-                ],
-                style=section_card(),
+                style={"marginTop": "24px"},
             ),
             # Section : Exemples de la vie réelle
             html.Div(
