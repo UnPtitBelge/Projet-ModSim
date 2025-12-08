@@ -5,6 +5,7 @@
 Projet-ModSim est une application Dash multipage pour l'analyse interactive de la stabilité des systèmes linéaires du second ordre via le diagramme de Poincaré.
 
 ### Stack technique
+
 - **Framework:** Dash (Python web framework)
 - **Visualisation:** Plotly (graphiques interactifs)
 - **Calculs:** NumPy, SciPy (algèbre linéaire, EDO)
@@ -14,7 +15,7 @@ Projet-ModSim est une application Dash multipage pour l'analyse interactive de l
 
 ## Structure des répertoires
 
-```
+```md
 src/
 ├── __init__.py                    # Exports lazy pour create_app/get_app
 ├── app/
@@ -79,7 +80,7 @@ ARCHITECTURE.md                  # Ce fichier
 
 ### 1. Démarrage de l'application
 
-```
+```md
 run.py → create_app() → Dash instance
   │
   ├→ [Auto-discovery des pages] → @dash.register_page() dans src/app/pages/**/*.py
@@ -93,7 +94,7 @@ run.py → create_app() → Dash instance
 
 ### 2. Navigation par clic sur Poincaré
 
-```
+```md
 User clicks zone on diagram
   │
   ├→ clickData callback → determine zone (meta label)
@@ -105,7 +106,7 @@ User clicks zone on diagram
 
 ### 3. Affichage d'une page d'équilibre
 
-```
+```md
 URL: /stabilite/foyer_stable
   │
   ├→ Dash auto-loads src/app/pages/stabilite/foyer_stable.py
@@ -129,7 +130,7 @@ URL: /stabilite/foyer_stable
 
 Tous les styles sont centralisés dans `src/app/style/`:
 
-```
+```md
 style/
 ├── palette.py          # Couleurs (PALETTE dataclass)
 ├── typography.py       # Fonts (TYPOGRAPHY dataclass)
@@ -207,7 +208,7 @@ log.warning("Something unexpected")
 
 ### Pages d'équilibre (11 types)
 
-```
+```md
 /stabilite/foyer_stable
 /stabilite/foyer_instable
 /stabilite/noeud_stable
@@ -230,6 +231,7 @@ Chacune est générée via `src/app/stabilite/` + template `base_layout.py`.
 ### `poincare/figure.py`
 
 Construit la figure Poincaré avec:
+
 - **Parabole noire** (τ² = 4Δ) séparant régions stables/instables
 - **11 zones colorées** correspondant aux 11 types d'équilibre
 - **Traces Plotly** avec indices 0..10 pour callbacks
@@ -238,7 +240,7 @@ Construit la figure Poincaré avec:
 
 Convertit (τ, Δ) → eigenvalues → classification:
 
-```
+```md
 Poincaré plane (τ, Δ)
     ↓
 tau_delta_to_matrix() → Matrix coefficients [a b; c d]
@@ -251,6 +253,7 @@ classify_equilibrium() → Type d'équilibre + nature
 ### `stabilite/base_figures.py`
 
 Génère les diagrammes de phase:
+
 - **Trajectoires** (solve ODE avec scipy.integrate.odeint)
 - **Champ de vecteurs** (arrows direction field)
 - **Points d'équilibre** (marqueurs)
@@ -259,6 +262,7 @@ Génère les diagrammes de phase:
 ### `poincare/callbacks.py`
 
 Gère les interactions utilisateur:
+
 - **Hover** → Surligner zone
 - **Click** → Navigate to `/stabilite/{type}`
 - **Zone mapping** → Meta labels → Page names
@@ -304,6 +308,7 @@ Gère les interactions utilisateur:
 ### Ajouter un nouveau type d'équilibre
 
 1. Créer `src/app/stabilite/nouveau_type.py`:
+
    ```python
    PAGE_KEY = "nouveau_type"
    
@@ -315,6 +320,7 @@ Gère les interactions utilisateur:
    ```
 
 2. Créer `src/app/pages/stabilite/nouveau_type.py`:
+
    ```python
    import dash
    from src.app.stabilite.nouveau_type import layout_pedagogic
@@ -330,14 +336,15 @@ Gère les interactions utilisateur:
 ## Nettoyage et Maintenance
 
 ### Structure épurée
+
 - ✅ Pas de fichiers temporaires (`src/temp/` supprimé)
 - ✅ Imports non-utilisés supprimés
 - ✅ Docstrings complètes sur modules clés
 - ✅ Fichiers d'__init__.py propres avec __all__
 
 ### Qualité du code
+
 - Noms clairs et constants importants en MAJUSCULES
 - Fonctions courtes avec docstrings + type hints
 - Modules spécialisés (analyse, présentation, style)
 - Logging strategic aux points importants
-
