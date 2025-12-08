@@ -16,7 +16,7 @@ log.info("Enregistrement de la page /stabilite/foyer_stable.")
 dash.register_page(
     __name__,
     path="/stabilite/foyer_stable",
-    name="Stabilité (foyer stable)",
+    name="Foyer stable",
     title="Stabilité – Foyer stable",
     order=10,
     description="Informations sur le foyer stable du diagramme de Poincaré.",

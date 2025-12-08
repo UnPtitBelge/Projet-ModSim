@@ -19,7 +19,7 @@ log.info("Enregistrement de la page /stabilite/centre.")
 dash.register_page(
     __name__,
     path="/stabilite/centre",
-    name="Stabilité (centre)",
+    name="Centre",
     title="Stabilité – Centre",
     order=15,
     description="Informations sur le cas 'centre' du diagramme de Poincaré (placeholder).",

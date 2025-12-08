@@ -18,7 +18,7 @@ log.info("Enregistrement de la page /stabilite/mouvement_uniforme.")
 dash.register_page(
     __name__,
     path="/stabilite/mouvement_uniforme",
-    name="Stabilité (mouvement uniforme)",
+    name="Mouvement uniforme",
     title="Stabilité – Mouvement uniforme",
     order=16,
     description="Informations sur le cas 'mouvement uniforme' du diagramme de Poincaré (placeholder).",

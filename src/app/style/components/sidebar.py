@@ -41,7 +41,7 @@ from src.app.style.text import TEXT
 from src.app.style.typography import TYPOGRAPHY
 
 # Public constants
-SIDEBAR_WIDTH: int = 280
+SIDEBAR_WIDTH: int = 140
 
 
 def sidebar_container() -> Dict[str, str]:

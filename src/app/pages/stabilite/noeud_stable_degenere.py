@@ -18,7 +18,7 @@ log.info("Enregistrement de la page /stabilite/noeud_stable_degenere.")
 dash.register_page(
     __name__,
     path="/stabilite/noeud_stable_degenere",
-    name="Stabilité (nœud stable dégénéré)",
+    name="Nœud stable dégénéré",
     title="Stabilité – Nœud stable dégénéré",
     order=17,
     description="Informations sur le cas 'nœud stable dégénéré' du diagramme de Poincaré (placeholder).",

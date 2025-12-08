@@ -20,7 +20,7 @@ log.info("Enregistrement de la page /stabilite/ligne_pe_stable.")
 dash.register_page(
     __name__,
     path="/stabilite/ligne_pe_stable",
-    name="Stabilité (ligne de PE stable)",
+    name="Ligne de PE stable",
     title="Stabilité – Ligne de points d’équilibre stable",
     order=19,
     description="Informations sur la ligne de points d’équilibre stable (placeholder).",

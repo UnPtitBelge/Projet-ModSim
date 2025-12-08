@@ -16,7 +16,7 @@ log.info("Enregistrement de la page /stabilite/noeud_instable.")
 dash.register_page(
     __name__,
     path="/stabilite/noeud_instable",
-    name="Stabilité (nœud instable)",
+    name="Nœud instable",
     title="Stabilité – Nœud instable",
     order=13,
     description="Informations sur le nœud instable du diagramme de Poincaré.",

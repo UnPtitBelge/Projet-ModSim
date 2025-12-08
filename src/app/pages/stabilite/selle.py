@@ -15,7 +15,7 @@ log.info("Enregistrement de la page /stabilite/selle.")
 dash.register_page(
     __name__,
     path="/stabilite/selle",
-    name="Stabilité (selle)",
+    name="Selle",
     title="Stabilité – Selle",
     order=14,
     description="Informations sur la selle du diagramme de Poincaré.",
