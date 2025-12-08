@@ -110,9 +110,13 @@ def tau_delta_to_matrix_typed(
         lambda1, lambda2 = calculate_eigenvalues(tau, delta)
         return (lambda1.real, 0.5, 0.5, lambda2.real)
 
-    # Mouvement uniforme: matrice nulle ou quasi-nulle
+    # Mouvement uniforme: structure où une variable ne varie pas
     elif "mouvement" in eq_type or "uniforme" in eq_type:
-        return (0, 0, 0, 0)
+        # Structure: [  0   1 ]  (ou similaire)
+        #            [  0   0 ]
+        # Représente: dx₁/dt = x₂, dx₂/dt = 0
+        # Une valeur propre nulle (pas d'accélération)
+        return (0, 1, 0, 0)
 
     # Ligne de points d'équilibre
     elif "ligne" in eq_type:
