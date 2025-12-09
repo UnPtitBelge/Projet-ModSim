@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dash
+import dash_bootstrap_components as dbc
 from dash import Dash, dcc, html  # type: ignore
 
 from .logging_setup import get_logger, init_logging
@@ -22,7 +23,12 @@ __all__ = ["create_app", "app"]
 def create_app() -> Dash:
     """Instancier l'application Dash."""
 
-    app = Dash(__name__, use_pages=True, suppress_callback_exceptions=True)
+    app = Dash(
+      __name__,
+      use_pages=True,
+      suppress_callback_exceptions=True,
+      external_stylesheets=[dbc.themes.BOOTSTRAP],
+    )
     app.index_string = """<!DOCTYPE html>
 <html>
   <head>

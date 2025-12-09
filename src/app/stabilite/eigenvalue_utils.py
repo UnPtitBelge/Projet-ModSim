@@ -183,69 +183,83 @@ def classify_equilibrium(tau: float, delta: float) -> str:
     """
     Classify equilibrium point type based on tau (trace) and delta (determinant).
     
-    Uses the Poincaré plane classification:
-    - Δ < 0: Selle (saddle)
-    - Δ = 0, τ ≠ 0: Ligne de points d'équilibre (one eigenvalue is 0)
-    - Δ = τ²/4: Nœud dégénéré (degenerate node)
-    - 0 < Δ < τ²/4: Nœud (node) - stable if τ < 0, unstable if τ > 0
-    - Δ > τ²/4: Foyer (focus) - stable if τ < 0, unstable if τ > 0
-    - τ = 0, Δ > 0: Centre
-    - τ = 0, Δ = 0: Mouvement uniforme (uniform motion)
+    Uses the Poincaré plane classification based on the position of (τ, Δ):
+    
+    Parabola boundary: Δ = τ²/4 (discriminant = 0)
+    
+    Cases (in order of priority):
+    1. τ = 0, Δ = 0: Mouvement uniforme (double zero eigenvalue)
+    2. τ = 0, Δ > 0: Centre (purely imaginary eigenvalues)
+    3. Δ < 0: Point selle (eigenvalues of opposite signs)
+    4. Δ = 0, τ ≠ 0: Ligne de points d'équilibre (one zero eigenvalue)
+    5. Δ = τ²/4: Nœud dégénéré (repeated real eigenvalue)
+    6. Δ > τ²/4: Foyer (complex conjugate eigenvalues)
+       - τ < 0: stable
+       - τ > 0: unstable
+    7. 0 < Δ < τ²/4: Nœud (distinct real eigenvalues, same sign)
+       - τ < 0: stable
+       - τ > 0: unstable
 
     Args:
-        tau: Trace of the system matrix (τ = λ₁ + λ₂)
-        delta: Determinant of the system matrix (Δ = λ₁ * λ₂)
+        tau: Trace of the system matrix (τ = a + d = λ₁ + λ₂)
+        delta: Determinant of the system matrix (Δ = ad - bc = λ₁ × λ₂)
 
     Returns:
         String describing the equilibrium type
     """
-    # Discriminant determines if eigenvalues are real or complex
+    TOL = 1e-10  # Tolerance for numerical comparisons
+    
+    # Calculate discriminant for parabola comparison
     discriminant = tau**2 - 4 * delta
-
-    # Special case: origin (no equilibrium, uniform motion)
-    if abs(tau) < 1e-10 and abs(delta) < 1e-10:
+    
+    # === CAS 1: Origin (τ = 0, Δ = 0) ===
+    if abs(tau) < TOL and abs(delta) < TOL:
         return "Mouvement uniforme"
-
-    # Special case: τ = 0 (one eigenvalue is zero)
-    if abs(tau) < 1e-10:
-        if delta > 0:
-            return "Centre"
-        elif delta < 0:
-            return "Point selle (instable)"
-
-    # Below horizontal axis: Δ < 0 (opposite sign eigenvalues)
-    # Check this BEFORE the Δ ≈ 0 case to avoid misclassification
-    if delta < 0:
+    
+    # === CAS 2: τ = 0, Δ > 0 (Centre) ===
+    if abs(tau) < TOL and delta > TOL:
+        return "Centre"
+    
+    # === CAS 3: Δ < 0 (Selle) ===
+    # Eigenvalues have opposite signs (λ₁ × λ₂ < 0)
+    if delta < -TOL:
         return "Point selle (instable)"
-
-    # Special case: Δ = 0, τ ≠ 0 (one eigenvalue is zero, one is non-zero)
-    # Only when delta is exactly/nearly zero AND positive
-    if abs(delta) >= 0:
-        if tau > 0:
-            return "Ligne de points d'équilibre (instable)"
-        elif tau < 0:
+    
+    # === CAS 4: Δ ≈ 0, τ ≠ 0 (Ligne de points d'équilibre) ===
+    # One eigenvalue is zero, the other is τ
+    if abs(delta) < TOL and abs(tau) > TOL:
+        if tau < 0:
             return "Ligne de points d'équilibre (stable)"
-
-    # On the parabola: τ² = 4Δ (repeated real eigenvalue)
-    if abs(discriminant) < 1e-10:
+        else:
+            return "Ligne de points d'équilibre (instable)"
+    
+    # === CAS 5: Sur la parabole (discriminant ≈ 0) ===
+    # Valeur propre double réelle: λ = τ/2
+    if abs(discriminant) < TOL:
         if tau < 0:
             return "Nœud dégénéré stable"
         else:
             return "Nœud dégénéré instable"
-
-    # Above the parabola: Δ > τ²/4 (complex conjugate eigenvalues)
-    if discriminant < 0:
+    
+    # === CAS 6: Au-dessus de la parabole (discriminant < 0) ===
+    # Valeurs propres complexes conjuguées: λ = (τ ± i√|discriminant|) / 2
+    if discriminant < -TOL:
         if tau < 0:
             return "Foyer stable"
         else:
             return "Foyer instable"
-
-    # Below the parabola (but above Δ=0): 0 < Δ < τ²/4 (real eigenvalues same sign)
-    # Stability determined by sign of τ (sum of eigenvalues)
-    if tau < 0:
-        return "Nœud stable"
-    else:
-        return "Nœud instable"
+    
+    # === CAS 7: En-dessous de la parabole (discriminant > 0, Δ > 0) ===
+    # Valeurs propres réelles distinctes de même signe
+    # λ₁ = (τ + √discriminant) / 2,  λ₂ = (τ - √discriminant) / 2
+    if discriminant > TOL and delta > TOL:
+        if tau < 0:
+            return "Nœud stable"
+        else:
+            return "Nœud instable"
+    
+    # Cas par défaut (ne devrait jamais arriver)
+    return "Type indéterminé"
 
 
 def create_eigenvalue_plot(tau: float, delta: float) -> go.Figure:

@@ -14,4 +14,9 @@ def get_ids():
         "ode_display": "main-stab-ode-display",
         "equilibrium_type": "main-stab-equilibrium-type",
         "trajectory_store": "main-stab-trajectory-store",
+        "legend_trajectories": "main-stab-legend-trajectories",
+        "legend_isoclines": "main-stab-legend-isoclines",
+        "legend_eigenvectors": "main-stab-legend-eigenvectors",
+        "legend_vectors": "main-stab-legend-vectors",
+        "legend_equilibrium": "main-stab-legend-equilibrium",
     }

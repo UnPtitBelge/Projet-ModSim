@@ -3,6 +3,7 @@ Layout pour la page principale de stabilité.
 """
 
 from dash import dcc, html
+import dash_bootstrap_components as dbc
 
 from src.app.style.components.layout import (
     app_container,
@@ -14,6 +15,7 @@ from src.app.style.components.layout import (
     side_by_side_last,
     spacing_section,
 )
+from src.app.style.components.tooltip import TOOLTIP_STYLE
 from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
 from src.app.style.typography import TYPOGRAPHY
@@ -191,6 +193,176 @@ def build_layout() -> html.Div:
                                             )
                                         ],
                                         style=graph_container(),
+                                    ),
+                                    # Légende interactive
+                                    html.Div(
+                                        [
+                                            html.H3(
+                                                "Éléments du portrait de phase",
+                                                style={
+                                                    **TEXT["h3"],
+                                                    "marginTop": "16px",
+                                                    "marginBottom": "12px",
+                                                },
+                                            ),
+                                            # Tooltips dbc (couleurs alignées sur la palette de l'app)
+                                            dbc.Tooltip(
+                                                "Point où les dérivées s'annulent (dx₁/dt = 0 et dx₂/dt = 0). Le système reste stationnaire en ce point.",
+                                                target=ids["legend_equilibrium"],
+                                                placement="top",
+                                                style=TOOLTIP_STYLE,
+                                            ),
+                                            dbc.Tooltip(
+                                                "Solutions du système différentiel partant de différentes conditions initiales. Elles montrent comment l'état du système évolue dans le temps.",
+                                                target=ids["legend_trajectories"],
+                                                placement="top",
+                                                style=TOOLTIP_STYLE,
+                                            ),
+                                            dbc.Tooltip(
+                                                "Directions des vecteurs propres de la matrice. Les trajectoires s'alignent asymptotiquement avec ces directions pour les systèmes avec valeurs propres réelles.",
+                                                target=ids["legend_eigenvectors"],
+                                                placement="top",
+                                                style=TOOLTIP_STYLE,
+                                            ),
+                                            dbc.Tooltip(
+                                                "Courbes où une dérivée s'annule : orange (dx₁/dt = 0) et vert (dx₂/dt = 0). Elles divisent le plan en régions avec différents signes de dérivées.",
+                                                target=ids["legend_isoclines"],
+                                                placement="top",
+                                                style=TOOLTIP_STYLE,
+                                            ),
+                                            dbc.Tooltip(
+                                                "Vecteurs vitesse (dx/dt) en différents points du plan. Ils indiquent la direction et le sens du mouvement à chaque position.",
+                                                target=ids["legend_vectors"],
+                                                placement="top",
+                                                style=TOOLTIP_STYLE,
+                                            ),
+                                            html.Div(
+                                                [
+                                                    # Point d'équilibre
+                                                    html.Div(
+                                                        [
+                                                            html.Span(
+                                                                "◆",
+                                                                style={
+                                                                    "color": "red",
+                                                                    "fontSize": "20px",
+                                                                    "marginRight": "8px",
+                                                                },
+                                                            ),
+                                                            html.Span(
+                                                                "Point d'équilibre",
+                                                                id=ids["legend_equilibrium"],
+                                                                style={"textDecoration": "underline", "cursor": "pointer"},
+                                                            ),
+                                                        ],
+                                                        style={"marginBottom": "8px"},
+                                                    ),
+                                                    # Trajectoires
+                                                    html.Div(
+                                                        [
+                                                            html.Span(
+                                                                "━",
+                                                                style={
+                                                                    "color": "rgba(100, 100, 100, 0.6)",
+                                                                    "fontSize": "20px",
+                                                                    "marginRight": "8px",
+                                                                },
+                                                            ),
+                                                            html.Span(
+                                                                "Trajectoires",
+                                                                id=ids["legend_trajectories"],
+                                                                style={"textDecoration": "underline", "cursor": "pointer"},
+                                                            ),
+                                                        ],
+                                                        style={"marginBottom": "8px"},
+                                                    ),
+                                                    # Directions propres
+                                                    html.Div(
+                                                        [
+                                                            html.Span(
+                                                                "- - -",
+                                                                style={
+                                                                    "color": "purple",
+                                                                    "fontSize": "16px",
+                                                                    "marginRight": "8px",
+                                                                },
+                                                            ),
+                                                            html.Span(
+                                                                "Directions propres",
+                                                                id=ids["legend_eigenvectors"],
+                                                                style={"textDecoration": "underline", "cursor": "pointer"},
+                                                            ),
+                                                        ],
+                                                        style={"marginBottom": "8px"},
+                                                    ),
+                                                    # Isoclines
+                                                    html.Div(
+                                                        [
+                                                            html.Span(
+                                                                "· · ·",
+                                                                style={
+                                                                    "color": "orange",
+                                                                    "fontSize": "16px",
+                                                                    "marginRight": "4px",
+                                                                },
+                                                            ),
+                                                            html.Span(
+                                                                " / ",
+                                                                style={
+                                                                    "color": "#666",
+                                                                    "marginRight": "4px",
+                                                                },
+                                                            ),
+                                                            html.Span(
+                                                                "· · ·",
+                                                                style={
+                                                                    "color": "green",
+                                                                    "fontSize": "16px",
+                                                                    "marginRight": "8px",
+                                                                },
+                                                            ),
+                                                            html.Span(
+                                                                "Isoclines",
+                                                                id=ids["legend_isoclines"],
+                                                                style={"textDecoration": "underline", "cursor": "pointer"},
+                                                            ),
+                                                        ],
+                                                        style={"marginBottom": "8px"},
+                                                    ),
+                                                    # Champ de vecteurs
+                                                    html.Div(
+                                                        [
+                                                            html.Span(
+                                                                "→",
+                                                                style={
+                                                                    "color": "rgba(31, 119, 180, 0.5)",
+                                                                    "fontSize": "20px",
+                                                                    "marginRight": "8px",
+                                                                },
+                                                            ),
+                                                            html.Span(
+                                                                "Champ de vecteurs",
+                                                                id=ids["legend_vectors"],
+                                                                style={"textDecoration": "underline", "cursor": "pointer"},
+                                                            ),
+                                                        ],
+                                                        style={"marginBottom": "8px"},
+                                                    ),
+                                                ],
+                                                style={
+                                                    "display": "flex",
+                                                    "flexDirection": "column",
+                                                    "fontSize": "14px",
+                                                },
+                                            ),
+                                        ],
+                                        style={
+                                            "marginTop": "16px",
+                                            "padding": "16px",
+                                            "backgroundColor": "#F9FAFB",
+                                            "borderRadius": "8px",
+                                            "border": "1px solid #E5E7EB",
+                                        },
                                     ),
                                 ],
                                 style=section_card(),
