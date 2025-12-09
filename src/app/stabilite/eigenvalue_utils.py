@@ -181,46 +181,68 @@ def calculate_eigenvalues(tau: float, delta: float) -> Tuple[complex, complex]:
 
 def classify_equilibrium(tau: float, delta: float) -> str:
     """
-    Classify equilibrium point type based on tau and delta.
+    Classify equilibrium point type based on tau (trace) and delta (determinant).
+    
+    Uses the Poincaré plane classification:
+    - Δ < 0: Selle (saddle)
+    - Δ = 0, τ ≠ 0: Ligne de points d'équilibre (one eigenvalue is 0)
+    - Δ = τ²/4: Nœud dégénéré (degenerate node)
+    - 0 < Δ < τ²/4: Nœud (node) - stable if τ < 0, unstable if τ > 0
+    - Δ > τ²/4: Foyer (focus) - stable if τ < 0, unstable if τ > 0
+    - τ = 0, Δ > 0: Centre
+    - τ = 0, Δ = 0: Mouvement uniforme (uniform motion)
 
     Args:
-        tau: Trace of the system matrix
-        delta: Determinant of the system matrix
+        tau: Trace of the system matrix (τ = λ₁ + λ₂)
+        delta: Determinant of the system matrix (Δ = λ₁ * λ₂)
 
     Returns:
         String describing the equilibrium type
     """
+    # Discriminant determines if eigenvalues are real or complex
     discriminant = tau**2 - 4 * delta
 
-    # Special cases
+    # Special case: origin (no equilibrium, uniform motion)
     if abs(tau) < 1e-10 and abs(delta) < 1e-10:
         return "Mouvement uniforme"
 
+    # Special case: τ = 0 (one eigenvalue is zero)
     if abs(tau) < 1e-10:
         if delta > 0:
             return "Centre"
-        else:
-            return "Ligne de points d'équilibre"
+        elif delta < 0:
+            return "Point selle (instable)"
 
+    # Below horizontal axis: Δ < 0 (opposite sign eigenvalues)
+    # Check this BEFORE the Δ ≈ 0 case to avoid misclassification
     if delta < 0:
         return "Point selle (instable)"
 
-    # Parabola: τ² = 4Δ
-    if abs(discriminant) < 1e-10:
+    # Special case: Δ = 0, τ ≠ 0 (one eigenvalue is zero, one is non-zero)
+    # Only when delta is exactly/nearly zero AND positive
+    if abs(delta) >= 0:
         if tau > 0:
+            return "Ligne de points d'équilibre (instable)"
+        elif tau < 0:
+            return "Ligne de points d'équilibre (stable)"
+
+    # On the parabola: τ² = 4Δ (repeated real eigenvalue)
+    if abs(discriminant) < 1e-10:
+        if tau < 0:
             return "Nœud dégénéré stable"
         else:
             return "Nœud dégénéré instable"
 
-    # Above parabola: complex eigenvalues
+    # Above the parabola: Δ > τ²/4 (complex conjugate eigenvalues)
     if discriminant < 0:
-        if tau > 0:
+        if tau < 0:
             return "Foyer stable"
         else:
             return "Foyer instable"
 
-    # Below parabola: real eigenvalues
-    if tau > 0:
+    # Below the parabola (but above Δ=0): 0 < Δ < τ²/4 (real eigenvalues same sign)
+    # Stability determined by sign of τ (sum of eigenvalues)
+    if tau < 0:
         return "Nœud stable"
     else:
         return "Nœud instable"
