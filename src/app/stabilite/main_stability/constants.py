@@ -13,7 +13,6 @@ def get_ids():
         "eigenvalue_display": "main-stab-eigenvalue-display",
         "ode_display": "main-stab-ode-display",
         "equilibrium_type": "main-stab-equilibrium-type",
-        "trajectory_store": "main-stab-trajectory-store",
         "legend_trajectories": "main-stab-legend-trajectories",
         "legend_isoclines": "main-stab-legend-isoclines",
         "legend_eigenvectors": "main-stab-legend-eigenvectors",

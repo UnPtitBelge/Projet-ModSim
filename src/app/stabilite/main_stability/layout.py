@@ -149,8 +149,6 @@ def build_layout() -> html.Div:
                 ],
                 style=section_card(),
             ),
-            # Store pour stocker les données de trajectoire
-            dcc.Store(id=ids["trajectory_store"], data=None),
             # Section des graphiques
             html.Div(
                 [
@@ -160,10 +158,6 @@ def build_layout() -> html.Div:
                             html.Div(
                                 [
                                     html.H2("Évolution temporelle", style=TEXT["h2"]),
-                                    html.P(
-                                        "Cliquez sur le graphique pour afficher le point correspondant sur le portrait de phase.",
-                                        style={**TEXT["p"], "fontSize": "0.9rem", "color": "#6B7280", "marginTop": "4px"},
-                                    ),
                                     html.Div(
                                         [
                                             dcc.Graph(
@@ -184,7 +178,7 @@ def build_layout() -> html.Div:
                         [
                             html.Div(
                                 [
-                                    html.H2("Portrait de phase", style=TEXT["h2"]),
+                                    html.H2("Portrait de phase", style={**TEXT["h2"], "marginBottom": "12px"}),
                                     html.Div(
                                         [
                                             dcc.Graph(

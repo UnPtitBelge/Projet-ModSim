@@ -44,13 +44,13 @@ def app_container() -> Dict[str, str]:
     }
 
 
-def content_wrapper(padding_px: int = 24) -> Dict[str, str]:
+def content_wrapper(padding_px: int = 24, margin_left_px: int = SIDEBAR_WIDTH) -> Dict[str, str]:
     """
     Wrapper for main content area (right of the fixed sidebar).
     The margin-left equals the sidebar width to prevent overlap.
     """
     return {
-        "marginLeft": f"{SIDEBAR_WIDTH}px",
+        "marginLeft": f"{margin_left_px}px",
         "padding": f"{padding_px}px",
     }
 

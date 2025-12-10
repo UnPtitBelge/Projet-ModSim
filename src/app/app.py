@@ -130,52 +130,11 @@ def create_app() -> Dash:
                                         [
                                             p
                                             for p in dash.page_registry.values()
-                                            if (
-                                                not p.get("path", "").startswith(
-                                                    "/stabilite"
-                                                )
-                                            )
-                                            and (p.get("path", "") != "/about")
+                                            if p.get("path", "") != "/about"
                                         ],
                                         key=lambda p: p.get("order", 0),
                                     )
                                 ],
-                                html.Details(
-                                    [
-                                        html.Summary(
-                                            "Stabilité",
-                                            style={
-                                                "cursor": "pointer",
-                                                "fontStyle": "normal",
-                                                "padding": "8px 10px",
-                                            },
-                                        ),
-                                        html.Div(
-                                            [
-                                                *[
-                                                    html.A(
-                                                        subpage["name"],
-                                                        href=subpage["path"],
-                                                        style=nav_link(),
-                                                    )
-                                                    for subpage in sorted(
-                                                        [
-                                                            p
-                                                            for p in dash.page_registry.values()
-                                                            if p.get(
-                                                                "path", ""
-                                                            ).startswith("/stabilite")
-                                                        ],
-                                                        key=lambda p: p.get("order", 0),
-                                                    )
-                                                ]
-                                            ],
-                                            style={"marginTop": "6px"},
-                                        ),
-                                    ],
-                                    open=True,
-                                    style={},
-                                ),
                                 html.A(
                                     "À propos",
                                     href="/about",

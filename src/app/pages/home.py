@@ -39,30 +39,6 @@ layout = html.Div(
         ),
         html.Div(
             [
-                html.H2("Contexte théorique", style=TEXT["h2"]),
-                html.P(
-                    (
-                        "Pour un système linéaire d'ordre 2, l'équation caractéristique s'écrit :"
-                    ),
-                    style=TEXT["p"],
-                ),
-                html.Div(
-                    "$$\\lambda^2 - \\tau\\lambda + \\Delta = 0$$",
-                    style={"textAlign": "center", "margin": "16px 0"},
-                ),
-                html.P(
-                    (
-                        "où $\\tau$ est la trace de la matrice du système et $\\Delta$ son déterminant. "
-                        "Les racines $\\lambda$ de cette équation déterminent complètement "
-                        "la nature du point d'équilibre et sa stabilité."
-                    ),
-                    style=TEXT["p"],
-                ),
-            ],
-            style=section_card(),
-        ),
-        html.Div(
-            [
                 html.H2("Objectifs pédagogiques", style=TEXT["h2"]),
                 html.Ul(
                     [
@@ -115,7 +91,7 @@ layout = html.Div(
             [
                 html.H2("Navigation", style=TEXT["h2"]),
                 html.P(
-                    "Explorez le dashboard dans l'ordre suivant :",
+                    "Explorez le dashboard de manière interactive :",
                     style=TEXT["p"],
                 ),
                 html.Ol(
@@ -127,22 +103,22 @@ layout = html.Div(
                                     href="/poincare",
                                     style={"color": PALETTE.primary},
                                 ),
-                                " : vue d'ensemble interactive des zones de stabilité",
+                                " : vue d'ensemble interactive des zones de stabilité dans le plan $(\\tau, \\Delta)$",
                             ],
                             style=TEXT["p"],
                         ),
                         html.Li(
-                            "Cliquez sur une zone pour accéder aux détails du point d'équilibre correspondant",
+                            "Cliquez directement sur une zone du diagramme pour afficher les détails complets : équations, valeurs propres, portraits de phase et explications pédagogiques",
                             style=TEXT["p"],
                         ),
                         html.Li(
                             [
                                 html.A(
-                                    "Sommaire des zones",
+                                    "Page d'analyse interactive",
                                     href="/stabilite",
                                     style={"color": PALETTE.primary},
                                 ),
-                                " : synthèse complète des 11 types",
+                                " : explorez librement les paramètres $\\tau$ et $\\Delta$ avec des graphiques dynamiques",
                             ],
                             style=TEXT["p"],
                         ),

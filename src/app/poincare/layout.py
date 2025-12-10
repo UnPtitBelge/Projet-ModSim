@@ -58,22 +58,14 @@ def build_layout(figure):
             ),
             html.Div(
                 [
-                    html.P(
-                        (
-                            "Ce diagramme de Poincaré illustre différentes zones liées à la stabilité locale "
-                            "des systèmes linéaires du second ordre en fonction des paramètres Tau (τ) et Delta (Δ). "
-                            "La parabole noire sépare les régions supérieures et inférieures. "
-                            "Survolez ou cliquez sur une zone pour la mettre en évidence."
-                        ),
-                        style=TEXT["p"],
+                    html.H3(
+                        "Détail du point d'équilibre sélectionné",
+                        style=TEXT["h3"],
                     ),
                     html.Div(
-                        id="output-temp-hover",
-                        style={"marginTop": "14px", **TEXT["muted"]},
-                    ),
-                    html.Div(
-                        id="output-temp-click",
-                        style={"marginTop": "8px", **TEXT["muted"]},
+                        "Cliquez sur une zone du diagramme pour afficher la fiche correspondante.",
+                        id="poincare-stability-panel",
+                        style={"marginTop": "8px"},
                     ),
                 ],
                 style=section_card(),

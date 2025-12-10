@@ -26,9 +26,29 @@ from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 import plotly.graph_objs as go
-from dash import Dash, Input, Output, no_update  # type: ignore
+from dash import Dash, Input, Output  # type: ignore
 
 from src.app.logging_setup import get_logger
+from src.app.stabilite.base_layout import build_stability_layout
+from src.app.stabilite.foyer_stable import layout_pedagogic as layout_foyer_stable, create_figure as fig_foyer_stable
+from src.app.stabilite.foyer_instable import layout_pedagogic as layout_foyer_instable, create_figure as fig_foyer_instable
+from src.app.stabilite.noeud_stable import layout_pedagogic as layout_noeud_stable, create_figure as fig_noeud_stable
+from src.app.stabilite.noeud_instable import layout_pedagogic as layout_noeud_instable, create_figure as fig_noeud_instable
+from src.app.stabilite.noeud_stable_degenere import (
+    layout_pedagogic as layout_noeud_stable_deg, create_figure as fig_noeud_stable_deg
+)
+from src.app.stabilite.noeud_instable_degenere import (
+    layout_pedagogic as layout_noeud_instable_deg, create_figure as fig_noeud_instable_deg
+)
+from src.app.stabilite.selle import layout_pedagogic as layout_selle, create_figure as fig_selle
+from src.app.stabilite.centre import layout_pedagogic as layout_centre, create_figure as fig_centre
+from src.app.stabilite.ligne_pe_stable import layout_pedagogic as layout_lpe_stable, create_figure as fig_lpe_stable
+from src.app.stabilite.ligne_pe_instable import (
+    layout_pedagogic as layout_lpe_instable, create_figure as fig_lpe_instable
+)
+from src.app.stabilite.mouvement_uniforme import (
+    layout_pedagogic as layout_mouvement_uniforme, create_figure as fig_mouvement_uniforme
+)
 
 
 @dataclass(frozen=True)
@@ -79,8 +99,6 @@ def register_callbacks(
     colors: Optional[ZoneColors] = None,
     zone_labels: Optional[Dict[int, str]] = None,
     graph_id: str = "poincare-graph",
-    hover_output_id: str = "output-temp-hover",
-    click_output_id: str = "output-temp-click",
 ) -> None:
     """
     Attache les callbacks d'interaction (hover + click) sur la figure Poincaré.
@@ -91,15 +109,11 @@ def register_callbacks(
         colors         : configuration des couleurs (optionnel)
         zone_labels    : dictionnaire curveNumber -> label (optionnel)
         graph_id       : id du composant dcc.Graph
-        hover_output_id: id du conteneur texte de survol
-        click_output_id: id du conteneur texte de clic
     """
     log = get_logger(__name__)
     log.debug(
-        "Initialisation des callbacks Poincaré (graph_id=%s, hover_output_id=%s, click_output_id=%s)",
+        "Initialisation des callbacks Poincaré (graph_id=%s)",
         graph_id,
-        hover_output_id,
-        click_output_id,
     )
     color_cfg = colors or ZoneColors()
     labels = zone_labels or DEFAULT_ZONE_LABELS
@@ -246,109 +260,59 @@ def register_callbacks(
 
         return fig_any
 
-    # Navigation multipage déclenchée par mise à jour de dcc.Location (id="url").
-    @app.callback(Output("url", "pathname"), Input(graph_id, "clickData"))
-    def navigate_on_click(clickData):
-        """
-        Navigation multipage déclenchée sur clic: zones, parabole gauche/droite, axes x/y et origine.
-        """
+    @app.callback(Output("poincare-stability-panel", "children"), Input(graph_id, "clickData"))
+    def render_stability_layout(clickData):
+        """Affiche le layout de stabilité correspondant sous le diagramme (sans navigation)."""
         if not clickData or not clickData.get("points"):
-            return no_update
-        pt = clickData["points"][0]
-        curve = pt.get("curveNumber")
-        # Tentative par meta (robuste)
-        try:
-            meta = getattr(base_figure.data[curve], "meta", None)
-        except Exception:
-            meta = None
-        if meta is not None:
-            target = PATH_BY_META.get(str(meta))
-            if target:
-                log.info(
-                    "Navigation via meta=%s vers %s (curve=%d)", meta, target, curve
-                )
-                return target
-        # Fallback par index
-        target = ZONE_PATH_MAP.get(curve)
-        if target:
-            log.info("Navigation via index vers %s (curve=%d)", target, curve)
-            return target
-        log.debug("Clic sans route associée (curve=%s meta=%s).", curve, meta)
-        return no_update
-
-    @app.callback(Output(hover_output_id, "children"), Input(graph_id, "hoverData"))
-    def hover_info(hoverData):
-        if not hoverData or not hoverData.get("points"):
-            log.debug("Hover sorti de zone ou vide.")
-            return "Survolez une zone pour voir les détails."
-        pt = hoverData["points"][0]
-        curve = pt.get("curveNumber")
-        # Essayer de récupérer le meta de la trace pour une identification robuste
-        meta = None
-        try:
-            meta = app._callback_list and app  # placeholder to avoid static check
-        except Exception:
-            meta = None
-        # Récupérer le meta depuis la figure de base (plus fiable)
-        try:
-            meta = getattr(base_figure.data[curve], "meta", None)
-        except Exception:
-            meta = None
-        label = LABEL_BY_META.get(str(meta)) if meta is not None else None
-        label = label or labels.get(curve, "Zone inconnue")
-        log.debug("Hover sur curve=%s meta=%s label=%s", curve, meta, label)
-        return f"Vous survolez : {label}"
-
-    @app.callback(Output(click_output_id, "children"), Input(graph_id, "clickData"))
-    def click_info(clickData):
-        if not clickData or not clickData.get("points"):
-            log.debug("Clic hors zone ou vide.")
-            return "Cliquez sur une zone pour voir les détails."
+            return "Cliquez sur une zone du diagramme pour afficher la fiche correspondante."
         pt = clickData["points"][0]
         curve = pt.get("curveNumber")
         try:
             meta = getattr(base_figure.data[curve], "meta", None)
         except Exception:
             meta = None
-        label = LABEL_BY_META.get(str(meta)) if meta is not None else None
-        label = label or labels.get(curve, "Zone inconnue")
-        log.info("Clic sur curve=%s meta=%s label=%s", curve, meta, label)
-        return f"Vous avez cliqué sur : {label}"
+
+        layout_builder = LAYOUT_BY_META.get(str(meta))
+        if layout_builder:
+            return layout_builder()
+
+        fallback = LAYOUT_BY_INDEX.get(curve)
+        if fallback:
+            return fallback()
+
+        return "Zone inconnue ou non supportée."
 
 
-# Mapping curveNumber -> pathname (sans accents) pour navigation vers pages de stabilité
-ZONE_PATH_MAP: Dict[int, str] = {
-    1: "/stabilite/foyer_stable",
-    2: "/stabilite/foyer_instable",
-    3: "/stabilite/noeud_stable",
-    4: "/stabilite/noeud_instable",
-    5: "/stabilite/selle",
-    # Fallbacks si indices utilisés pour axes/parabole/point (à ajuster selon figure)
-    6: "/stabilite/noeud_stable_degenere",  # parabole gauche (exemple)
-    7: "/stabilite/noeud_instable_degenere",  # parabole droite (exemple)
-    8: "/stabilite/centre",  # y line (centre)
-    9: "/stabilite/ligne_pe_stable",  # x left
-    10: "/stabilite/ligne_pe_instable",  # x right
-    11: "/stabilite/mouvement_uniforme",  # origin
+
+
+# Mapping vers layouts (affichage inline, pas de navigation)
+LAYOUT_BY_META: Dict[str, Any] = {
+    "ulp": lambda: build_stability_layout("foyer_stable", layout_foyer_stable, tau=-2.0, delta=2.0, create_phase_fig=fig_foyer_stable),
+    "urp": lambda: build_stability_layout("foyer_instable", layout_foyer_instable, tau=2.0, delta=2.0, create_phase_fig=fig_foyer_instable),
+    "llp": lambda: build_stability_layout("noeud_stable", layout_noeud_stable, tau=-2.0, delta=2.0, create_phase_fig=fig_noeud_stable),
+    "lrp": lambda: build_stability_layout("noeud_instable", layout_noeud_instable, tau=2.0, delta=2.0, create_phase_fig=fig_noeud_instable),
+    "lxa": lambda: build_stability_layout("selle", layout_selle, tau=0.0, delta=-1.0, create_phase_fig=fig_selle),
+    "parabola_left": lambda: build_stability_layout("noeud_stable_degenere", layout_noeud_stable_deg, tau=-2.0, delta=1.0, create_phase_fig=fig_noeud_stable_deg),
+    "parabola_right": lambda: build_stability_layout("noeud_instable_degenere", layout_noeud_instable_deg, tau=2.0, delta=1.0, create_phase_fig=fig_noeud_instable_deg),
+    "y": lambda: build_stability_layout("centre", layout_centre, tau=0.0, delta=1.0, create_phase_fig=fig_centre),
+    "x_left": lambda: build_stability_layout("ligne_pe_stable", layout_lpe_stable, tau=-2.0, delta=0.0, create_phase_fig=fig_lpe_stable),
+    "x_right": lambda: build_stability_layout("ligne_pe_instable", layout_lpe_instable, tau=2.0, delta=0.0, create_phase_fig=fig_lpe_instable),
+    "origin": lambda: build_stability_layout("mouvement_uniforme", layout_mouvement_uniforme, tau=0.0, delta=0.0, create_phase_fig=fig_mouvement_uniforme),
 }
 
-# Mapping par meta — navigation robuste
-PATH_BY_META: Dict[str, str] = {
-    "ulp": "/stabilite/foyer_stable",
-    "urp": "/stabilite/foyer_instable",
-    "llp": "/stabilite/noeud_stable",
-    "lrp": "/stabilite/noeud_instable",
-    "lxa": "/stabilite/selle",
-    "parabola_left": "/stabilite/noeud_stable_degenere",
-    "parabola_right": "/stabilite/noeud_instable_degenere",
-    "y": "/stabilite/centre",
-    "x_left": "/stabilite/ligne_pe_stable",
-    "x_right": "/stabilite/ligne_pe_instable",
-    "origin": "/stabilite/mouvement_uniforme",
+LAYOUT_BY_INDEX: Dict[int, Any] = {
+    1: LAYOUT_BY_META["ulp"],
+    2: LAYOUT_BY_META["urp"],
+    3: LAYOUT_BY_META["llp"],
+    4: LAYOUT_BY_META["lrp"],
+    5: LAYOUT_BY_META["lxa"],
+    6: LAYOUT_BY_META["parabola_left"],
+    7: LAYOUT_BY_META["parabola_right"],
+    8: LAYOUT_BY_META["y"],
+    9: LAYOUT_BY_META["x_left"],
+    10: LAYOUT_BY_META["x_right"],
+    11: LAYOUT_BY_META["origin"],
 }
-
-
-# Ancienne fonction de navigation séparée supprimée (intégrée dans update_figure_and_navigate)
 
 
 __all__ = [

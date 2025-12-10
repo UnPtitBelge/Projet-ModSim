@@ -68,50 +68,67 @@ layout = html.Div(
         html.Div(
             [
                 html.H2("Contenu du dashboard", style=TEXT["h2"]),
-                html.H3("Diagramme de Poincaré", style=TEXT["h3"]),
+                html.H3("Diagramme de Poincaré interactif", style=TEXT["h3"]),
                 html.P(
                     (
                         "Le diagramme de Poincaré est une représentation dans le plan $(\\tau, \\Delta)$ "
                         "qui divise l'espace en zones correspondant aux 11 types de points d'équilibre. "
-                        "Chaque zone est colorée et cliquable pour accéder aux détails."
+                        "Chaque zone est colorée et interactive : survolez pour identifier, cliquez pour explorer."
                     ),
                     style=TEXT["p"],
                 ),
-                html.H3("Pages de stabilité", style=TEXT["h3"]),
+                html.H3("Affichage inline des détails", style=TEXT["h3"]),
                 html.P(
                     (
-                        "Chaque type de point d'équilibre dispose d'une page dédiée comprenant :"
+                        "En cliquant sur une zone du diagramme de Poincaré, les détails complets s'affichent "
+                        "directement sur la même page, incluant :"
                     ),
                     style=TEXT["p"],
                 ),
                 html.Ul(
                     [
                         html.Li(
-                            "Un graphique interactif permettant de modifier les paramètres",
+                            "Les valeurs des paramètres $\\tau$ (trace) et $\\Delta$ (déterminant)",
                             style=TEXT["p"],
                         ),
                         html.Li(
-                            "Un portrait de phase montrant les trajectoires du système",
+                            "Les équations différentielles du système linéaire",
                             style=TEXT["p"],
                         ),
                         html.Li(
-                            "Des explications théoriques et exemples concrets",
+                            "Le calcul et la nature des valeurs propres",
                             style=TEXT["p"],
                         ),
                         html.Li(
-                            "Les caractéristiques mathématiques du point d'équilibre",
+                            "Le portrait de phase avec trajectoires, vecteurs propres et isoclines",
+                            style=TEXT["p"],
+                        ),
+                        html.Li(
+                            "L'évolution temporelle des variables d'état",
+                            style=TEXT["p"],
+                        ),
+                        html.Li(
+                            "Des explications théoriques et exemples concrets de la vie réelle",
                             style=TEXT["p"],
                         ),
                     ],
+                ),
+                html.H3("Exploration paramétrique", style=TEXT["h3"]),
+                html.P(
+                    (
+                        "La page d'analyse interactive permet d'ajuster librement les paramètres $\\tau$ et $\\Delta$ "
+                        "à l'aide de curseurs pour observer en temps réel l'impact sur le comportement du système."
+                    ),
+                    style=TEXT["p"],
                 ),
             ],
             style=section_card(),
         ),
         html.Div(
             [
-                html.H2("Structure technique", style=TEXT["h2"]),
+                html.H2("Architecture technique", style=TEXT["h2"]),
                 html.P(
-                    "Le dashboard est structuré en modules pour faciliter la maintenance et l'extension :",
+                    "Le dashboard est conçu selon une architecture modulaire et maintenable :",
                     style=TEXT["p"],
                 ),
                 html.Ul(
@@ -119,7 +136,7 @@ layout = html.Div(
                         html.Li(
                             [
                                 html.Code("src/app/app.py", style=TEXT["code_block"]),
-                                " : point d'entrée de l'application multi-page",
+                                " : application Dash multi-page avec sidebar de navigation",
                             ],
                             style=TEXT["p"],
                         ),
@@ -128,7 +145,7 @@ layout = html.Div(
                                 html.Code(
                                     "src/app/poincare/", style=TEXT["code_block"]
                                 ),
-                                " : modules du diagramme de Poincaré",
+                                " : diagramme interactif avec callbacks pour affichage inline",
                             ],
                             style=TEXT["p"],
                         ),
@@ -137,18 +154,26 @@ layout = html.Div(
                                 html.Code(
                                     "src/app/stabilite/", style=TEXT["code_block"]
                                 ),
-                                " : logique des pages de stabilité",
+                                " : génération statique des layouts de stabilité (valeurs propres, EDO, portraits de phase)",
                             ],
                             style=TEXT["p"],
                         ),
                         html.Li(
                             [
                                 html.Code("src/app/style/", style=TEXT["code_block"]),
-                                " : système de design centralisé",
+                                " : design system centralisé (palette, typographie, composants)",
                             ],
                             style=TEXT["p"],
                         ),
                     ],
+                ),
+                html.P(
+                    (
+                        "L'architecture privilégie la réutilisabilité : les layouts de stabilité sont générés "
+                        "par une fonction unique qui calcule toutes les données (eigenvalues, figures) sans callbacks, "
+                        "permettant leur utilisation inline et standalone."
+                    ),
+                    style=TEXT["p"],
                 ),
             ],
             style=section_card(),

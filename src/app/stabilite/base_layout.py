@@ -15,15 +15,20 @@ to generate unique element IDs for Dash callbacks.
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Optional, Callable
 
 from dash import Input, Output, callback, dcc, html
+import plotly.graph_objects as go
 
-from src.app.style.components.layout import (content_wrapper, graph_container,
-                                             section_card, back_link, 
-                                             side_by_side_container, side_by_side_last,
-                                             spacing_section, nav_button, code_display,
-                                             app_container)
+from src.app.style.components.layout import (
+    code_display,
+    content_wrapper,
+    graph_container,
+    section_card,
+    side_by_side_container,
+    side_by_side_last,
+    spacing_section,
+)
 from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
 from src.app.style.typography import TYPOGRAPHY
@@ -60,41 +65,125 @@ def build_stability_layout(
     layout_pedagogic_fn=None,
     tau: float = 0.0,
     delta: float = 0.0,
+    create_phase_fig: Optional[Callable[[], go.Figure]] = None,
 ) -> html.Div:
     """
-    Create a base layout for stability pages (static display).
-
-    - Affiche les valeurs propres calculées
-    - Diagramme de phase (dcc.Graph)
-    - Explication pédagogique (html.Div)
+    Create a static stability layout with pre-rendered figures (no callbacks).
+    
+    This function generates all content (eigenvalues, ODEs, figures) directly
+    without relying on Dash callbacks, making it suitable for both standalone
+    pages and inline display.
 
     Args:
         page_key: Unique identifier for the page
         layout_pedagogic_fn: Function returning pedagogical content
         tau: Trace value for this equilibrium type
         delta: Determinant value for this equilibrium type
+        create_phase_fig: Optional function that returns the phase diagram figure
     """
-    ids = stability_ids(page_key)
+    # Import here to avoid circular dependencies
+    from .base_figures import create_phase_diagram, create_system_graph
+    from .eigenvalue_utils import (
+        tau_delta_to_matrix_typed,
+        format_eigenvalue_display,
+        classify_equilibrium,
+    )
+    
     title = page_key.replace("_", " ").title()
-
+    
     # Determine pedagogic content
     pedagogic_content = html.Div(["à compléter"])
     if layout_pedagogic_fn is not None:
         pedagogic_content = layout_pedagogic_fn()
+    
+    # Generate eigenvalue display
+    eigenvalue_info = format_eigenvalue_display(tau, delta)
+    eigenvalue_display = html.Div([
+        html.Div(
+            [
+                html.Strong(
+                    "Type de point d'équilibre : ", style={"color": PALETTE.primary}
+                ),
+                html.Span(eigenvalue_info["type"]),
+            ],
+            style={"marginBottom": "1rem"},
+        ),
+        html.Div(
+            [
+                html.Strong("Valeurs propres : "),
+                html.Span(eigenvalue_info["eigenvalues"]),
+            ],
+            style={"marginBottom": "0.5rem"},
+        ),
+        html.Div(
+            [
+                html.Strong("Nature : "),
+                html.Span(eigenvalue_info["nature"]),
+            ]
+        ),
+    ])
+    
+    # Generate ODE display
+    a, b, c, d = tau_delta_to_matrix_typed(tau, delta, page_key)
+    
+    def format_coeff(val: float) -> str:
+        if val == 0:
+            return "0"
+        elif val == 1:
+            return ""
+        elif val == -1:
+            return "-"
+        else:
+            return f"{val:.2f}" if val != int(val) else str(int(val))
+    
+    x1_terms = []
+    if b != 0:
+        if b > 0:
+            x1_terms.append(f"+ {format_coeff(b)}x₂" if format_coeff(b) else "+ x₂")
+        else:
+            x1_terms.append(f"- {format_coeff(-b)}x₂" if format_coeff(-b) else "- x₂")
+    if a > 0:
+        x1_terms.insert(0, f"{format_coeff(a)}x₁" if format_coeff(a) else "x₁")
+    elif a < 0:
+        x1_terms.insert(0, f"- {format_coeff(-a)}x₁" if format_coeff(-a) else "- x₁")
+    
+    x2_terms = []
+    if c != 0:
+        if c > 0:
+            x2_terms.append(f"+ {format_coeff(c)}x₁" if format_coeff(c) else "+ x₁")
+        else:
+            x2_terms.append(f"- {format_coeff(-c)}x₁" if format_coeff(-c) else "- x₁")
+    if d > 0:
+        x2_terms.insert(0, f"{format_coeff(d)}x₂" if format_coeff(d) else "x₂")
+    elif d < 0:
+        x2_terms.insert(0, f"- {format_coeff(-d)}x₂" if format_coeff(-d) else "- x₂")
+    
+    x1_eq = " ".join(x1_terms) if x1_terms else "0"
+    x2_eq = " ".join(x2_terms) if x2_terms else "0"
+    
+    x1_eq = x1_eq.strip().lstrip("+ ").replace("  ", " ")
+    x2_eq = x2_eq.strip().lstrip("+ ").replace("  ", " ")
+    
+    ode_display = html.Div(
+        children=f"""
+        $$\\dot{{x}}_1 = {x1_eq}$$
+        $$\\dot{{x}}_2 = {x2_eq}$$
+        """
+    )
+    
+    # Generate phase diagram
+    if create_phase_fig is not None:
+        phase_fig = create_phase_fig()
+    else:
+        eq_type = classify_equilibrium(tau, delta)
+        phase_fig = create_phase_diagram(a, b, c, d, title=f"Diagramme de phase: {eq_type}")
+    
+    # Generate system graph
+    eq_type = classify_equilibrium(tau, delta)
+    system_fig = create_system_graph(a, b, c, d, title=f"Évolution temporelle: {eq_type}")
 
     return html.Div(
         [
-            # Back link to Poincaré
-            html.Div(
-                [
-                    html.A(
-                        "← Retour au diagramme de Poincaré",
-                        href="/poincare",
-                        style=back_link(),
-                    )
-                ],
-                style={"marginBottom": "16px"},
-            ),
             # Title
             html.H2(title, style=TEXT["h2"]),
             # Section: Paramètres du système
@@ -144,7 +233,7 @@ def build_stability_layout(
                                 style={"marginBottom": "0.5rem"},
                             ),
                             html.Div(
-                                id=ids["ode_display"],
+                                ode_display,
                                 style={
                                     **code_display(),
                                     "marginTop": "0.5rem",
@@ -152,7 +241,7 @@ def build_stability_layout(
                                 },
                             ),
                             html.Div(
-                                id=ids["eigenvalue_display"],
+                                eigenvalue_display,
                                 style={
                                     **code_display(),
                                     "marginTop": "1rem",
@@ -174,7 +263,7 @@ def build_stability_layout(
                                     html.H3("Évolution temporelle", style=TEXT["h3"]),
                                     html.Div(
                                         [
-                                            dcc.Graph(id=ids["system_graph"]),
+                                            dcc.Graph(figure=system_fig, config={"displayModeBar": False}),
                                         ],
                                         style=graph_container(),
                                     ),
@@ -192,7 +281,7 @@ def build_stability_layout(
                                     html.H3("Diagramme de phase", style=TEXT["h3"]),
                                     html.Div(
                                         [
-                                            dcc.Graph(id=ids["phase"]),
+                                            dcc.Graph(figure=phase_fig, config={"displayModeBar": False}),
                                         ],
                                         style=graph_container(),
                                     ),
@@ -209,34 +298,10 @@ def build_stability_layout(
             html.Div(
                 [
                     html.H3("Explication pédagogique", style=TEXT["h3"]),
-                    html.Div(pedagogic_content, id=ids["explication"], style=TEXT["p"]),
-                ],
-                style=section_card(),
-            ),
-            # Section: Navigation
-            html.Div(
-                [
-                    html.Div(
-                        [
-                            html.A(
-                                "→ Accéder au diagramme de Poincaré",
-                                href="/poincare",
-                                style=nav_button("primary"),
-                            ),
-                            html.A(
-                                "→ Voir le sommaire de stabilité",
-                                href="/stabilite",
-                                style=nav_button("secondary"),
-                            ),
-                        ],
-                        style=spacing_section("top"),
-                    ),
+                    html.Div(pedagogic_content, style=TEXT["p"]),
                 ],
                 style=section_card(),
             ),
         ],
-        style={
-            **app_container(),
-            **content_wrapper(),
-        },
+        style=content_wrapper(margin_left_px=0),
     )
