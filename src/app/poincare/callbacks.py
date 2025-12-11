@@ -67,12 +67,8 @@ from src.app.stabilite.noeud_stable_degenere import \
     layout_pedagogic as layout_noeud_stable_deg
 from src.app.stabilite.selle import create_figure as fig_selle
 from src.app.stabilite.selle import layout_pedagogic as layout_selle
-
-from src.app.style.text import TEXT
 from src.app.style.palette import PALETTE
-
-
-
+from src.app.style.text import TEXT
 
 # Labels par défaut (français) — par indices (fallback)
 DEFAULT_ZONE_LABELS: Dict[int, str] = {
@@ -146,8 +142,11 @@ def register_callbacks(
     }
     log.debug(
         "Configuration des couleurs: zones=%s/%s/%s, lignes=%s, origine=%s",
-        color_cfg["base_zones"], color_cfg["hover_zones"], color_cfg["click_zones"],
-        color_cfg["base_lines"], color_cfg["base_origin"]
+        color_cfg["base_zones"],
+        color_cfg["hover_zones"],
+        color_cfg["click_zones"],
+        color_cfg["base_lines"],
+        color_cfg["base_origin"],
     )
 
     @app.callback(
@@ -199,7 +198,10 @@ def register_callbacks(
                     fill = color_cfg["click_zones"]
                 log.debug(
                     "Colorisation zone index=%d meta=%s état=%s couleur=%s",
-                    idx, meta, state, fill,
+                    idx,
+                    meta,
+                    state,
+                    fill,
                 )
                 if hasattr(trace, "fillcolor"):
                     trace.fillcolor = fill
@@ -222,10 +224,14 @@ def register_callbacks(
                     color = color_cfg["click_lines"]
                 if line_obj is not None:
                     line_obj.color = color
-                    line_obj.width = 8 if state == "hover" else 10 if state == "click" else 3
+                    line_obj.width = (
+                        8 if state == "hover" else 10 if state == "click" else 3
+                    )
                 if marker_obj is not None:
                     base_size = getattr(marker_obj, "size", None) or 6
-                    marker_obj.size = 9 if state == "hover" else 11 if state == "click" else base_size
+                    marker_obj.size = (
+                        9 if state == "hover" else 11 if state == "click" else base_size
+                    )
                     marker_obj.color = color
                 continue
 
@@ -243,8 +249,14 @@ def register_callbacks(
                     if base_line is None:
                         marker_obj.line = dict(width=0, color=color)
                         base_line = marker_obj.line
-                    marker_obj.size = 16 if state == "hover" else 20 if state == "click" else base_size
-                    base_line["width"] = 3 if state == "hover" else 5 if state == "click" else 0
+                    marker_obj.size = (
+                        16
+                        if state == "hover"
+                        else 20 if state == "click" else base_size
+                    )
+                    base_line["width"] = (
+                        3 if state == "hover" else 5 if state == "click" else 0
+                    )
                     base_line["color"] = color
                 continue
 

@@ -148,6 +148,7 @@ def footer_text() -> Dict[str, str]:
     )
     return style
 
+
 def poincare_badge() -> Dict[str, str]:
     """Badge style for Poincaré page in sidebar: teal blue rounded rectangle."""
     return {
@@ -165,6 +166,7 @@ def poincare_badge() -> Dict[str, str]:
         "transition": "all 120ms ease",
         "boxShadow": f"0 2px 8px 0 rgba(59, 124, 140, 0.18)",
     }
+
 
 def stabilite_badge() -> Dict[str, str]:
     """Badge style for Analyse de la stabilité page in sidebar: sage green rounded rectangle."""
@@ -184,6 +186,7 @@ def stabilite_badge() -> Dict[str, str]:
         "boxShadow": f"0 2px 8px 0 rgba(88, 150, 137, 0.18)",
     }
 
+
 def chaos_badge() -> Dict[str, str]:
     """Unique badge style for chaos page in sidebar: orange rounded rectangle."""
     return {
@@ -201,6 +204,7 @@ def chaos_badge() -> Dict[str, str]:
         "transition": "all 120ms ease",
         "boxShadow": f"0 2px 8px 0 rgba(234, 88, 12, 0.2)",
     }
+
 
 def other_badge() -> Dict[str, str]:
     """Badge style for About page in sidebar: warm cream rounded rectangle."""

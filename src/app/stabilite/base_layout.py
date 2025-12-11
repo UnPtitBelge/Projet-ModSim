@@ -319,7 +319,7 @@ def build_stability_layout(
             # Section: Explication pédagogique
             html.Div(
                 [
-                    html.H3("Explication pédagogique", style=TEXT["h3"]),
+                    html.H2("Description", style=TEXT["h2"]),
                     html.Div(pedagogic_content, style=TEXT["p"]),
                 ],
                 style=section_card(),

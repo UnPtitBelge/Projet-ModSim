@@ -24,6 +24,8 @@ import numpy as np
 import plotly.graph_objects as go
 from scipy.integrate import odeint
 
+from src.app.style.palette import PALETTE
+
 logger = logging.getLogger(__name__)
 
 
@@ -81,7 +83,7 @@ def phase_with_equilibria(
                 y=ys,
                 mode="markers",
                 name="Points d'équilibre",
-                marker=dict(color="#1f77b4", size=8, symbol="circle"),
+                marker=dict(color=PALETTE.third, size=8, symbol="circle"),
             )
         )
 
@@ -199,7 +201,9 @@ def _build_phase_diagram_figure(
                             x=x_line[mask],
                             y=y_line[mask],
                             mode="lines",
-                            line=dict(color="purple", width=2, dash="dash"),
+                            line=dict(
+                                color=PALETTE.stability_stable, width=2, dash="dash"
+                            ),
                             name=f"Direction propre {i+1}",
                             hoverinfo="skip",
                             showlegend=(i == 0),
@@ -221,7 +225,7 @@ def _build_phase_diagram_figure(
                     x=x_iso1[mask1],
                     y=y_iso1[mask1],
                     mode="lines",
-                    line=dict(color="orange", width=1.5, dash="dot"),
+                    line=dict(color=PALETTE.third_light, width=1.5, dash="dot"),
                     name="Isocline dx₁/dt=0",
                     hoverinfo="skip",
                     showlegend=True,
@@ -238,7 +242,7 @@ def _build_phase_diagram_figure(
                     x=x_iso2[mask2],
                     y=y_iso2[mask2],
                     mode="lines",
-                    line=dict(color="green", width=1.5, dash="dot"),
+                    line=dict(color=PALETTE.third_dark, width=1.5, dash="dot"),
                     name="Isocline dx₂/dt=0",
                     hoverinfo="skip",
                     showlegend=True,
@@ -262,12 +266,14 @@ def _build_phase_diagram_figure(
                 dx_scaled = (dx / norm) * scale
                 dy_scaled = (dy / norm) * scale
 
+                arrow_color = PALETTE.secondary
+
                 fig.add_trace(
                     go.Scatter(
                         x=[x_pos, x_pos + dx_scaled],
                         y=[y_pos, y_pos + dy_scaled],
                         mode="lines",
-                        line=dict(color="rgba(31, 119, 180, 0.5)", width=1.5),
+                        line=dict(color=arrow_color, width=1.5),
                         hoverinfo="skip",
                         showlegend=False,
                     )
@@ -291,7 +297,7 @@ def _build_phase_diagram_figure(
                         x=[x_tip, x_head1],
                         y=[y_tip, y_head1],
                         mode="lines",
-                        line=dict(color="rgba(31, 119, 180, 0.5)", width=1.5),
+                        line=dict(color=arrow_color, width=1.5),
                         hoverinfo="skip",
                         showlegend=False,
                     )
@@ -301,7 +307,7 @@ def _build_phase_diagram_figure(
                         x=[x_tip, x_head2],
                         y=[y_tip, y_head2],
                         mode="lines",
-                        line=dict(color="rgba(31, 119, 180, 0.5)", width=1.5),
+                        line=dict(color=arrow_color, width=1.5),
                         hoverinfo="skip",
                         showlegend=False,
                     )
@@ -352,7 +358,7 @@ def _build_phase_diagram_figure(
                         x=x_traj[mask],
                         y=y_traj[mask],
                         mode="lines",
-                        line=dict(color="rgba(100, 100, 100, 0.4)", width=1),
+                        line=dict(color=PALETTE.primary, width=1),
                         hoverinfo="skip",
                         showlegend=False,
                     )
@@ -366,7 +372,7 @@ def _build_phase_diagram_figure(
             x=[0],
             y=[0],
             mode="markers",
-            marker=dict(size=10, color="red", symbol="diamond"),
+            marker=dict(size=10, color=PALETTE.accent_red, symbol="diamond"),
             name="Point d'équilibre",
             hoverinfo="text",
             hovertext="(0, 0)",
@@ -386,13 +392,13 @@ def _build_phase_diagram_figure(
             range=x_range,
             scaleanchor="y",
             scaleratio=1,
-            gridcolor="#E5E7EB",
+            gridcolor=PALETTE.plot_bg,
         ),
         yaxis=dict(
             range=y_range,
             scaleanchor="x",
             scaleratio=1,
-            gridcolor="#E5E7EB",
+            gridcolor=PALETTE.plot_bg,
         ),
         template="plotly_white",
         showlegend=False,  # Désactiver la légende Plotly (sera dans le HTML)
@@ -488,7 +494,7 @@ def create_system_graph(
             y=x1_vals,
             mode="lines",
             name="x₁(t)",
-            line=dict(color="#EA580C", width=2),
+            line=dict(color=PALETTE.primary, width=2),
         )
     )
 
@@ -498,7 +504,7 @@ def create_system_graph(
             y=x2_vals,
             mode="lines",
             name="x₂(t)",
-            line=dict(color="#0066CC", width=2),
+            line=dict(color=PALETTE.secondary, width=2),
         )
     )
 
@@ -511,15 +517,15 @@ def create_system_graph(
         width=None,
         height=500,
         template="plotly_white",
-        xaxis=dict(gridcolor="#E5E7EB"),
-        yaxis=dict(gridcolor="#E5E7EB"),
+        xaxis=dict(gridcolor=PALETTE.plot_bg),
+        yaxis=dict(gridcolor=PALETTE.plot_bg),
         legend=dict(
             x=0.02,
             y=0.98,
             xanchor="left",
             yanchor="top",
-            bgcolor="rgba(255, 255, 255, 0.8)",
-            bordercolor="#E5E7EB",
+            bgcolor=PALETTE.bg,
+            bordercolor=PALETTE.border,
             borderwidth=1,
         ),
         margin=dict(l=60, r=60, t=60, b=60),

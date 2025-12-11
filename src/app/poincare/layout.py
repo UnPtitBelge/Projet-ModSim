@@ -15,7 +15,8 @@ with styled containers and descriptive text using the design system.
 from dash import dcc, html
 
 from src.app.logging_setup import get_logger
-from src.app.style.components.layout import graph_container, section_card
+from src.app.style.components.layout import (graph_container, section_card,
+                                             spacing_section)
 from src.app.style.text import TEXT
 
 
@@ -36,11 +37,11 @@ def build_layout(figure):
             html.Div(
                 [
                     html.H1(
-                        "Analyse et découverte de la notion de stabilité pour des systèmes linéaires continus d'ordre deux",
+                        "Analyse et découverte des points d'équilibre et de leur stabilité associée dans le diagramme de Poincaré",
                         style=TEXT["h1"],
                     ),
                 ],
-                style=section_card(),
+                style={**section_card(), **spacing_section("bottom")},
             ),
             html.Div(
                 [
@@ -65,10 +66,10 @@ def build_layout(figure):
                     html.Div(
                         "Cliquez sur une zone du diagramme pour afficher la fiche correspondante.",
                         id="poincare-stability-panel",
-                        style={**TEXT["p"], "marginTop": "8px"},
+                        style=TEXT["p"],
                     ),
                 ],
-                style=section_card(),
+                style={**section_card(), **spacing_section("bottom")},
             ),
         ],
     )

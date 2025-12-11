@@ -8,8 +8,9 @@ from .logging_setup import get_logger, init_logging
 from .poincare.figure import build_poincare_figure
 from .poincare.layout import build_layout
 from .style.components.layout import content_wrapper
-from .style.components.sidebar import (chaos_badge, poincare_badge, stabilite_badge, other_badge, nav_link,
-                                       sidebar_container, sidebar_header)
+from .style.components.sidebar import (chaos_badge, nav_link, other_badge,
+                                       poincare_badge, sidebar_container,
+                                       sidebar_header, stabilite_badge)
 from .style.html_head import get_index_string
 
 _init_logging_cfg = init_logging()
@@ -65,7 +66,6 @@ def create_app() -> Dash:
                                     style=poincare_badge(),
                                     title="Explorer le diagramme de Poincaré et les points d'équilibre associés",
                                 ),
-
                                 # Stabilité badge
                                 html.A(
                                     "Stabilité",
@@ -73,7 +73,6 @@ def create_app() -> Dash:
                                     style=stabilite_badge(),
                                     title="Analyser la stabilité des systèmes linéaires d'ordre 2",
                                 ),
-
                                 # Chaos badge
                                 html.A(
                                     "Chaos",
@@ -83,7 +82,7 @@ def create_app() -> Dash:
                                 ),
                                 # About page (On the bottom)
                                 html.Div(
-                                    [    
+                                    [
                                         html.A(
                                             "À propos",
                                             href="/about",

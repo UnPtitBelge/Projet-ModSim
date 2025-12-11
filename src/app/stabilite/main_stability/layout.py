@@ -33,14 +33,12 @@ def build_layout() -> html.Div:
             # Titre et introduction
             html.Div(
                 [
-                    html.H1(
-                        "Analyse de stabilité des systèmes linéaires", style=TEXT["h1"]
-                    ),
+                    html.H1("Point d'équilibre et stabilité", style=TEXT["h1"]),
                     html.P(
                         "Explorez le comportement des systèmes dynamiques linéaires d'ordre 2 "
                         "en ajustant les paramètres τ (trace) et Δ (déterminant). "
                         "Les graphiques se mettent à jour en temps réel pour montrer "
-                        "l'évolution temporelle et le portrait de phase.",
+                        "l'évolution temporelle et le portrait de phase associé. Un système est automatiquement généré en fonction des valeurs de τ et Δ.",
                         style=TEXT["p"],
                     ),
                 ],
@@ -199,7 +197,7 @@ def build_layout() -> html.Div:
                                     html.Div(
                                         [
                                             html.H3(
-                                                "Éléments du portrait de phase",
+                                                "Légende du portrait de phase",
                                                 style={
                                                     **TEXT["h3"],
                                                     "marginTop": "16px",
@@ -208,7 +206,7 @@ def build_layout() -> html.Div:
                                             ),
                                             # Tooltips dbc (couleurs alignées sur la palette de l'app)
                                             dbc.Tooltip(
-                                                "Point où les dérivées s'annulent (dx₁/dt = 0 et dx₂/dt = 0). Le système reste stationnaire en ce point.",
+                                                "Point où les dérivées s'annulent (dx₁/dt = 0 et dx₂/dt = 0). Le système reste stationnaire en ce point (cas particulier du mouvement uniforme).",
                                                 target=ids["legend_equilibrium"],
                                                 placement="top",
                                                 style=TOOLTIP_STYLE,
@@ -245,7 +243,7 @@ def build_layout() -> html.Div:
                                                             html.Span(
                                                                 "◆",
                                                                 style={
-                                                                    "color": "red",
+                                                                    "color": PALETTE.accent_red,
                                                                     "fontSize": "20px",
                                                                     "marginRight": "8px",
                                                                 },
@@ -269,7 +267,7 @@ def build_layout() -> html.Div:
                                                             html.Span(
                                                                 "━",
                                                                 style={
-                                                                    "color": "rgba(100, 100, 100, 0.6)",
+                                                                    "color": PALETTE.primary,
                                                                     "fontSize": "20px",
                                                                     "marginRight": "8px",
                                                                 },
@@ -293,13 +291,13 @@ def build_layout() -> html.Div:
                                                             html.Span(
                                                                 "- - -",
                                                                 style={
-                                                                    "color": "purple",
+                                                                    "color": PALETTE.stability_stable,
                                                                     "fontSize": "16px",
                                                                     "marginRight": "8px",
                                                                 },
                                                             ),
                                                             html.Span(
-                                                                "Directions propres",
+                                                                "Droites vecteurs propres",
                                                                 id=ids[
                                                                     "legend_eigenvectors"
                                                                 ],
@@ -317,7 +315,7 @@ def build_layout() -> html.Div:
                                                             html.Span(
                                                                 "· · ·",
                                                                 style={
-                                                                    "color": "orange",
+                                                                    "color": PALETTE.third_light,
                                                                     "fontSize": "16px",
                                                                     "marginRight": "4px",
                                                                 },
@@ -325,14 +323,13 @@ def build_layout() -> html.Div:
                                                             html.Span(
                                                                 " / ",
                                                                 style={
-                                                                    "color": "#666",
                                                                     "marginRight": "4px",
                                                                 },
                                                             ),
                                                             html.Span(
                                                                 "· · ·",
                                                                 style={
-                                                                    "color": "green",
+                                                                    "color": PALETTE.third_dark,
                                                                     "fontSize": "16px",
                                                                     "marginRight": "8px",
                                                                 },
@@ -356,7 +353,7 @@ def build_layout() -> html.Div:
                                                             html.Span(
                                                                 "→",
                                                                 style={
-                                                                    "color": "rgba(31, 119, 180, 0.5)",
+                                                                    "color": PALETTE.secondary,
                                                                     "fontSize": "20px",
                                                                     "marginRight": "8px",
                                                                 },
@@ -792,38 +789,8 @@ def build_layout() -> html.Div:
                         ],
                         style={"marginBottom": "24px"},
                     ),
-                    html.Div(
-                        [
-                            html.H3("5. Systèmes de contrôle", style=TEXT["h3"]),
-                            html.P(
-                                [
-                                    "En automatique, la stabilité d'un système asservi est cruciale. "
-                                    "Les paramètres τ et Δ dépendent des gains du contrôleur. "
-                                    "Un mauvais réglage peut mener à :"
-                                ],
-                                style=TEXT["p"],
-                            ),
-                            html.Ul(
-                                [
-                                    html.Li(
-                                        "Foyer stable : réponse oscillante mais contrôlée",
-                                        style=TEXT["p"],
-                                    ),
-                                    html.Li(
-                                        "Nœud stable : réponse optimale sans dépassement",
-                                        style=TEXT["p"],
-                                    ),
-                                    html.Li(
-                                        "Foyer instable : oscillations croissantes (système instable)",
-                                        style=TEXT["p"],
-                                    ),
-                                ],
-                                style={"marginLeft": "20px"},
-                            ),
-                        ]
-                    ),
                 ],
-                style=section_card(),
+                style={**section_card(), **spacing_section("bottom")},
             ),
             # Section: Navigation
             html.Div(

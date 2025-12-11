@@ -13,7 +13,8 @@ from src.app.chaos.plots import build_three_body_figure_with_data
 from src.app.style.components.layout import (action_button, alert_box,
                                              app_container, content_wrapper,
                                              graph_container,
-                                             loading_container, section_card, spacing_section,)
+                                             loading_container, section_card,
+                                             spacing_section)
 from src.app.style.text import TEXT
 
 
@@ -111,7 +112,10 @@ def build_layout() -> html.Div:
                                         "↻ Reset",
                                         id="chaos-reset-button",
                                         n_clicks=0,
-                                        style={**action_button(), **spacing_section("left")},
+                                        style={
+                                            **action_button(),
+                                            **spacing_section("left"),
+                                        },
                                         title="Réinitialiser aux positions de base",
                                     ),
                                 ],

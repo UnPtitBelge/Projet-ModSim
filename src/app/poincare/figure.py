@@ -218,10 +218,7 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
             x=[0.0],
             y=[0.0],
             mode="markers",
-            marker=dict(
-                size=12,
-                color=PALETTE.third
-            ),
+            marker=dict(size=12, color=PALETTE.third),
             name="Mouvement uniforme",
             meta="origin",
             hoverinfo="text",

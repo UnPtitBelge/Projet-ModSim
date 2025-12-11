@@ -150,7 +150,10 @@ layout = html.Div(
                     [
                         html.Li(
                             [
-                                html.Code("src/app/app.py et src/app/pages/", style=TEXT["code"]),
+                                html.Code(
+                                    "src/app/app.py et src/app/pages/",
+                                    style=TEXT["code"],
+                                ),
                                 " : application Dash multi-page avec sidebar de navigation",
                             ],
                             style=TEXT["p"],

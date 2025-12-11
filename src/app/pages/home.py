@@ -124,15 +124,15 @@ layout = html.Div(
                             style=TEXT["p"],
                         ),
                         html.Li(
-                          [
+                            [
                                 html.A(
-                                  "Introduction au Chaos",
-                                  href="/chaos",
-                                  style={"color": PALETTE.primary},
+                                    "Introduction au Chaos",
+                                    href="/chaos",
+                                    style={"color": PALETTE.primary},
                                 ),
                                 " : découvrez le chaos dans les systèmes dynamiques",
-                          ],
-                          style=TEXT["p"],
+                            ],
+                            style=TEXT["p"],
                         ),
                     ],
                 ),
