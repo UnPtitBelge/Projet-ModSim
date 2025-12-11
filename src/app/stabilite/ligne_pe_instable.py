@@ -61,7 +61,7 @@ def layout_pedagogic() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Une ligne propre instable est un point d'équilibre où les trajectoires divergent linéairement le long d'une ligne (direction propre)."
+                "On obtient une ligne d’équilibres instables lorsqu’une valeur propre est nulle et l’autre est positive. Tous les points situés sur la direction associée à la valeur propre nulle sont des équilibres, mais toute perturbation dans la direction correspondante à la valeur propre positive s’en éloigne ce qui rend le système instable."
             ),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(

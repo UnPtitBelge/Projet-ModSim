@@ -61,8 +61,7 @@ def layout_pedagogic() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Un point selle est un équilibre instable dans certaines directions et stable dans d'autres. "
-                "C'est un cas mixte où le système converge le long d'une direction et diverge le long d'une autre."
+                "Un point d’équilibre est une selle lorsque les valeurs propres sont réelles et de signes opposés. Une direction est attirante (valeur propre négative) tandis qu’une autre est répulsive (valeur propre positive). Comme il existe au moins une direction instable, le point d’équilibre est toujours instable. Nous pouvons faire une analogie avec le col d'une montagne, on descend d’un côté mais on tombe de l’autre."
             ),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(

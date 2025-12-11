@@ -62,9 +62,7 @@ def layout_pedagogic() -> html.Div:
     """
     return html.Div(
         [
-            html.P(
-                "Etat d'équilibre asymptotiquement stable où les trajectoires convergent vers le point fixe sans oscillations."
-            ),
+            html.P("Un point d’équilibre est un nœud stable lorsque les valeurs propres sont réelles, négatives et éventuellement égales. Les trajectoires se dirigent vers l’équilibre sans osciller, en suivant des directions privilégiées correspondant aux vecteurs propres. Comme toutes les valeurs propres sont négatives, les perturbations décroissent exponentiellement ce qui rend l’équilibre asymptotiquement stable."),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(
                 [

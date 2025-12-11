@@ -61,7 +61,7 @@ def layout_pedagogic() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Une ligne propre stable est un point d'équilibre où les trajectoires convergent linéairement le long d'une ligne (direction propre)."
+                "Lorsque le système possède une valeur propre nulle et une valeur propre négative, on a une ligne d’équilibres stables. Les trajectoires convergent vers cette ligne (direction négative) mais restent ensuite sur celle-ci (direction nulle). Le système est stable au sens de Lyapunov, mais pas asymptotiquement stable puisqu’on ne converge pas vers un point unique."
             ),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(

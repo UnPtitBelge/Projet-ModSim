@@ -67,8 +67,7 @@ def layout_pedagogic() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Un foyer stable est un point d'équilibre où les trajectoires convergent en suivant des spirales vers celui-ci. "
-                " Nous pouvons en déduire que le système est asymptotiquement stable. "
+                "Un point d’équilibre est un foyer stable lorsque les valeurs propres du système sont complexes conjuguées avec une partie réelle strictement négative. Les trajectoires tournent autour du point d’équilibre tout en se rapprochant progressivement. La partie réelle négative provoque une décroissance exponentielle, ce qui rend l’équilibre asymptotiquement stable."
             ),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(

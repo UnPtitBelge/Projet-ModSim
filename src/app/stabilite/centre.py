@@ -61,8 +61,7 @@ def layout_pedagogic() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Un centre est un point d'équilibre neutre où les trajectoires s'arrangent autour de celui-ci sans converger ni s'éloigner. "
-                "Le système oscille indéfiniment sans amortissement ni amplification."
+                "Un point d’équilibre est un centre lorsque les valeurs propres sont purement imaginaires. Les trajectoires sont alors des courbes fermées (cercles ou ellipses), traduisant un mouvement oscillatoire sans amortissement. L’équilibre est donc stable mais non asymptotiquement stable, car les trajectoires ne convergent pas vers le point d’équilibre."
             ),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(

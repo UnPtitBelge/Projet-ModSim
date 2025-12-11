@@ -61,7 +61,7 @@ def layout_pedagogic() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Un nœud instable est un point d'équilibre où les trajectoires s'éloignent du point dans toutes les directions sans oscillations."
+                "Un point d’équilibre est un nœud instable lorsque les valeurs propres sont réelles, positives et éventuellement égales. Les trajectoires s’éloignent de l’équilibre sans osciller. La présence de valeurs propres positives implique une croissance exponentielle des perturbations ce qui rend l’équilibre instable."
             ),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(

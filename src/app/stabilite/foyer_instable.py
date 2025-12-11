@@ -63,7 +63,7 @@ def layout_pedagogic() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Un foyer instable est un point d'équilibre où les trajectoires s'éloignent en suivant des spirales autour de celui-ci lorsqu'une petite perturbation se produit."
+                "Un point d’équilibre est un foyer instable lorsque les valeurs propres sont complexes conjuguées avec une partie réelle strictement positive. Les trajectoires tournent autour de l’équilibre mais s’en éloignent de plus en plus. La partie réelle positive entraîne une croissance exponentielle, ce qui rend l’équilibre instable."
             ),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(
