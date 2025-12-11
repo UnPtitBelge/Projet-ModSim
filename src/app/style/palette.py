@@ -57,6 +57,13 @@ class Palette:
 
     # Secondary / complementary
     secondary: str = "#3B7C8C"  # Teal Blue (complementary to terra cotta)
+    secondary_light: str = "#6FA8DC"  # Light Teal Blue
+    secondary_dark: str = "#25496B"  # Dark Teal Blue
+
+    # Third / accent
+    third: str = "#F2B134"  # Golden Yellow
+    third_light: str = "#FFD580"  # Light Golden Yellow
+    third_dark: str = "#B97A1B"  # Dark Golden Yellow
 
     # Accents
     accent_amber: str = "#E8A870"  # Warm Sand/Amber

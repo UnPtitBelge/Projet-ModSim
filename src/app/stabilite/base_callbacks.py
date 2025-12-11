@@ -200,16 +200,3 @@ def register_stability_callbacks(
 
         # Créer le graphe avec les paramètres calculés
         return create_system_graph(a, b, c, d, title=title)
-
-    # Explication pédagogique (préservation du contenu)
-    @app.callback(
-        Output(ids["explication"], "children"),
-        Input(ids["explication"], "id"),
-        State(ids["explication"], "children"),
-        prevent_initial_call=False,
-    )
-    def _preserve_explication(_explication_id: Optional[str], existing_children):
-        # Preserve pre-built pedagogic content when already provided in layout
-        if existing_children:
-            return no_update
-        return [html.P("à compléter")]

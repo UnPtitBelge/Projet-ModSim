@@ -362,20 +362,30 @@ def create_eigenvalue_plot(tau: float, delta: float) -> go.Figure:
 
 def format_eigenvalue_display(tau: float, delta: float) -> Dict:
     """
-    Format eigenvalue information for display.
-
+    Format eigenvalue information for display, including the special case of uniform motion.
     Args:
         tau: Trace value
         delta: Determinant value
-
     Returns:
         Dictionary with formatted eigenvalue information
     """
     lambda1, lambda2 = calculate_eigenvalues(tau, delta)
     eq_type = classify_equilibrium(tau, delta)
 
+    # Check for uniform motion (both eigenvalues are zero or very close to zero)
+    is_uniform_motion = (
+        abs(lambda1.real) < 1e-10
+        and abs(lambda1.imag) < 1e-10
+        and abs(lambda2.real) < 1e-10
+        and abs(lambda2.imag) < 1e-10
+    )
+
     # Format eigenvalues
-    if abs(lambda1.imag) < 1e-10:
+    if is_uniform_motion:
+        lambda1_str = "0"
+        lambda2_str = "0"
+        nature = "Mouvement uniforme (valeurs propres nulles, pas de point d'équilibre, sauf si système statique, alors tous les points sont des points d'équilibre)"
+    elif abs(lambda1.imag) < 1e-10:
         # Real eigenvalues
         lambda1_str = f"{lambda1.real:.4f}"
         lambda2_str = f"{lambda2.real:.4f}"
@@ -389,7 +399,10 @@ def format_eigenvalue_display(tau: float, delta: float) -> Dict:
         nature = "Valeurs propres complexes conjuguées"
 
     # Stability
-    if lambda1.real < -1e-10 and lambda2.real < -1e-10:
+    if is_uniform_motion:
+        stability = "Marginalement stable (mouvement uniforme)"
+        stability_color = PALETTE.accent_amber
+    elif lambda1.real < -1e-10 and lambda2.real < -1e-10:
         stability = "Stable"
         stability_color = PALETTE.secondary
     elif lambda1.real > 1e-10 or lambda2.real > 1e-10:

@@ -23,20 +23,20 @@ layout = html.Div(
         html.Div(
             [
                 html.H1(
-                    "Analyse de stabilité des systèmes linéaires d'ordre 2",
+                    "Découverte des points d'équilibre et introduction au chaos",
                     style=TEXT["h1"],
                 ),
                 html.P(
                     (
-                        "Bienvenue dans ce dashboard pédagogique dédié à l'étude de la stabilité "
-                        "des systèmes linéaires continus d'ordre deux. Cet outil interactif vous permet "
+                        "Bienvenue dans ce dashboard dédié à l'étude de la stabilité "
+                        "des systèmes linéaires continus d'ordre deux et à l'introduction du chaos. Cet outil interactif vous permet "
                         "de comprendre et visualiser les différents types de points d'équilibre "
-                        "et leur comportement dynamique."
+                        "et leur comportement dynamique. Vous trouverez aussi une introduction au chaos qui montre l'incapacité à calculer la stabilité.",
                     ),
                     style=TEXT["p"],
                 ),
             ],
-            style=section_card(),
+            style={**section_card(), **spacing_section("bottom")},
         ),
         html.Div(
             [
@@ -52,11 +52,11 @@ layout = html.Div(
                             style=TEXT["p"],
                         ),
                         html.Li(
-                            "Visualiser les portraits de phase associés à chaque type d'équilibre",
+                            "Visualiser les systèmes et les portraits de phase associés à chaque type d'équilibre",
                             style=TEXT["p"],
                         ),
                         html.Li(
-                            "Distinguer les comportements : oscillatoire, amorti, divergent, stable, instable",
+                            "Introduire la notion de base du chaos dans les systèmes dynamiques",
                             style=TEXT["p"],
                         ),
                     ],
@@ -86,7 +86,7 @@ layout = html.Div(
                     ],
                 ),
             ],
-            style=section_card(),
+            style={**section_card(), **spacing_section("bottom")},
         ),
         html.Div(
             [
@@ -123,10 +123,21 @@ layout = html.Div(
                             ],
                             style=TEXT["p"],
                         ),
+                        html.Li(
+                            [
+                                html.A(
+                                    "Introduction au Chaos",
+                                    href="/chaos",
+                                    style={"color": PALETTE.primary},
+                                ),
+                                " : découvrez le chaos dans les systèmes dynamiques",
+                            ],
+                            style=TEXT["p"],
+                        ),
                     ],
                 ),
             ],
-            style=section_card(),
+            style={**section_card(), **spacing_section("bottom")},
         ),
         html.Div(
             [

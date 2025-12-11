@@ -48,12 +48,14 @@ def sidebar_container() -> Dict[str, str]:
     """Left sidebar container: fixed, scrollable, card-like surface."""
     return {
         "position": "fixed",
+        "display": "flex",
+        "flexDirection": "column",
         "top": "0",
         "left": "0",
         "bottom": "0",
         "width": f"{SIDEBAR_WIDTH}px",
         "overflowY": "auto",
-        "padding": "18px 16px",
+        "padding": "9px 8px",
         "backgroundColor": PALETTE.surface,
         "borderRight": f"1px solid {PALETTE.border}",
         "boxShadow": f"0 2px 12px 0 {PALETTE.shadow}",
@@ -147,12 +149,50 @@ def footer_text() -> Dict[str, str]:
     return style
 
 
+def poincare_badge() -> Dict[str, str]:
+    """Badge style for Poincaré page in sidebar: teal blue rounded rectangle."""
+    return {
+        "display": "block",
+        "padding": "8px 14px",
+        "margin": "6px 6px",
+        "backgroundColor": PALETTE.secondary,
+        "color": PALETTE.surface,
+        "borderRadius": "12px",
+        "textAlign": "center",
+        "textDecoration": "none",
+        "fontFamily": TYPOGRAPHY.font_sans,
+        "fontSize": f"{TYPOGRAPHY.size_md}rem",
+        "fontWeight": str(TYPOGRAPHY.weight_semibold),
+        "transition": "all 120ms ease",
+        "boxShadow": f"0 2px 8px 0 rgba(59, 124, 140, 0.18)",
+    }
+
+
+def stabilite_badge() -> Dict[str, str]:
+    """Badge style for Analyse de la stabilité page in sidebar: sage green rounded rectangle."""
+    return {
+        "display": "block",
+        "padding": "8px 14px",
+        "margin": "6px 6px",
+        "backgroundColor": PALETTE.stability_stable,
+        "color": PALETTE.surface,
+        "borderRadius": "12px",
+        "textAlign": "center",
+        "textDecoration": "none",
+        "fontFamily": TYPOGRAPHY.font_sans,
+        "fontSize": f"{TYPOGRAPHY.size_md}rem",
+        "fontWeight": str(TYPOGRAPHY.weight_semibold),
+        "transition": "all 120ms ease",
+        "boxShadow": f"0 2px 8px 0 rgba(88, 150, 137, 0.18)",
+    }
+
+
 def chaos_badge() -> Dict[str, str]:
     """Unique badge style for chaos page in sidebar: orange rounded rectangle."""
     return {
         "display": "block",
-        "padding": "12px 14px",
-        "margin": "12px 6px",
+        "padding": "8px 14px",
+        "margin": "6px 6px",
         "backgroundColor": PALETTE.primary,
         "color": PALETTE.surface,
         "borderRadius": "12px",
@@ -166,14 +206,14 @@ def chaos_badge() -> Dict[str, str]:
     }
 
 
-def chaos_badge_hover() -> Dict[str, str]:
-    """Hover state for chaos badge."""
+def other_badge() -> Dict[str, str]:
+    """Badge style for About page in sidebar: warm cream rounded rectangle."""
     return {
         "display": "block",
-        "padding": "12px 14px",
-        "margin": "12px 6px",
-        "backgroundColor": PALETTE.primary_dark,
-        "color": PALETTE.surface,
+        "padding": "8px 14px",
+        "margin": "6px 6px",
+        "backgroundColor": PALETTE.bg,
+        "color": PALETTE.primary,
         "borderRadius": "12px",
         "textAlign": "center",
         "textDecoration": "none",
@@ -181,7 +221,7 @@ def chaos_badge_hover() -> Dict[str, str]:
         "fontSize": f"{TYPOGRAPHY.size_md}rem",
         "fontWeight": str(TYPOGRAPHY.weight_semibold),
         "transition": "all 120ms ease",
-        "boxShadow": f"0 4px 12px 0 rgba(234, 88, 12, 0.35)",
+        "boxShadow": f"0 2px 8px 0 rgba(245, 233, 220, 0.2)",
     }
 
 
@@ -194,6 +234,10 @@ __all__ = [
     "nav_link_hover_guide",
     "divider",
     "footer_text",
+    "stabilite_badge",
+    "poincare_badge",
     "chaos_badge",
-    "chaos_badge_hover",
+    "poincare_badge",
+    "other_badge",
+    "stabilite_badge",
 ]

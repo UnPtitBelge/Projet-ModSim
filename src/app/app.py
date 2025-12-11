@@ -8,8 +8,9 @@ from .logging_setup import get_logger, init_logging
 from .poincare.figure import build_poincare_figure
 from .poincare.layout import build_layout
 from .style.components.layout import content_wrapper
-from .style.components.sidebar import (chaos_badge, nav_link,
-                                       sidebar_container, sidebar_header)
+from .style.components.sidebar import (chaos_badge, nav_link, other_badge,
+                                       poincare_badge, sidebar_container,
+                                       sidebar_header, stabilite_badge)
 from .style.html_head import get_index_string
 
 _init_logging_cfg = init_logging()
@@ -52,33 +53,43 @@ def create_app() -> Dash:
                                     "Menu",
                                     style=sidebar_header(),
                                 ),
-                                *[
-                                    html.A(
-                                        page["name"],
-                                        href=page["path"],
-                                        style=nav_link(),
-                                    )
-                                    for page in sorted(
-                                        [
-                                            p
-                                            for p in dash.page_registry.values()
-                                            if p.get("path", "")
-                                            not in ["/about", "/chaos"]
-                                        ],
-                                        key=lambda p: p.get("order", 0),
-                                    )
-                                ],
-                                # Chaos badge (unique design)
+                                # Home page
+                                html.A(
+                                    "Accueil",
+                                    href="/",
+                                    style=other_badge(),
+                                ),
+                                # Poincaré badge
+                                html.A(
+                                    "Poincaré",
+                                    href="/poincare",
+                                    style=poincare_badge(),
+                                    title="Explorer le diagramme de Poincaré et les points d'équilibre associés",
+                                ),
+                                # Stabilité badge
+                                html.A(
+                                    "Stabilité",
+                                    href="/stabilite",
+                                    style=stabilite_badge(),
+                                    title="Analyser la stabilité des systèmes linéaires d'ordre 2",
+                                ),
+                                # Chaos badge
                                 html.A(
                                     "Chaos",
                                     href="/chaos",
                                     style=chaos_badge(),
                                     title="Explore chaotic systems and non-linear dynamics",
                                 ),
-                                html.A(
-                                    "À propos",
-                                    href="/about",
-                                    style=nav_link(),
+                                # About page (On the bottom)
+                                html.Div(
+                                    [
+                                        html.A(
+                                            "À propos",
+                                            href="/about",
+                                            style=other_badge(),
+                                        ),
+                                    ],
+                                    style={"marginTop": "auto"},
                                 ),
                             ],
                             id="sidebar-container",
