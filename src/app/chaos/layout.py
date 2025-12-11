@@ -13,7 +13,7 @@ from src.app.chaos.plots import build_three_body_figure_with_data
 from src.app.style.components.layout import (action_button, alert_box,
                                              app_container, content_wrapper,
                                              graph_container,
-                                             loading_container, section_card)
+                                             loading_container, section_card, spacing_section,)
 from src.app.style.text import TEXT
 
 
@@ -51,7 +51,7 @@ def build_layout() -> html.Div:
                         className="tex2jax_process",
                     ),
                 ],
-                style=section_card(),
+                style={**section_card(), **spacing_section("bottom")},
             ),
             # Section englobante du problème à trois corps
             html.Div(
@@ -111,24 +111,14 @@ def build_layout() -> html.Div:
                                         "↻ Reset",
                                         id="chaos-reset-button",
                                         n_clicks=0,
-                                        style={
-                                            **action_button(),
-                                            "marginLeft": "10px",
-                                            "padding": "8px 12px",
-                                            "fontSize": "14px",
-                                        },
+                                        style={**action_button(), **spacing_section("left")},
                                         title="Réinitialiser aux positions de base",
                                     ),
                                 ],
-                                style={
-                                    "display": "flex",
-                                    "gap": "10px",
-                                    "marginBottom": "16px",
-                                },
                             ),
                             html.Div(
                                 id="chaos-initial-conditions",
-                                style={"marginBottom": "16px"},
+                                style=section_card(),
                             ),
                             dcc.Loading(
                                 id="chaos-loading",
@@ -148,7 +138,7 @@ def build_layout() -> html.Div:
                                 style=loading_container(),
                             ),
                         ],
-                        style={**section_card(), "marginTop": "16px"},
+                        style=section_card(),
                     ),
                     # Équations du mouvement
                     html.Div(
@@ -164,11 +154,7 @@ def build_layout() -> html.Div:
                             ),
                             html.Div(
                                 r"$$\mathbf{a}_i = G \sum_{j \ne i} \frac{m_j \, (\mathbf{r}_j - \mathbf{r}_i)}{|\mathbf{r}_j - \mathbf{r}_i|^3}$$",
-                                style={
-                                    **TEXT["p"],
-                                    "textAlign": "center",
-                                    "margin": "1rem 0",
-                                },
+                                style=TEXT["p"],
                                 className="tex2jax_process",
                             ),
                             html.P(
@@ -182,7 +168,7 @@ def build_layout() -> html.Div:
                                 className="tex2jax_process",
                             ),
                         ],
-                        style={**section_card(), "marginTop": "16px"},
+                        style={**section_card(), **spacing_section()},
                     ),
                     # Sensibilité aux conditions initiales
                     html.Div(
@@ -203,7 +189,7 @@ def build_layout() -> html.Div:
                                 className="tex2jax_process",
                             ),
                         ],
-                        style={**section_card(), "marginTop": "16px"},
+                        style=section_card(),
                     ),
                 ],
                 style=section_card(),
@@ -255,7 +241,7 @@ def build_layout() -> html.Div:
                         className="tex2jax_process",
                     ),
                 ],
-                style=section_card(),
+                style={**section_card(), **spacing_section()},
             ),
         ],
         style={

@@ -171,6 +171,8 @@ def spacing_section(spacing_type: str = "top") -> Dict[str, str]:
         "bottom": {"marginBottom": "24px"},
         "both": {"marginTop": "24px", "marginBottom": "24px"},
         "small": {"marginTop": "16px"},
+        "left": {"marginLeft": "16px"},
+        "right": {"marginRight": "16px"},
     }
     return spacing_map.get(spacing_type, {})
 

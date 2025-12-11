@@ -35,35 +35,35 @@ Complete documentation of the centralized style system for Projet-ModSim.
 The PALETTE is the foundation of all visual design. It includes:
 
 ### Primary Colors
-- `primary`: #EA580C (warm orange) - main brand color
-- `primary_light`: #F97316 (lighter orange)
-- `primary_dark`: #D63803 (darker orange)
+- `primary`: #C65D3B (terra cotta) - main brand color
+- `primary_light`: #D97855 (light terra cotta)
+- `primary_dark`: #A34A28 (dark terra cotta)
 
 ### UI Colors
-- `bg`: #FEF5F1 (warm beige-peach background)
-- `surface`: #FFFBF8 (warm white for cards)
-- `text`: #3E2723 (dark brown)
-- `text_muted`: #78614B (muted brown for secondary text)
-- `border`: #E8DDD4 (warm beige)
+- `bg`: #F9F3EE (warm cream background)
+- `surface`: #FFF9F5 (very light warm white)
+- `text`: #3D2E27 (deep warm brown)
+- `text_muted`: #8B7366 (muted warm brown)
+- `border`: #E5D5C8 (warm beige)
 
 ### Specialty Colors
-- `accent_amber`: #F59E0B (amber accent)
-- `accent_red`: #EF4444 (red accent)
-- `secondary`: #DC2626 (warm red)
-- `mouvement_uniforme`: #F59E0B (for special points)
+- `accent_amber`: #E8A870 (warm sand/amber)
+- `accent_red`: #B85A45 (burnt sienna)
+- `secondary`: #3B7C8C (teal blue)
+- `mouvement_uniforme`: #E8A870 (for special points)
 
 ### Stability Categories (NEW)
-- `stability_stable`: #27ae60 (asymptotically stable - green)
-- `stability_marginal`: #f39c12 (marginally stable - amber)
-- `stability_unstable`: #e74c3c (unstable - red)
+- `stability_stable`: #589689 (sage green - stable)
+- `stability_marginal`: #D9925D (warm terracotta orange - marginal)
+- `stability_unstable`: #B85A45 (burnt sienna - unstable)
 
 ### Poincaré Zones
 Each zone has base, hover, and active states with opacity:
-- Upper left: Amber
-- Upper right: Red
-- Lower left: Green
-- Lower right: Orange
-- Lower axis: Gray
+- Upper left: Warm Sand (amber)
+- Upper right: Burnt Sienna (red)
+- Lower left: Sage Green
+- Lower right: Light Terra
+- Lower axis: Warm Gray
 
 ## Typography System (text.py, typography.py)
 
@@ -103,8 +103,9 @@ Functions returning style dicts:
 - `sidebar_container()`: Base sidebar styling
 - `sidebar_header()`: "Menu" title styling
 - `nav_link(active=False, level=0)`: Navigation links
+- `stability_badge()`: Special Stabilité page badge
+- `poincare_badge()`: Special Poincaré page badge
 - `chaos_badge()`: Special Chaos page badge
-- `chaos_badge_hover()`: Hover state for badge
 
 ### Plot Components (plot/theme.py)
 - `FIGURE_THEME`: Complete figure styling dict
