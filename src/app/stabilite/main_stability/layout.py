@@ -5,12 +5,16 @@ Layout pour la page principale de stabilité.
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from src.app.style.components.layout import (app_container, content_wrapper,
-                                             graph_container, nav_button,
-                                             section_card,
-                                             side_by_side_container,
-                                             side_by_side_last,
-                                             spacing_section)
+from src.app.style.components.layout import (
+    app_container,
+    content_wrapper,
+    graph_container,
+    nav_button,
+    section_card,
+    side_by_side_container,
+    side_by_side_last,
+    spacing_section,
+)
 from src.app.style.components.tooltip import TOOLTIP_STYLE
 from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
@@ -503,6 +507,69 @@ def build_layout() -> html.Div:
                                     ),
                                 ],
                                 style={"marginBottom": "20px"},
+                            ),
+                        ],
+                        style={
+                            **section_card(),
+                        },
+                    ),
+                    html.Div(
+                        [
+                            html.H2(
+                                "Comment déterminer le type d'équilibre",
+                                style=TEXT["h2"],
+                            ),
+                            html.P(
+                                "Pour un système linéaire de dimension 2 représenté par la matrice A"
+                            ),
+                            html.Div(
+                                "$$A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$$",
+                                className="tex2jax_process",
+                            ),
+                            html.H3(
+                                "Nous devons calculer la trace (τ) et le déterminant (Δ):",
+                                style=TEXT["h3"],
+                            ),
+                            html.P(
+                                "La trace est égale à la somme des éléments diagonaux, et le déterminant est calculé comme suit:"
+                            ),
+                            html.Ul(
+                                [
+                                    html.Li(
+                                        "$$\\tau = \\text{tr}(A) = a + d$$",
+                                        className="tex2jax_process",
+                                    ),
+                                    html.Li(
+                                        "$$\\Delta = \\det(A) = ad - bc$$",
+                                        className="tex2jax_process",
+                                    ),
+                                ],
+                                style={"marginLeft": "20px"},
+                            ),
+                            html.H3("Il faut ensuite calculer les valeurs propres :", style=TEXT["h3"]),
+                            html.Ul(
+                                [
+                                    html.Li(
+                                        "Résoudre le polynôme caractéristique : $$\\lambda^2 - \\tau\\lambda + \\Delta = 0$$",
+                                        className="tex2jax_process",
+                                    ),
+                                    html.Li(
+                                        "Résoudre pour trouver les valeurs propres : $$\\lambda_{1,2} = \\frac{\\tau \\pm \\sqrt{\\tau^2 - 4\\Delta}}{2}$$",
+                                        className="tex2jax_process",
+                                    ),
+                                ]
+                            ),
+                            html.H3("Avec ces données, nous pouvons déterminer le type d'équilibre:", style=TEXT["h3"]),
+                            html.Ul(
+                                [
+                                    html.Li("Deux valeurs propres réelles négatives: Noeud stable"),
+                                    html.Li("Deux valeurs propres réelles positives: Noeud instable"),
+                                    html.Li("Deux valeurs propres complexes avec partie réelle négative: Foyer stable"),
+                                    html.Li("Deux valeurs propres complexes avec partie réelle positive: Foyer instable"),   
+                                    html.Li("Deux valeurs propres réelles de signes opposés: Selle"),       
+                                    html.Li("Deux valeurs propres purement imaginaires: Centre"),
+                                    html.Li("Présence d’une valeur propre nulle: ")
+                                ]
                             ),
                         ],
                         style={
