@@ -23,19 +23,21 @@ layout = html.Div(
                 html.H1("À propos de ce dashboard", style=TEXT["h1"]),
                 html.P(
                     (
-                        "Ce dashboard pédagogique est conçu pour offrir un support théorique "
+                        "Ce dashboard est conçu pour offrir un support pratique "
                         "et interactif autour de la notion de stabilité des systèmes dynamiques. "
                         "Il se concentre sur les systèmes linéaires continus d'ordre 2 et "
-                        "leurs différents types de points d'équilibre."
+                        "leurs différents types de points d'équilibre. Il a aussi pour objectif "
+                        "d'introduire la notion de chaos dans les systèmes dynamiques pour montrer les limites des modèles "
+                        "linéaires et la perte de sens de la stabilité dans ce contexte."
                     ),
                     style=TEXT["p"],
                 ),
             ],
-            style=section_card(),
+            style={**section_card(), **spacing_section("bottom")},
         ),
         html.Div(
             [
-                html.H2("Objectif pédagogique", style=TEXT["h2"]),
+                html.H2("Objectif", style=TEXT["h2"]),
                 html.P(
                     (
                         "L'objectif principal est de permettre aux étudiants et enseignants "
@@ -58,7 +60,11 @@ layout = html.Div(
                             style=TEXT["p"],
                         ),
                         html.Li(
-                            "La stabilité locale du point d'équilibre",
+                            "La stabilité du point d'équilibre pour chaque type de système linéaire d'ordre 2",
+                            style=TEXT["p"],
+                        ),
+                        html.Li(
+                            "L'introduction du chaos et ses implications",
                             style=TEXT["p"],
                         ),
                     ],
@@ -122,8 +128,16 @@ layout = html.Div(
                     ),
                     style=TEXT["p"],
                 ),
+                html.H3("Introduction au chaos", style=TEXT["h3"]),
+                html.P(
+                    (
+                        "Une section dédiée introduit la notion de chaos dans les systèmes dynamiques, "
+                        "montrant comment certains systèmes non linéaires (ici le problème à trois corps) peuvent exhiber un comportement chaotique."
+                    ),
+                    style=TEXT["p"],
+                ),
             ],
-            style=section_card(),
+            style={**section_card(), **spacing_section("bottom")},
         ),
         html.Div(
             [
@@ -136,7 +150,7 @@ layout = html.Div(
                     [
                         html.Li(
                             [
-                                html.Code("src/app/app.py", style=TEXT["code"]),
+                                html.Code("src/app/app.py et src/app/pages/", style=TEXT["code"]),
                                 " : application Dash multi-page avec sidebar de navigation",
                             ],
                             style=TEXT["p"],
@@ -157,20 +171,19 @@ layout = html.Div(
                         ),
                         html.Li(
                             [
+                                html.Code("src/app/chaos/", style=TEXT["code"]),
+                                " : introduction au chaos avec simulations du problème à trois corps",
+                            ],
+                            style=TEXT["p"],
+                        ),
+                        html.Li(
+                            [
                                 html.Code("src/app/style/", style=TEXT["code"]),
                                 " : design system centralisé (palette, typographie, composants)",
                             ],
                             style=TEXT["p"],
                         ),
                     ],
-                ),
-                html.P(
-                    (
-                        "L'architecture privilégie la réutilisabilité : les layouts de stabilité sont générés "
-                        "par une fonction unique qui calcule toutes les données (eigenvalues, figures) sans callbacks, "
-                        "permettant leur utilisation inline et standalone."
-                    ),
-                    style=TEXT["p"],
                 ),
             ],
             style=section_card(),
@@ -195,7 +208,7 @@ layout = html.Div(
                     ],
                 ),
             ],
-            style=section_card(),
+            style={**section_card(), **spacing_section("bottom")},
         ),
         html.Div(
             [

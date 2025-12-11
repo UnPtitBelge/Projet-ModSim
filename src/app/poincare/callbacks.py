@@ -67,14 +67,11 @@ from src.app.stabilite.noeud_stable_degenere import \
     layout_pedagogic as layout_noeud_stable_deg
 from src.app.stabilite.selle import create_figure as fig_selle
 from src.app.stabilite.selle import layout_pedagogic as layout_selle
+
 from src.app.style.text import TEXT
+from src.app.style.palette import PALETTE
 
 
-@dataclass(frozen=True)
-class ZoneColors:
-    base: str = "rgba(210, 70, 70, 0.35)"
-    hover: str = "rgba(240, 150, 150, 0.55)"
-    click: str = "rgba(150, 30, 30, 0.65)"
 
 
 # Labels par défaut (français) — par indices (fallback)
@@ -115,8 +112,7 @@ LABEL_BY_META: Dict[str, str] = {
 def register_callbacks(
     app: Dash,
     base_figure: go.Figure,
-    colors: Optional[ZoneColors] = None,
-    zone_labels: Optional[Dict[int, str]] = None,
+    colors: Optional[dict] = None,
     graph_id: str = "poincare-graph",
 ) -> None:
     """
@@ -134,13 +130,24 @@ def register_callbacks(
         "Initialisation des callbacks Poincaré (graph_id=%s)",
         graph_id,
     )
-    color_cfg = colors or ZoneColors()
-    labels = zone_labels or DEFAULT_ZONE_LABELS
+    color_cfg = colors or {
+        # Zones (remplissage)
+        "base_zones": PALETTE.primary,
+        "hover_zones": PALETTE.primary_light,
+        "click_zones": PALETTE.primary_dark,
+        # Lignes (axes, paraboles, centre)
+        "base_lines": PALETTE.secondary,
+        "hover_lines": PALETTE.secondary,
+        "click_lines": PALETTE.secondary,
+        # Origine (point mouvement uniforme)
+        "base_origin": PALETTE.third,
+        "hover_origin": PALETTE.third_light,
+        "click_origin": PALETTE.third_dark,
+    }
     log.debug(
-        "Configuration des couleurs: base=%s hover=%s click=%s",
-        color_cfg.base,
-        color_cfg.hover,
-        color_cfg.click,
+        "Configuration des couleurs: zones=%s/%s/%s, lignes=%s, origine=%s",
+        color_cfg["base_zones"], color_cfg["hover_zones"], color_cfg["click_zones"],
+        color_cfg["base_lines"], color_cfg["base_origin"]
     )
 
     @app.callback(
@@ -173,34 +180,29 @@ def register_callbacks(
         click_curve = extract_curve(clickData)
         log.debug("Indices détectés: hover=%s click=%s", hover_curve, click_curve)
 
-        # Coloriser uniquement les zones (par meta), pas les axes/parabole/point
+        # Colorisation centralisée via la palette
         for idx, trace in enumerate(fig_any.data):
             meta = getattr(trace, "meta", None)
             state = "base"
 
-            # Déterminer l'état (base / hover / click) pour cette trace
             if hover_curve == idx:
                 state = "hover"
             if click_curve == idx:
                 state = "click"
 
-            # 1) Zones (polygones) — meta: ulp, urp, llp, lrp, lxa
+            # 1) Zones (polygones)
             if meta in {"ulp", "urp", "llp", "lrp", "lxa"}:
-                fill = color_cfg.base
+                fill = color_cfg["base_zones"]
                 if state == "hover":
-                    fill = color_cfg.hover
+                    fill = color_cfg["hover_zones"]
                 if state == "click":
-                    fill = color_cfg.click
+                    fill = color_cfg["click_zones"]
                 log.debug(
                     "Colorisation zone index=%d meta=%s état=%s couleur=%s",
-                    idx,
-                    meta,
-                    state,
-                    fill,
+                    idx, meta, state, fill,
                 )
                 if hasattr(trace, "fillcolor"):
                     trace.fillcolor = fill
-                # Masquer les bordures pour rester homogène
                 line_obj = getattr(trace, "line", None)
                 if line_obj is not None and hasattr(line_obj, "width"):
                     try:
@@ -209,72 +211,41 @@ def register_callbacks(
                         pass
                 continue
 
-            # 2) Lignes (parabole gauche/droite, axes x/y) — accentuer sur hover/click
+            # 2) Lignes (parabole gauche/droite, axes x/y)
             if meta in {"parabola_left", "parabola_right", "y", "x_left", "x_right"}:
                 line_obj = getattr(trace, "line", None)
                 marker_obj = getattr(trace, "marker", None)
-                if line_obj is not None or marker_obj is not None:
-                    try:
-                        # Accentuer largeur et couleur des lignes, et taille/couleur des marqueurs selon l'état
-                        if state == "hover":
-                            if line_obj is not None:
-                                line_obj.width = 8
-                                if hasattr(line_obj, "color"):
-                                    line_obj.color = color_cfg.hover
-                            if marker_obj is not None:
-                                base_size = getattr(marker_obj, "size", None) or 6
-                                marker_obj.size = max(base_size, 9)
-                                # Harmoniser la couleur du marqueur avec l'état
-                                marker_obj.color = color_cfg.hover
-                        elif state == "click":
-                            if line_obj is not None:
-                                line_obj.width = 10
-                                if hasattr(line_obj, "color"):
-                                    line_obj.color = color_cfg.click
-                            if marker_obj is not None:
-                                base_size = getattr(marker_obj, "size", None) or 6
-                                marker_obj.size = max(base_size, 11)
-                                marker_obj.color = color_cfg.click
-                        else:
-                            # État de base: conserver les valeurs existantes (ligne et marqueur)
-                            pass
-                        log.debug(
-                            "Accentuation ligne/markers index=%d meta=%s état=%s",
-                            idx,
-                            meta,
-                            state,
-                        )
-                    except Exception:
-                        pass
+                color = color_cfg["base_lines"]
+                if state == "hover":
+                    color = color_cfg["hover_lines"]
+                if state == "click":
+                    color = color_cfg["click_lines"]
+                if line_obj is not None:
+                    line_obj.color = color
+                    line_obj.width = 8 if state == "hover" else 10 if state == "click" else 3
+                if marker_obj is not None:
+                    base_size = getattr(marker_obj, "size", None) or 6
+                    marker_obj.size = 9 if state == "hover" else 11 if state == "click" else base_size
+                    marker_obj.color = color
                 continue
 
-            # 3) Point à l'origine — accentuer taille/bordure sur hover/click
+            # 3) Point à l'origine
             if meta == "origin":
                 marker_obj = getattr(trace, "marker", None)
+                color = color_cfg["base_origin"]
+                if state == "hover":
+                    color = color_cfg["hover_origin"]
+                if state == "click":
+                    color = color_cfg["click_origin"]
                 if marker_obj is not None:
-                    try:
-                        base_size = getattr(marker_obj, "size", None) or 10
-                        base_line = getattr(marker_obj, "line", None)
-                        # Initialiser la ligne si absente
-                        if base_line is None:
-                            marker_obj.line = dict(width=0, color=color_cfg.base)
-                            base_line = marker_obj.line
-                        if state == "hover":
-                            marker_obj.size = max(base_size, 16)
-                            base_line["width"] = 3
-                            base_line["color"] = color_cfg.hover
-                        elif state == "click":
-                            marker_obj.size = max(base_size, 20)
-                            base_line["width"] = 5
-                            base_line["color"] = color_cfg.click
-                        else:
-                            # État de base: laisser les valeurs existantes
-                            pass
-                        log.debug(
-                            "Accentuation point origine index=%d état=%s", idx, state
-                        )
-                    except Exception:
-                        pass
+                    base_size = getattr(marker_obj, "size", None) or 10
+                    base_line = getattr(marker_obj, "line", None)
+                    if base_line is None:
+                        marker_obj.line = dict(width=0, color=color)
+                        base_line = marker_obj.line
+                    marker_obj.size = 16 if state == "hover" else 20 if state == "click" else base_size
+                    base_line["width"] = 3 if state == "hover" else 5 if state == "click" else 0
+                    base_line["color"] = color
                 continue
 
         return fig_any
@@ -396,7 +367,6 @@ LAYOUT_BY_INDEX: Dict[int, Any] = {
 
 
 __all__ = [
-    "ZoneColors",
     "DEFAULT_ZONE_LABELS",
     "register_callbacks",
 ]

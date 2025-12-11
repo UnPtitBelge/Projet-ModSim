@@ -50,53 +50,60 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Palette:
-    # Brand / primary (terra cotta tones)
-    primary: str = "#C65D3B"  # Terra Cotta
-    primary_light: str = "#D97855"  # Light Terra Cotta
-    primary_dark: str = "#A34A28"  # Dark Terra Cotta
+   # Brand / primary (terra cotta tones)
+   primary: str = "#C65D3B"  # Terra Cotta
+   primary_light: str = "#D97855"  # Light Terra Cotta
+   primary_dark: str = "#A34A28"  # Dark Terra Cotta
 
-    # Secondary / complementary
-    secondary: str = "#3B7C8C"  # Teal Blue (complementary to terra cotta)
+   # Secondary / complementary
+   secondary: str = "#3B7C8C"  # Teal Blue (complementary to terra cotta)
+   secondary_light: str = "#6FA8DC"  # Light Teal Blue
+   secondary_dark: str = "#25496B"  # Dark Teal Blue
 
-    # Accents
-    accent_amber: str = "#E8A870"  # Warm Sand/Amber
-    accent_red: str = "#B85A45"  # Burnt Sienna
+   # Third / accent
+   third: str = "#F2B134"  # Golden Yellow
+   third_light: str = "#FFD580"  # Light Golden Yellow
+   third_dark: str = "#B97A1B"  # Dark Golden Yellow
 
-    # Greys (warmer, earthier tones)
-    bg: str = "#F9F3EE"  # Warm cream background
-    surface: str = "#FFF9F5"  # Very light warm white
-    text: str = "#3D2E27"  # Deep warm brown
-    text_muted: str = "#8B7366"  # Muted warm brown
-    border: str = "#E5D5C8"  # Warm beige border
+   # Accents
+   accent_amber: str = "#E8A870"  # Warm Sand/Amber
+   accent_red: str = "#B85A45"  # Burnt Sienna
 
-    # Utility (RGBA)
-    overlay: str = "rgba(61, 46, 39, 0.06)"  # Deep brown @ 6% (hover bg)
-    shadow: str = "rgba(61, 46, 39, 0.08)"  # Deep brown @ 8% (box shadow)
+   # Greys (warmer, earthier tones)
+   bg: str = "#F9F3EE"  # Warm cream background
+   surface: str = "#FFF9F5"  # Very light warm white
+   text: str = "#3D2E27"  # Deep warm brown
+   text_muted: str = "#8B7366"  # Muted warm brown
+   border: str = "#E5D5C8"  # Warm beige border
 
-    # Poincaré diagram zones (terra cotta harmony)
-    zone_upper_left: str = "rgba(232, 168, 112, 0.35)"  # Warm Sand @ 35%
-    zone_upper_right: str = "rgba(184, 90, 69, 0.35)"  # Burnt Sienna @ 35%
-    zone_lower_left: str = "rgba(88, 150, 137, 0.38)"  # Sage Green @ 38%
-    zone_lower_right: str = "rgba(217, 120, 85, 0.32)"  # Light Terra @ 32%
-    zone_lower_axis: str = "rgba(200, 190, 180, 0.45)"  # Warm Gray @ 45%
+   # Utility (RGBA)
+   overlay: str = "rgba(61, 46, 39, 0.06)"  # Deep brown @ 6% (hover bg)
+   shadow: str = "rgba(61, 46, 39, 0.08)"  # Deep brown @ 8% (box shadow)
 
-    # Poincaré diagram background (clean and neutral)
-    plot_bg: str = "#FDFAF7"  # Very light warm neutral
+   # Poincaré diagram zones (terra cotta harmony)
+   zone_upper_left: str = "rgba(232, 168, 112, 0.35)"  # Warm Sand @ 35%
+   zone_upper_right: str = "rgba(184, 90, 69, 0.35)"  # Burnt Sienna @ 35%
+   zone_lower_left: str = "rgba(88, 150, 137, 0.38)"  # Sage Green @ 38%
+   zone_lower_right: str = "rgba(217, 120, 85, 0.32)"  # Light Terra @ 32%
+   zone_lower_axis: str = "rgba(200, 190, 180, 0.45)"  # Warm Gray @ 45%
 
-    # Poincaré diagram hover zones (subtle increase)
-    zone_upper_left_hover: str = "rgba(232, 168, 112, 0.50)"  # Warm Sand @ 50%
-    zone_upper_right_hover: str = "rgba(184, 90, 69, 0.50)"  # Burnt Sienna @ 50%
-    zone_lower_left_hover: str = "rgba(88, 150, 137, 0.53)"  # Sage Green @ 53%
-    zone_lower_right_hover: str = "rgba(217, 120, 85, 0.47)"  # Light Terra @ 47%
-    zone_lower_axis_hover: str = "rgba(200, 190, 180, 0.60)"  # Warm Gray @ 60%
+   # Poincaré diagram background (clean and neutral)
+   plot_bg: str = "#FDFAF7"  # Very light warm neutral
 
-    # Mouvement uniforme point color
-    mouvement_uniforme: str = "#E8A870"  # Warm Sand (harmonious accent)
+   # Poincaré diagram hover zones (subtle increase)
+   zone_upper_left_hover: str = "rgba(232, 168, 112, 0.50)"  # Warm Sand @ 50%
+   zone_upper_right_hover: str = "rgba(184, 90, 69, 0.50)"  # Burnt Sienna @ 50%
+   zone_lower_left_hover: str = "rgba(88, 150, 137, 0.53)"  # Sage Green @ 53%
+   zone_lower_right_hover: str = "rgba(217, 120, 85, 0.47)"  # Light Terra @ 47%
+   zone_lower_axis_hover: str = "rgba(200, 190, 180, 0.60)"  # Warm Gray @ 60%
 
-    # Stability category colors (terra cotta harmony)
-    stability_stable: str = "#589689"  # Sage Green (earthy, stable)
-    stability_marginal: str = "#D9925D"  # Warm Terracotta Orange (transitional)
-    stability_unstable: str = "#B85A45"  # Burnt Sienna (unstable, warm red)
+   # Mouvement uniforme point color
+   mouvement_uniforme: str = "#E8A870"  # Warm Sand (harmonious accent)
+
+   # Stability category colors (terra cotta harmony)
+   stability_stable: str = "#589689"  # Sage Green (earthy, stable)
+   stability_marginal: str = "#D9925D"  # Warm Terracotta Orange (transitional)
+   stability_unstable: str = "#B85A45"  # Burnt Sienna (unstable, warm red)
 
 
 # Singleton palette instance

@@ -33,17 +33,8 @@ class PoincareConfig:
     tau_max: float = TAU_MAX
     samples: int = N_SAMPLES
 
-    # Styles (thématisés)
-    line_width: int = FIGURE_THEME.line_width
-    main_line_color: str = FIGURE_THEME.line_color
-    # Couleurs des zones (thématisées)
-    color_upper_left: str = FIGURE_THEME.zone_upper_left
-    color_upper_right: str = FIGURE_THEME.zone_upper_right
-    color_lower_left: str = FIGURE_THEME.zone_lower_left
-    color_lower_right: str = FIGURE_THEME.zone_lower_right
-    color_lower_axis: str = FIGURE_THEME.zone_lower_axis
-    # Mise en page
-    plot_bgcolor: str = FIGURE_THEME.plot_bgcolor
+    # Styles (palette centrale)
+    line_width: int = 3
     origin_gap_ratio: float = 2.0 / max(N_SAMPLES, 1)
 
 
@@ -84,7 +75,14 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
 
     fig = go.Figure()
 
-    def add_zone(zone_x, zone_y, fillcolor, name, meta):
+    def add_zone(zone_x, zone_y, name, meta):
+        # Choix explicite de la couleur depuis PALETTE
+        if meta == "llp":
+            fillcolor = PALETTE.stability_stable
+        elif meta == "lxa":
+            fillcolor = PALETTE.secondary
+        else:
+            fillcolor = PALETTE.primary
         fig.add_trace(
             go.Scatter(
                 x=zone_x,
@@ -106,23 +104,23 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
 
     ul_x = np.concatenate([[0.0], x_left[::-1], [0.0]])
     ul_y = np.concatenate([[0.0], y_left[::-1], [y_left[0] if len(y_left) else 0.0]])
-    add_zone(ul_x, ul_y, cfg.color_upper_left, "Foyer stable", "ulp")
+    add_zone(ul_x, ul_y, "Foyer stable", "ulp")
 
     ur_x = np.concatenate([[0.0], x_right, [0.0]])
     ur_y = np.concatenate([[0.0], y_right, [y_right[-1] if len(y_right) else 0.0]])
-    add_zone(ur_x, ur_y, cfg.color_upper_right, "Foyer instable", "urp")
+    add_zone(ur_x, ur_y, "Foyer instable", "urp")
 
     ll_x = np.concatenate([[-val_max], x_left, [0.0]])
     ll_y = np.concatenate([[y_left[-1] if len(y_left) else 0.0], y_left, [0.0]])
-    add_zone(ll_x, ll_y, cfg.color_lower_left, "Noeud stable", "llp")
+    add_zone(ll_x, ll_y, "Noeud stable", "llp")
 
     lr_x = np.concatenate([[0.0], x_right, [val_max]])
     lr_y = np.concatenate([[y_right[0] if len(y_right) else 0.0], y_right, [0.0]])
-    add_zone(lr_x, lr_y, cfg.color_lower_right, "Noeud instable", "lrp")
+    add_zone(lr_x, lr_y, "Noeud instable", "lrp")
 
     lxa_x = [-val_max, val_max, val_max, -val_max]
     lxa_y = [0.0, 0.0, -val_max, -val_max]
-    add_zone(lxa_x, lxa_y, cfg.color_lower_axis, "Selle", "lxa")
+    add_zone(lxa_x, lxa_y, "Selle", "lxa")
 
     # Échantillonnage dense de la ligne Y pour améliorer hover/click
     y_line = np.linspace(gap, val_max, cfg.samples)
@@ -132,8 +130,8 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
             x=x_line,
             y=y_line,
             mode="lines+markers",
-            marker=dict(size=6, color=cfg.main_line_color),
-            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            marker=dict(size=6, color=PALETTE.secondary),
+            line=dict(color=PALETTE.secondary, width=cfg.line_width),
             name="Droite en y (τ = 0)",
             meta="y",
             hoverinfo="text",
@@ -152,8 +150,8 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
             x=x_left_line,
             y=y_left_line,
             mode="lines+markers",
-            marker=dict(size=6, color=cfg.main_line_color),
-            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            marker=dict(size=6, color=PALETTE.secondary),
+            line=dict(color=PALETTE.secondary, width=cfg.line_width),
             name="Droite en x (partie gauche)",
             meta="x_left",
             hoverinfo="text",
@@ -171,8 +169,8 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
             x=x_right_line,
             y=y_right_line_const,
             mode="lines+markers",
-            marker=dict(size=6, color=cfg.main_line_color),
-            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            marker=dict(size=6, color=PALETTE.secondary),
+            line=dict(color=PALETTE.secondary, width=cfg.line_width),
             name="Droite en x (partie droite)",
             meta="x_right",
             hoverinfo="text",
@@ -189,7 +187,7 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
             x=x_left,
             y=y_left,
             mode="lines",
-            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            line=dict(color=PALETTE.secondary, width=cfg.line_width),
             name="Parabole (partie gauche)",
             meta="parabola_left",
             hoverinfo="text",
@@ -204,7 +202,7 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
             x=x_right,
             y=y_right,
             mode="lines",
-            line=dict(color=cfg.main_line_color, width=cfg.line_width),
+            line=dict(color=PALETTE.secondary, width=cfg.line_width),
             name="Parabole (partie droite)",
             meta="parabola_right",
             hoverinfo="text",
@@ -222,8 +220,7 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
             mode="markers",
             marker=dict(
                 size=12,
-                color=PALETTE.mouvement_uniforme,
-                line=dict(color="rgba(0,0,0,0)", width=0),
+                color=PALETTE.third
             ),
             name="Mouvement uniforme",
             meta="origin",
@@ -241,7 +238,7 @@ def build_poincare_figure(config: PoincareConfig | None = None) -> go.Figure:
         yaxis=dict(
             showgrid=False, zeroline=False, visible=False, range=[-val_max, val_max]
         ),
-        plot_bgcolor=cfg.plot_bgcolor,
+        plot_bgcolor=PALETTE.secondary,
         margin=dict(l=0, r=0, t=0, b=0),
         hovermode="closest",
     )
