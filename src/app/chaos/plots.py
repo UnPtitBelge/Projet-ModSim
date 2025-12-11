@@ -180,7 +180,7 @@ def build_three_body_figure_with_data(
                 "showactive": False,
                 "buttons": [
                     {
-                        "label": "lancer",
+                        "label": "Lancer",
                         "method": "animate",
                         "args": [
                             None,
@@ -196,7 +196,7 @@ def build_three_body_figure_with_data(
                         ],
                     },
                     {
-                        "label": "pause",
+                        "label": "Pause",
                         "method": "animate",
                         "args": [
                             [None],
@@ -208,7 +208,7 @@ def build_three_body_figure_with_data(
                         ],
                     },
                     {
-                        "label": "recommencer",
+                        "label": "Recommencer",
                         "method": "animate",
                         "args": [
                             [0],
