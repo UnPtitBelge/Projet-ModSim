@@ -2,19 +2,15 @@
 Layout pour la page principale de stabilité.
 """
 
-from dash import dcc, html
 import dash_bootstrap_components as dbc
+from dash import dcc, html
 
-from src.app.style.components.layout import (
-    app_container,
-    content_wrapper,
-    graph_container,
-    nav_button,
-    section_card,
-    side_by_side_container,
-    side_by_side_last,
-    spacing_section,
-)
+from src.app.style.components.layout import (app_container, content_wrapper,
+                                             graph_container, nav_button,
+                                             section_card,
+                                             side_by_side_container,
+                                             side_by_side_last,
+                                             spacing_section)
 from src.app.style.components.tooltip import TOOLTIP_STYLE
 from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
@@ -59,11 +55,7 @@ def build_layout() -> html.Div:
                         [
                             html.Label(
                                 "τ (Trace) :",
-                                style={
-                                    **TEXT["p"],
-                                    "fontWeight": str(TYPOGRAPHY.weight_semibold),
-                                    "marginBottom": "8px",
-                                },
+                                style={**TEXT["label"], "marginBottom": "8px"},
                             ),
                             dcc.Slider(
                                 id=ids["tau_slider"],
@@ -85,11 +77,7 @@ def build_layout() -> html.Div:
                         [
                             html.Label(
                                 "Δ (Déterminant) :",
-                                style={
-                                    **TEXT["p"],
-                                    "fontWeight": str(TYPOGRAPHY.weight_semibold),
-                                    "marginBottom": "8px",
-                                },
+                                style={**TEXT["label"], "marginBottom": "8px"},
                             ),
                             dcc.Slider(
                                 id=ids["delta_slider"],
@@ -158,14 +146,22 @@ def build_layout() -> html.Div:
                             html.Div(
                                 [
                                     html.H2("Évolution temporelle", style=TEXT["h2"]),
-                                    html.Div(
-                                        [
-                                            dcc.Graph(
-                                                id=ids["system_graph"],
-                                                config={"displayModeBar": False},
-                                            )
+                                    dcc.Loading(
+                                        id="main-stability-system-loading",
+                                        type="default",
+                                        children=[
+                                            html.Div(
+                                                [
+                                                    dcc.Graph(
+                                                        id=ids["system_graph"],
+                                                        config={
+                                                            "displayModeBar": False
+                                                        },
+                                                    )
+                                                ],
+                                                style=graph_container(),
+                                            ),
                                         ],
-                                        style=graph_container(),
                                     ),
                                 ],
                                 style=section_card(),
@@ -178,15 +174,26 @@ def build_layout() -> html.Div:
                         [
                             html.Div(
                                 [
-                                    html.H2("Portrait de phase", style={**TEXT["h2"], "marginBottom": "12px"}),
-                                    html.Div(
-                                        [
-                                            dcc.Graph(
-                                                id=ids["phase_diagram"],
-                                                config={"displayModeBar": False},
-                                            )
+                                    html.H2(
+                                        "Portrait de phase",
+                                        style={**TEXT["h2"], "marginBottom": "12px"},
+                                    ),
+                                    dcc.Loading(
+                                        id="main-stability-phase-loading",
+                                        type="default",
+                                        children=[
+                                            html.Div(
+                                                [
+                                                    dcc.Graph(
+                                                        id=ids["phase_diagram"],
+                                                        config={
+                                                            "displayModeBar": False
+                                                        },
+                                                    )
+                                                ],
+                                                style=graph_container(),
+                                            ),
                                         ],
-                                        style=graph_container(),
                                     ),
                                     # Légende interactive
                                     html.Div(
@@ -245,8 +252,13 @@ def build_layout() -> html.Div:
                                                             ),
                                                             html.Span(
                                                                 "Point d'équilibre",
-                                                                id=ids["legend_equilibrium"],
-                                                                style={"textDecoration": "underline", "cursor": "pointer"},
+                                                                id=ids[
+                                                                    "legend_equilibrium"
+                                                                ],
+                                                                style={
+                                                                    "textDecoration": "underline",
+                                                                    "cursor": "pointer",
+                                                                },
                                                             ),
                                                         ],
                                                         style={"marginBottom": "8px"},
@@ -264,8 +276,13 @@ def build_layout() -> html.Div:
                                                             ),
                                                             html.Span(
                                                                 "Trajectoires",
-                                                                id=ids["legend_trajectories"],
-                                                                style={"textDecoration": "underline", "cursor": "pointer"},
+                                                                id=ids[
+                                                                    "legend_trajectories"
+                                                                ],
+                                                                style={
+                                                                    "textDecoration": "underline",
+                                                                    "cursor": "pointer",
+                                                                },
                                                             ),
                                                         ],
                                                         style={"marginBottom": "8px"},
@@ -283,8 +300,13 @@ def build_layout() -> html.Div:
                                                             ),
                                                             html.Span(
                                                                 "Directions propres",
-                                                                id=ids["legend_eigenvectors"],
-                                                                style={"textDecoration": "underline", "cursor": "pointer"},
+                                                                id=ids[
+                                                                    "legend_eigenvectors"
+                                                                ],
+                                                                style={
+                                                                    "textDecoration": "underline",
+                                                                    "cursor": "pointer",
+                                                                },
                                                             ),
                                                         ],
                                                         style={"marginBottom": "8px"},
@@ -317,8 +339,13 @@ def build_layout() -> html.Div:
                                                             ),
                                                             html.Span(
                                                                 "Isoclines",
-                                                                id=ids["legend_isoclines"],
-                                                                style={"textDecoration": "underline", "cursor": "pointer"},
+                                                                id=ids[
+                                                                    "legend_isoclines"
+                                                                ],
+                                                                style={
+                                                                    "textDecoration": "underline",
+                                                                    "cursor": "pointer",
+                                                                },
                                                             ),
                                                         ],
                                                         style={"marginBottom": "8px"},
@@ -336,8 +363,13 @@ def build_layout() -> html.Div:
                                                             ),
                                                             html.Span(
                                                                 "Champ de vecteurs",
-                                                                id=ids["legend_vectors"],
-                                                                style={"textDecoration": "underline", "cursor": "pointer"},
+                                                                id=ids[
+                                                                    "legend_vectors"
+                                                                ],
+                                                                style={
+                                                                    "textDecoration": "underline",
+                                                                    "cursor": "pointer",
+                                                                },
                                                             ),
                                                         ],
                                                         style={"marginBottom": "8px"},
@@ -373,12 +405,17 @@ def build_layout() -> html.Div:
                     # Section pédagogique : Définitions des types de stabilité
                     html.Div(
                         [
-                            html.H2("Définitions des types de stabilité", style=TEXT["h2"]),
+                            html.H2(
+                                "Définitions des types de stabilité", style=TEXT["h2"]
+                            ),
                             html.Div(
                                 [
                                     html.H3(
                                         "Stabilité asymptotique",
-                                        style={**TEXT["h3"], "color": "#27ae60"},
+                                        style={
+                                            **TEXT["h3"],
+                                            "color": PALETTE.stability_stable,
+                                        },
                                     ),
                                     html.P(
                                         [
@@ -412,7 +449,10 @@ def build_layout() -> html.Div:
                                 [
                                     html.H3(
                                         "Stabilité (marginale)",
-                                        style={**TEXT["h3"], "color": "#f39c12"},
+                                        style={
+                                            **TEXT["h3"],
+                                            "color": PALETTE.stability_marginal,
+                                        },
                                     ),
                                     html.P(
                                         [
@@ -431,7 +471,11 @@ def build_layout() -> html.Div:
                             html.Div(
                                 [
                                     html.H3(
-                                        "Instabilité", style={**TEXT["h3"], "color": "#e74c3c"}
+                                        "Instabilité",
+                                        style={
+                                            **TEXT["h3"],
+                                            "color": PALETTE.stability_unstable,
+                                        },
                                     ),
                                     html.P(
                                         [

@@ -4,7 +4,8 @@ import dash
 from dash import html
 
 from src.app.style.components.layout import (app_container, content_wrapper,
-                                             section_card, nav_button, spacing_section)
+                                             nav_button, section_card,
+                                             spacing_section)
 from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
 

@@ -6,7 +6,6 @@ Provides consistent tooltip styles using the project's color palette.
 
 from ..palette import PALETTE
 
-
 # Tooltip style for dbc.Tooltip components
 TOOLTIP_STYLE = {
     "backgroundColor": f"{PALETTE.surface} !important",
@@ -20,7 +19,7 @@ TOOLTIP_STYLE = {
 def get_tooltip_style() -> dict[str, str]:
     """
     Return the standard tooltip style dictionary.
-    
+
     Returns:
         Dictionary of CSS properties for tooltip styling.
     """

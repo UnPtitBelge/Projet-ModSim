@@ -2,14 +2,15 @@ from __future__ import annotations
 
 import dash
 import dash_bootstrap_components as dbc
-from dash import Dash, dcc, html  # type: ignore
+from dash import Dash, Input, Output, callback, dcc, html  # type: ignore
 
 from .logging_setup import get_logger, init_logging
 from .poincare.figure import build_poincare_figure
 from .poincare.layout import build_layout
 from .style.components.layout import content_wrapper
-from .style.components.sidebar import (nav_link, sidebar_container,
-                                       sidebar_header)
+from .style.components.sidebar import (chaos_badge, nav_link,
+                                       sidebar_container, sidebar_header)
+from .style.html_head import get_index_string
 
 _init_logging_cfg = init_logging()
 log = get_logger(__name__)
@@ -24,81 +25,12 @@ def create_app() -> Dash:
     """Instancier l'application Dash."""
 
     app = Dash(
-      __name__,
-      use_pages=True,
-      suppress_callback_exceptions=True,
-      external_stylesheets=[dbc.themes.BOOTSTRAP],
+        __name__,
+        use_pages=True,
+        suppress_callback_exceptions=True,
+        external_stylesheets=[dbc.themes.BOOTSTRAP],
     )
-    app.index_string = """<!DOCTYPE html>
-<html>
-  <head>
-    {%metas%}
-    <title>{%title%}</title>
-    {%favicon%}
-    {%css%}
-    <script>
-      window.MathJax = {
-        tex: {
-          inlineMath: [['$', '$']],
-          displayMath: [['$$', '$$']],
-          processEscapes: true,
-          packages: {'[+]': ['ams']},
-          tags: 'ams'
-        },
-        options: {
-          skipHtmlTags: ['script', 'noscript', 'style', 'textarea'],
-          ignoreHtmlClass: 'tex2jax_ignore',
-          processHtmlClass: 'tex2jax_process'
-        },
-        chtml: {
-          fontURL: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2',
-          scale: 1.0
-        }
-      };
-    </script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-    <style>
-      mjx-container[jax="CHTML"][display="inline"] { display: inline !important; }
-      mjx-container[jax="CHTML"][display="true"] {
-        display: block !important;
-        text-align: center;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 0.25rem 0;
-      }
-      a mjx-container, button mjx-container { font-size: 0.95em; }
-    </style>
-  </head>
-  <body>
-    {%app_entry%}
-    <footer>
-      {%config%}
-      {%scripts%}
-      {%renderer%}
-    </footer>
-    <script>
-      (function() {
-        function typeset() {
-          if (window.MathJax && MathJax.typesetPromise) {
-            MathJax.typesetPromise();
-          }
-        }
-        if (document.readyState === 'complete') {
-          typeset();
-        } else {
-          window.addEventListener('load', typeset);
-        }
-        var appRoot = document.getElementById('_dash-app') || document.body;
-        var observer = new MutationObserver(function() {
-          clearTimeout(observer._mjxTimer);
-          observer._mjxTimer = setTimeout(typeset, 50);
-        });
-        observer.observe(appRoot, { childList: true, subtree: true });
-      })();
-    </script>
-  </body>
-</html>"""
+    app.index_string = get_index_string()
 
     base_figure = build_poincare_figure()
 
@@ -130,17 +62,26 @@ def create_app() -> Dash:
                                         [
                                             p
                                             for p in dash.page_registry.values()
-                                            if p.get("path", "") != "/about"
+                                            if p.get("path", "")
+                                            not in ["/about", "/chaos"]
                                         ],
                                         key=lambda p: p.get("order", 0),
                                     )
                                 ],
+                                # Chaos badge (unique design)
+                                html.A(
+                                    "Chaos",
+                                    href="/chaos",
+                                    style=chaos_badge(),
+                                    title="Explore chaotic systems and non-linear dynamics",
+                                ),
                                 html.A(
                                     "À propos",
                                     href="/about",
                                     style=nav_link(),
                                 ),
                             ],
+                            id="sidebar-container",
                             style=sidebar_container(),
                         ),
                         html.Div(
@@ -153,6 +94,17 @@ def create_app() -> Dash:
                 ),
             ]
         )
+
+        # Callback to invert sidebar colors on chaos page
+        @app.callback(
+            Output("sidebar-container", "className"),
+            Input("url", "pathname"),
+        )
+        def update_sidebar_colors(pathname: str) -> str:
+            """Update sidebar styling based on current page."""
+            if pathname == "/chaos":
+                return "chaos-mode"
+            return ""
 
     else:
         log.warning("Aucune page détectée. Utilisation du layout fallback Poincaré.")

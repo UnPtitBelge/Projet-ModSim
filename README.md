@@ -43,6 +43,7 @@ Pages disponibles :
 - `/stabilite` sommaire stabilité
 - `/stabilite/<type>` foyers, nœuds, selle, centre, lignes de PE, mouvement uniforme
 - `/about` à propos
+- `/chaos` page expérimentale (chaos solaire avec slider de conditions initiales)
 
 ## Structure rapide
 

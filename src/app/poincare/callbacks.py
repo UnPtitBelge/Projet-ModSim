@@ -26,29 +26,48 @@ from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 import plotly.graph_objs as go
-from dash import Dash, Input, Output  # type: ignore
+from dash import Dash, Input, Output, html  # type: ignore
 
 from src.app.logging_setup import get_logger
 from src.app.stabilite.base_layout import build_stability_layout
-from src.app.stabilite.foyer_stable import layout_pedagogic as layout_foyer_stable, create_figure as fig_foyer_stable
-from src.app.stabilite.foyer_instable import layout_pedagogic as layout_foyer_instable, create_figure as fig_foyer_instable
-from src.app.stabilite.noeud_stable import layout_pedagogic as layout_noeud_stable, create_figure as fig_noeud_stable
-from src.app.stabilite.noeud_instable import layout_pedagogic as layout_noeud_instable, create_figure as fig_noeud_instable
-from src.app.stabilite.noeud_stable_degenere import (
-    layout_pedagogic as layout_noeud_stable_deg, create_figure as fig_noeud_stable_deg
-)
-from src.app.stabilite.noeud_instable_degenere import (
-    layout_pedagogic as layout_noeud_instable_deg, create_figure as fig_noeud_instable_deg
-)
-from src.app.stabilite.selle import layout_pedagogic as layout_selle, create_figure as fig_selle
-from src.app.stabilite.centre import layout_pedagogic as layout_centre, create_figure as fig_centre
-from src.app.stabilite.ligne_pe_stable import layout_pedagogic as layout_lpe_stable, create_figure as fig_lpe_stable
-from src.app.stabilite.ligne_pe_instable import (
-    layout_pedagogic as layout_lpe_instable, create_figure as fig_lpe_instable
-)
-from src.app.stabilite.mouvement_uniforme import (
-    layout_pedagogic as layout_mouvement_uniforme, create_figure as fig_mouvement_uniforme
-)
+from src.app.stabilite.centre import create_figure as fig_centre
+from src.app.stabilite.centre import layout_pedagogic as layout_centre
+from src.app.stabilite.foyer_instable import \
+    create_figure as fig_foyer_instable
+from src.app.stabilite.foyer_instable import \
+    layout_pedagogic as layout_foyer_instable
+from src.app.stabilite.foyer_stable import create_figure as fig_foyer_stable
+from src.app.stabilite.foyer_stable import \
+    layout_pedagogic as layout_foyer_stable
+from src.app.stabilite.ligne_pe_instable import \
+    create_figure as fig_lpe_instable
+from src.app.stabilite.ligne_pe_instable import \
+    layout_pedagogic as layout_lpe_instable
+from src.app.stabilite.ligne_pe_stable import create_figure as fig_lpe_stable
+from src.app.stabilite.ligne_pe_stable import \
+    layout_pedagogic as layout_lpe_stable
+from src.app.stabilite.mouvement_uniforme import \
+    create_figure as fig_mouvement_uniforme
+from src.app.stabilite.mouvement_uniforme import \
+    layout_pedagogic as layout_mouvement_uniforme
+from src.app.stabilite.noeud_instable import \
+    create_figure as fig_noeud_instable
+from src.app.stabilite.noeud_instable import \
+    layout_pedagogic as layout_noeud_instable
+from src.app.stabilite.noeud_instable_degenere import \
+    create_figure as fig_noeud_instable_deg
+from src.app.stabilite.noeud_instable_degenere import \
+    layout_pedagogic as layout_noeud_instable_deg
+from src.app.stabilite.noeud_stable import create_figure as fig_noeud_stable
+from src.app.stabilite.noeud_stable import \
+    layout_pedagogic as layout_noeud_stable
+from src.app.stabilite.noeud_stable_degenere import \
+    create_figure as fig_noeud_stable_deg
+from src.app.stabilite.noeud_stable_degenere import \
+    layout_pedagogic as layout_noeud_stable_deg
+from src.app.stabilite.selle import create_figure as fig_selle
+from src.app.stabilite.selle import layout_pedagogic as layout_selle
+from src.app.style.text import TEXT
 
 
 @dataclass(frozen=True)
@@ -260,11 +279,16 @@ def register_callbacks(
 
         return fig_any
 
-    @app.callback(Output("poincare-stability-panel", "children"), Input(graph_id, "clickData"))
+    @app.callback(
+        Output("poincare-stability-panel", "children"), Input(graph_id, "clickData")
+    )
     def render_stability_layout(clickData):
         """Affiche le layout de stabilité correspondant sous le diagramme (sans navigation)."""
         if not clickData or not clickData.get("points"):
-            return "Cliquez sur une zone du diagramme pour afficher la fiche correspondante."
+            return html.Div(
+                "Cliquez sur une zone du diagramme pour afficher la fiche correspondante.",
+                style={**TEXT["p"], "marginTop": "8px"},
+            )
         pt = clickData["points"][0]
         curve = pt.get("curveNumber")
         try:
@@ -280,24 +304,80 @@ def register_callbacks(
         if fallback:
             return fallback()
 
-        return "Zone inconnue ou non supportée."
-
-
+        return html.Div("Zone inconnue ou non supportée.", style=TEXT["p"])
 
 
 # Mapping vers layouts (affichage inline, pas de navigation)
 LAYOUT_BY_META: Dict[str, Any] = {
-    "ulp": lambda: build_stability_layout("foyer_stable", layout_foyer_stable, tau=-2.0, delta=2.0, create_phase_fig=fig_foyer_stable),
-    "urp": lambda: build_stability_layout("foyer_instable", layout_foyer_instable, tau=2.0, delta=2.0, create_phase_fig=fig_foyer_instable),
-    "llp": lambda: build_stability_layout("noeud_stable", layout_noeud_stable, tau=-2.0, delta=2.0, create_phase_fig=fig_noeud_stable),
-    "lrp": lambda: build_stability_layout("noeud_instable", layout_noeud_instable, tau=2.0, delta=2.0, create_phase_fig=fig_noeud_instable),
-    "lxa": lambda: build_stability_layout("selle", layout_selle, tau=0.0, delta=-1.0, create_phase_fig=fig_selle),
-    "parabola_left": lambda: build_stability_layout("noeud_stable_degenere", layout_noeud_stable_deg, tau=-2.0, delta=1.0, create_phase_fig=fig_noeud_stable_deg),
-    "parabola_right": lambda: build_stability_layout("noeud_instable_degenere", layout_noeud_instable_deg, tau=2.0, delta=1.0, create_phase_fig=fig_noeud_instable_deg),
-    "y": lambda: build_stability_layout("centre", layout_centre, tau=0.0, delta=1.0, create_phase_fig=fig_centre),
-    "x_left": lambda: build_stability_layout("ligne_pe_stable", layout_lpe_stable, tau=-2.0, delta=0.0, create_phase_fig=fig_lpe_stable),
-    "x_right": lambda: build_stability_layout("ligne_pe_instable", layout_lpe_instable, tau=2.0, delta=0.0, create_phase_fig=fig_lpe_instable),
-    "origin": lambda: build_stability_layout("mouvement_uniforme", layout_mouvement_uniforme, tau=0.0, delta=0.0, create_phase_fig=fig_mouvement_uniforme),
+    "ulp": lambda: build_stability_layout(
+        "foyer_stable",
+        layout_foyer_stable,
+        tau=-2.0,
+        delta=2.0,
+        create_phase_fig=fig_foyer_stable,
+    ),
+    "urp": lambda: build_stability_layout(
+        "foyer_instable",
+        layout_foyer_instable,
+        tau=2.0,
+        delta=2.0,
+        create_phase_fig=fig_foyer_instable,
+    ),
+    "llp": lambda: build_stability_layout(
+        "noeud_stable",
+        layout_noeud_stable,
+        tau=-2.0,
+        delta=2.0,
+        create_phase_fig=fig_noeud_stable,
+    ),
+    "lrp": lambda: build_stability_layout(
+        "noeud_instable",
+        layout_noeud_instable,
+        tau=2.0,
+        delta=2.0,
+        create_phase_fig=fig_noeud_instable,
+    ),
+    "lxa": lambda: build_stability_layout(
+        "selle", layout_selle, tau=0.0, delta=-1.0, create_phase_fig=fig_selle
+    ),
+    "parabola_left": lambda: build_stability_layout(
+        "noeud_stable_degenere",
+        layout_noeud_stable_deg,
+        tau=-2.0,
+        delta=1.0,
+        create_phase_fig=fig_noeud_stable_deg,
+    ),
+    "parabola_right": lambda: build_stability_layout(
+        "noeud_instable_degenere",
+        layout_noeud_instable_deg,
+        tau=2.0,
+        delta=1.0,
+        create_phase_fig=fig_noeud_instable_deg,
+    ),
+    "y": lambda: build_stability_layout(
+        "centre", layout_centre, tau=0.0, delta=1.0, create_phase_fig=fig_centre
+    ),
+    "x_left": lambda: build_stability_layout(
+        "ligne_pe_stable",
+        layout_lpe_stable,
+        tau=-2.0,
+        delta=0.0,
+        create_phase_fig=fig_lpe_stable,
+    ),
+    "x_right": lambda: build_stability_layout(
+        "ligne_pe_instable",
+        layout_lpe_instable,
+        tau=2.0,
+        delta=0.0,
+        create_phase_fig=fig_lpe_instable,
+    ),
+    "origin": lambda: build_stability_layout(
+        "mouvement_uniforme",
+        layout_mouvement_uniforme,
+        tau=0.0,
+        delta=0.0,
+        create_phase_fig=fig_mouvement_uniforme,
+    ),
 }
 
 LAYOUT_BY_INDEX: Dict[int, Any] = {

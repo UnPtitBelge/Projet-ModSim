@@ -172,11 +172,11 @@ def _build_phase_diagram_figure(
                     v = np.array([lam - d, c])
                 else:
                     v = np.array([1, 0]) if abs(a - lam) < 1e-10 else np.array([0, 1])
-                
+
                 # Normaliser
                 v = v / np.linalg.norm(v) if np.linalg.norm(v) > 0 else v
                 eigenvectors.append(v)
-        
+
         # Tracer les droites invariantes (directions propres)
         for i, v in enumerate(eigenvectors):
             if np.linalg.norm(v) > 1e-10:
@@ -184,11 +184,15 @@ def _build_phase_diagram_figure(
                 t_line = np.linspace(-6, 6, 100)
                 x_line = t_line * v[0]
                 y_line = t_line * v[1]
-                
+
                 # Filtrer pour rester dans les limites
-                mask = (x_line >= x_range[0]) & (x_line <= x_range[1]) & \
-                       (y_line >= y_range[0]) & (y_line <= y_range[1])
-                
+                mask = (
+                    (x_line >= x_range[0])
+                    & (x_line <= x_range[1])
+                    & (y_line >= y_range[0])
+                    & (y_line <= y_range[1])
+                )
+
                 if np.any(mask):
                     fig.add_trace(
                         go.Scatter(
@@ -206,7 +210,7 @@ def _build_phase_diagram_figure(
     # === ÉTAPE 5: Calculer les isoclines ===
     # Isocline dx₁/dt = 0: a*x₁ + b*x₂ = 0 => x₂ = -(a/b)*x₁ (si b≠0)
     # Isocline dx₂/dt = 0: c*x₁ + d*x₂ = 0 => x₂ = -(c/d)*x₁ (si d≠0)
-    
+
     if abs(b) > 1e-10:
         x_iso1 = np.linspace(x_range[0], x_range[1], 100)
         y_iso1 = -(a / b) * x_iso1
@@ -223,7 +227,7 @@ def _build_phase_diagram_figure(
                     showlegend=True,
                 )
             )
-    
+
     if abs(d) > 1e-10:
         x_iso2 = np.linspace(x_range[0], x_range[1], 100)
         y_iso2 = -(c / d) * x_iso2
@@ -245,19 +249,19 @@ def _build_phase_diagram_figure(
     grid_density = 12
     x_arrow = np.linspace(x_range[0], x_range[1], grid_density)
     y_arrow = np.linspace(y_range[0], y_range[1], grid_density)
-    
+
     for x_pos in x_arrow:
         for y_pos in y_arrow:
             dx = a * x_pos + b * y_pos
             dy = c * x_pos + d * y_pos
             norm = np.sqrt(dx**2 + dy**2)
-            
+
             if norm > 0.05:
                 # Normaliser et mettre à l'échelle
                 scale = 0.25
                 dx_scaled = (dx / norm) * scale
                 dy_scaled = (dy / norm) * scale
-                
+
                 fig.add_trace(
                     go.Scatter(
                         x=[x_pos, x_pos + dx_scaled],
@@ -268,20 +272,20 @@ def _build_phase_diagram_figure(
                         showlegend=False,
                     )
                 )
-                
+
                 # Ajouter une petite tête de flèche
                 angle = np.arctan2(dy, dx)
                 head_len = 0.08
                 head_ang = np.pi / 6
-                
+
                 x_tip = x_pos + dx_scaled
                 y_tip = y_pos + dy_scaled
-                
+
                 x_head1 = x_tip - head_len * np.cos(angle - head_ang)
                 y_head1 = y_tip - head_len * np.sin(angle - head_ang)
                 x_head2 = x_tip - head_len * np.cos(angle + head_ang)
                 y_head2 = y_tip - head_len * np.sin(angle + head_ang)
-                
+
                 fig.add_trace(
                     go.Scatter(
                         x=[x_tip, x_head1],
@@ -333,11 +337,15 @@ def _build_phase_diagram_figure(
             traj = odeint(system, [x0, y0], t_span, full_output=False)
             x_traj = traj[:, 0]
             y_traj = traj[:, 1]
-            
+
             # Filtrer les points dans les limites
-            mask = (x_traj >= x_range[0] - 1) & (x_traj <= x_range[1] + 1) & \
-                   (y_traj >= y_range[0] - 1) & (y_traj <= y_range[1] + 1)
-            
+            mask = (
+                (x_traj >= x_range[0] - 1)
+                & (x_traj <= x_range[1] + 1)
+                & (y_traj >= y_range[0] - 1)
+                & (y_traj <= y_range[1] + 1)
+            )
+
             if np.any(mask):
                 fig.add_trace(
                     go.Scatter(
