@@ -106,17 +106,6 @@ def create_app() -> Dash:
             ]
         )
 
-        # Callback to invert sidebar colors on chaos page
-        @app.callback(
-            Output("sidebar-container", "className"),
-            Input("url", "pathname"),
-        )
-        def update_sidebar_colors(pathname: str) -> str:
-            """Update sidebar styling based on current page."""
-            if pathname == "/chaos":
-                return "chaos-mode"
-            return ""
-
     else:
         log.warning("Aucune page détectée. Utilisation du layout fallback Poincaré.")
         app.layout = build_layout(base_figure)
