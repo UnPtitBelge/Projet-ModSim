@@ -8,8 +8,8 @@ from .logging_setup import get_logger, init_logging
 from .poincare.figure import build_poincare_figure
 from .poincare.layout import build_layout
 from .style.components.layout import content_wrapper
-from .style.components.sidebar import (chaos_badge, nav_link, sidebar_container,
-                                       sidebar_header)
+from .style.components.sidebar import (chaos_badge, nav_link,
+                                       sidebar_container, sidebar_header)
 from .style.html_head import get_index_string
 
 _init_logging_cfg = init_logging()
@@ -62,7 +62,8 @@ def create_app() -> Dash:
                                         [
                                             p
                                             for p in dash.page_registry.values()
-                                            if p.get("path", "") not in ["/about", "/chaos"]
+                                            if p.get("path", "")
+                                            not in ["/about", "/chaos"]
                                         ],
                                         key=lambda p: p.get("order", 0),
                                     )

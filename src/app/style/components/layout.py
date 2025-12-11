@@ -45,7 +45,7 @@ def app_container() -> Dict[str, str]:
 
 
 def content_wrapper(
-    padding_px: int = 24, margin_left_px: int = SIDEBAR_WIDTH//2
+    padding_px: int = 24, margin_left_px: int = SIDEBAR_WIDTH // 2
 ) -> Dict[str, str]:
     """
     Wrapper for main content area (right of the fixed sidebar).
@@ -211,7 +211,7 @@ def action_button() -> Dict[str, str]:
 def loading_container(padding_px: int = 12) -> Dict[str, str]:
     """
     Container style for dcc.Loading spinner.
-    
+
     Provides a consistent appearance with soft colors and spacing.
     """
     return {
@@ -227,10 +227,10 @@ def loading_container(padding_px: int = 12) -> Dict[str, str]:
 def alert_box(kind: str = "info") -> Dict[str, str]:
     """
     Alert/notice box style for informational messages, warnings, or tips.
-    
+
     Args:
         kind: "info" (default), "warning", or "tip"
-    
+
     Returns:
         Style dictionary for the alert box
     """
@@ -242,7 +242,7 @@ def alert_box(kind: str = "info") -> Dict[str, str]:
         "lineHeight": f"{TYPOGRAPHY.lh_normal}",
         "margin": "8px 0",
     }
-    
+
     if kind == "warning":
         return {
             **base,

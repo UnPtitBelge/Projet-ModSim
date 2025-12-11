@@ -154,7 +154,9 @@ def build_layout() -> html.Div:
                                                 [
                                                     dcc.Graph(
                                                         id=ids["system_graph"],
-                                                        config={"displayModeBar": False},
+                                                        config={
+                                                            "displayModeBar": False
+                                                        },
                                                     )
                                                 ],
                                                 style=graph_container(),
@@ -184,7 +186,9 @@ def build_layout() -> html.Div:
                                                 [
                                                     dcc.Graph(
                                                         id=ids["phase_diagram"],
-                                                        config={"displayModeBar": False},
+                                                        config={
+                                                            "displayModeBar": False
+                                                        },
                                                     )
                                                 ],
                                                 style=graph_container(),
@@ -408,7 +412,10 @@ def build_layout() -> html.Div:
                                 [
                                     html.H3(
                                         "Stabilité asymptotique",
-                                        style={**TEXT["h3"], "color": PALETTE.stability_stable},
+                                        style={
+                                            **TEXT["h3"],
+                                            "color": PALETTE.stability_stable,
+                                        },
                                     ),
                                     html.P(
                                         [
@@ -442,7 +449,10 @@ def build_layout() -> html.Div:
                                 [
                                     html.H3(
                                         "Stabilité (marginale)",
-                                        style={**TEXT["h3"], "color": PALETTE.stability_marginal},
+                                        style={
+                                            **TEXT["h3"],
+                                            "color": PALETTE.stability_marginal,
+                                        },
                                     ),
                                     html.P(
                                         [
@@ -462,7 +472,10 @@ def build_layout() -> html.Div:
                                 [
                                     html.H3(
                                         "Instabilité",
-                                        style={**TEXT["h3"], "color": PALETTE.stability_unstable},
+                                        style={
+                                            **TEXT["h3"],
+                                            "color": PALETTE.stability_unstable,
+                                        },
                                     ),
                                     html.P(
                                         [

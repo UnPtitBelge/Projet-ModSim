@@ -10,29 +10,24 @@ from __future__ import annotations
 from dash import dcc, html
 
 from src.app.chaos.plots import build_three_body_figure_with_data
-from src.app.style.components.layout import (
-    action_button,
-    alert_box,
-    app_container,
-    content_wrapper,
-    graph_container,
-    loading_container,
-    section_card,
-)
+from src.app.style.components.layout import (action_button, alert_box,
+                                             app_container, content_wrapper,
+                                             graph_container,
+                                             loading_container, section_card)
 from src.app.style.text import TEXT
 
 
 def build_layout() -> html.Div:
     """
     Construit le layout complet de la page du problème à trois corps.
-    
+
     Inclut:
     - Introduction théorique au problème
     - Contexte historique
     - Simulation interactive avec animation
     - Explication des équations mathématiques
     - Discussion sur l'instabilité chaotique
-    
+
     Returns:
         Composant Div contenant le layout complet de la page
     """
@@ -125,9 +120,16 @@ def build_layout() -> html.Div:
                                         title="Réinitialiser aux positions de base",
                                     ),
                                 ],
-                                style={"display": "flex", "gap": "10px", "marginBottom": "16px"},
+                                style={
+                                    "display": "flex",
+                                    "gap": "10px",
+                                    "marginBottom": "16px",
+                                },
                             ),
-                            html.Div(id="chaos-initial-conditions", style={"marginBottom": "16px"}),
+                            html.Div(
+                                id="chaos-initial-conditions",
+                                style={"marginBottom": "16px"},
+                            ),
                             dcc.Loading(
                                 id="chaos-loading",
                                 type="default",
@@ -135,7 +137,9 @@ def build_layout() -> html.Div:
                                     html.Div(
                                         dcc.Graph(
                                             id="chaos-three-body-graph",
-                                            figure=build_three_body_figure_with_data()[0],
+                                            figure=build_three_body_figure_with_data()[
+                                                0
+                                            ],
                                             config={"displayModeBar": False},
                                         ),
                                         style=graph_container(),
@@ -160,7 +164,11 @@ def build_layout() -> html.Div:
                             ),
                             html.Div(
                                 r"$$\mathbf{a}_i = G \sum_{j \ne i} \frac{m_j \, (\mathbf{r}_j - \mathbf{r}_i)}{|\mathbf{r}_j - \mathbf{r}_i|^3}$$",
-                                style={**TEXT["p"], "textAlign": "center", "margin": "1rem 0"},
+                                style={
+                                    **TEXT["p"],
+                                    "textAlign": "center",
+                                    "margin": "1rem 0",
+                                },
                                 className="tex2jax_process",
                             ),
                             html.P(
@@ -179,7 +187,9 @@ def build_layout() -> html.Div:
                     # Sensibilité aux conditions initiales
                     html.Div(
                         [
-                            html.H3("Sensibilité aux conditions initiales", style=TEXT["h3"]),
+                            html.H3(
+                                "Sensibilité aux conditions initiales", style=TEXT["h3"]
+                            ),
                             html.P(
                                 [
                                     "Le caractère chaotique se manifeste par une ",
@@ -201,7 +211,10 @@ def build_layout() -> html.Div:
             # Conclusion globale sur le chaos
             html.Div(
                 [
-                    html.H2("Comprendre le chaos : l'ordre dans le désordre", style=TEXT["h2"]),
+                    html.H2(
+                        "Comprendre le chaos : l'ordre dans le désordre",
+                        style=TEXT["h2"],
+                    ),
                     html.P(
                         [
                             "Bien que les systèmes chaotiques soient ",
@@ -246,7 +259,7 @@ def build_layout() -> html.Div:
             ),
         ],
         style={
-        **app_container(),
-        **content_wrapper(),
-    },
+            **app_container(),
+            **content_wrapper(),
+        },
     )

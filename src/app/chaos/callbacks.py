@@ -19,15 +19,15 @@ from src.app.chaos.plots import build_three_body_figure_with_data
 def update_three_body_figure(restart_n_clicks, reset_n_clicks):
     """
     Génère une nouvelle simulation avec ou sans perturbations aléatoires.
-    
+
     Deux comportements possibles:
     - Bouton "Générer": positions aléatoires avec perturbations
     - Bouton "Reset": retour à la configuration de base sans perturbations
-    
+
     Args:
         restart_n_clicks: Nombre de clics sur "Générer"
         reset_n_clicks: Nombre de clics sur "Reset"
-    
+
     Returns:
         fig: Figure Plotly avec la nouvelle animation
         conditions_text: Composant HTML affichant les positions initiales
@@ -39,9 +39,9 @@ def update_three_body_figure(restart_n_clicks, reset_n_clicks):
     else:
         # Chargement initial
         randomize = False
-    
+
     fig, bodies, _, _ = build_three_body_figure_with_data(randomize=randomize)
-    
+
     # Créer l'affichage des conditions initiales avec couleurs
     conditions_text = html.Div(
         [
@@ -86,5 +86,5 @@ def update_three_body_figure(restart_n_clicks, reset_n_clicks):
             "marginTop": "10px",
         },
     )
-    
+
     return fig, conditions_text

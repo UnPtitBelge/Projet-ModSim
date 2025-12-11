@@ -269,7 +269,9 @@ def build_stability_layout(
                                                 [
                                                     dcc.Graph(
                                                         figure=system_fig,
-                                                        config={"displayModeBar": False},
+                                                        config={
+                                                            "displayModeBar": False
+                                                        },
                                                     ),
                                                 ],
                                                 style=graph_container(),
@@ -296,7 +298,9 @@ def build_stability_layout(
                                                 [
                                                     dcc.Graph(
                                                         figure=phase_fig,
-                                                        config={"displayModeBar": False},
+                                                        config={
+                                                            "displayModeBar": False
+                                                        },
                                                     ),
                                                 ],
                                                 style=graph_container(),
