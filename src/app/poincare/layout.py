@@ -22,10 +22,10 @@ from src.app.style.text import TEXT
 def build_layout(figure):
     """
     Build the Poincaré diagram page layout.
-    
+
     Args:
         figure: Plotly graph object with the Poincaré diagram traces and zones
-        
+
     Returns:
         html.Div containing the complete page structure with title, graph, and descriptions
     """
@@ -35,10 +35,10 @@ def build_layout(figure):
         [
             html.Div(
                 [
-            html.H1(
-                "Analyse et découverte de la notion de stabilité pour des systèmes linéaires continus d'ordre deux",
-                style=TEXT["h1"],
-            ),
+                    html.H1(
+                        "Analyse et découverte de la notion de stabilité pour des systèmes linéaires continus d'ordre deux",
+                        style=TEXT["h1"],
+                    ),
                 ],
                 style=section_card(),
             ),
@@ -65,7 +65,7 @@ def build_layout(figure):
                     html.Div(
                         "Cliquez sur une zone du diagramme pour afficher la fiche correspondante.",
                         id="poincare-stability-panel",
-                        style={"marginTop": "8px"},
+                        style={**TEXT["p"], "marginTop": "8px"},
                     ),
                 ],
                 style=section_card(),

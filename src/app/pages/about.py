@@ -2,7 +2,8 @@ import dash
 from dash import html
 
 from src.app.style.components.layout import (app_container, content_wrapper,
-                                             section_card, nav_button, spacing_section)
+                                             nav_button, section_card,
+                                             spacing_section)
 from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
 
@@ -135,32 +136,28 @@ layout = html.Div(
                     [
                         html.Li(
                             [
-                                html.Code("src/app/app.py", style=TEXT["code_block"]),
+                                html.Code("src/app/app.py", style=TEXT["code"]),
                                 " : application Dash multi-page avec sidebar de navigation",
                             ],
                             style=TEXT["p"],
                         ),
                         html.Li(
                             [
-                                html.Code(
-                                    "src/app/poincare/", style=TEXT["code_block"]
-                                ),
+                                html.Code("src/app/poincare/", style=TEXT["code"]),
                                 " : diagramme interactif avec callbacks pour affichage inline",
                             ],
                             style=TEXT["p"],
                         ),
                         html.Li(
                             [
-                                html.Code(
-                                    "src/app/stabilite/", style=TEXT["code_block"]
-                                ),
+                                html.Code("src/app/stabilite/", style=TEXT["code"]),
                                 " : génération statique des layouts de stabilité (valeurs propres, EDO, portraits de phase)",
                             ],
                             style=TEXT["p"],
                         ),
                         html.Li(
                             [
-                                html.Code("src/app/style/", style=TEXT["code_block"]),
+                                html.Code("src/app/style/", style=TEXT["code"]),
                                 " : design system centralisé (palette, typographie, composants)",
                             ],
                             style=TEXT["p"],

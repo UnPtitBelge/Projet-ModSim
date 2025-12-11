@@ -15,20 +15,16 @@ to generate unique element IDs for Dash callbacks.
 
 from __future__ import annotations
 
-from typing import Dict, Optional, Callable
+from typing import Callable, Dict, Optional
 
-from dash import Input, Output, callback, dcc, html
 import plotly.graph_objects as go
+from dash import Input, Output, callback, dcc, html
 
-from src.app.style.components.layout import (
-    code_display,
-    content_wrapper,
-    graph_container,
-    section_card,
-    side_by_side_container,
-    side_by_side_last,
-    spacing_section,
-)
+from src.app.style.components.layout import (code_display, content_wrapper,
+                                             graph_container, section_card,
+                                             side_by_side_container,
+                                             side_by_side_last,
+                                             spacing_section)
 from src.app.style.palette import PALETTE
 from src.app.style.text import TEXT
 from src.app.style.typography import TYPOGRAPHY
@@ -69,7 +65,7 @@ def build_stability_layout(
 ) -> html.Div:
     """
     Create a static stability layout with pre-rendered figures (no callbacks).
-    
+
     This function generates all content (eigenvalues, ODEs, figures) directly
     without relying on Dash callbacks, making it suitable for both standalone
     pages and inline display.
@@ -83,49 +79,49 @@ def build_stability_layout(
     """
     # Import here to avoid circular dependencies
     from .base_figures import create_phase_diagram, create_system_graph
-    from .eigenvalue_utils import (
-        tau_delta_to_matrix_typed,
-        format_eigenvalue_display,
-        classify_equilibrium,
-    )
-    
+    from .eigenvalue_utils import (classify_equilibrium,
+                                   format_eigenvalue_display,
+                                   tau_delta_to_matrix_typed)
+
     title = page_key.replace("_", " ").title()
-    
+
     # Determine pedagogic content
     pedagogic_content = html.Div(["à compléter"])
     if layout_pedagogic_fn is not None:
         pedagogic_content = layout_pedagogic_fn()
-    
+
     # Generate eigenvalue display
     eigenvalue_info = format_eigenvalue_display(tau, delta)
-    eigenvalue_display = html.Div([
-        html.Div(
-            [
-                html.Strong(
-                    "Type de point d'équilibre : ", style={"color": PALETTE.primary}
-                ),
-                html.Span(eigenvalue_info["type"]),
-            ],
-            style={"marginBottom": "1rem"},
-        ),
-        html.Div(
-            [
-                html.Strong("Valeurs propres : "),
-                html.Span(eigenvalue_info["eigenvalues"]),
-            ],
-            style={"marginBottom": "0.5rem"},
-        ),
-        html.Div(
-            [
-                html.Strong("Nature : "),
-                html.Span(eigenvalue_info["nature"]),
-            ]
-        ),
-    ])
-    
+    eigenvalue_display = html.Div(
+        [
+            html.Div(
+                [
+                    html.Strong(
+                        "Type de point d'équilibre : ", style={"color": PALETTE.primary}
+                    ),
+                    html.Span(eigenvalue_info["type"]),
+                ],
+                style={"marginBottom": "1rem"},
+            ),
+            html.Div(
+                [
+                    html.Strong("Valeurs propres : "),
+                    html.Span(eigenvalue_info["eigenvalues"]),
+                ],
+                style={"marginBottom": "0.5rem"},
+            ),
+            html.Div(
+                [
+                    html.Strong("Nature : "),
+                    html.Span(eigenvalue_info["nature"]),
+                ]
+            ),
+        ]
+    )
+
     # Generate ODE display
     a, b, c, d = tau_delta_to_matrix_typed(tau, delta, page_key)
-    
+
     def format_coeff(val: float) -> str:
         if val == 0:
             return "0"
@@ -135,7 +131,7 @@ def build_stability_layout(
             return "-"
         else:
             return f"{val:.2f}" if val != int(val) else str(int(val))
-    
+
     x1_terms = []
     if b != 0:
         if b > 0:
@@ -146,7 +142,7 @@ def build_stability_layout(
         x1_terms.insert(0, f"{format_coeff(a)}x₁" if format_coeff(a) else "x₁")
     elif a < 0:
         x1_terms.insert(0, f"- {format_coeff(-a)}x₁" if format_coeff(-a) else "- x₁")
-    
+
     x2_terms = []
     if c != 0:
         if c > 0:
@@ -157,30 +153,34 @@ def build_stability_layout(
         x2_terms.insert(0, f"{format_coeff(d)}x₂" if format_coeff(d) else "x₂")
     elif d < 0:
         x2_terms.insert(0, f"- {format_coeff(-d)}x₂" if format_coeff(-d) else "- x₂")
-    
+
     x1_eq = " ".join(x1_terms) if x1_terms else "0"
     x2_eq = " ".join(x2_terms) if x2_terms else "0"
-    
+
     x1_eq = x1_eq.strip().lstrip("+ ").replace("  ", " ")
     x2_eq = x2_eq.strip().lstrip("+ ").replace("  ", " ")
-    
+
     ode_display = html.Div(
         children=f"""
         $$\\dot{{x}}_1 = {x1_eq}$$
         $$\\dot{{x}}_2 = {x2_eq}$$
         """
     )
-    
+
     # Generate phase diagram
     if create_phase_fig is not None:
         phase_fig = create_phase_fig()
     else:
         eq_type = classify_equilibrium(tau, delta)
-        phase_fig = create_phase_diagram(a, b, c, d, title=f"Diagramme de phase: {eq_type}")
-    
+        phase_fig = create_phase_diagram(
+            a, b, c, d, title=f"Diagramme de phase: {eq_type}"
+        )
+
     # Generate system graph
     eq_type = classify_equilibrium(tau, delta)
-    system_fig = create_system_graph(a, b, c, d, title=f"Évolution temporelle: {eq_type}")
+    system_fig = create_system_graph(
+        a, b, c, d, title=f"Évolution temporelle: {eq_type}"
+    )
 
     return html.Div(
         [
@@ -261,11 +261,20 @@ def build_stability_layout(
                             html.Div(
                                 [
                                     html.H3("Évolution temporelle", style=TEXT["h3"]),
-                                    html.Div(
-                                        [
-                                            dcc.Graph(figure=system_fig, config={"displayModeBar": False}),
+                                    dcc.Loading(
+                                        id="stabilite-system-loading",
+                                        type="default",
+                                        children=[
+                                            html.Div(
+                                                [
+                                                    dcc.Graph(
+                                                        figure=system_fig,
+                                                        config={"displayModeBar": False},
+                                                    ),
+                                                ],
+                                                style=graph_container(),
+                                            ),
                                         ],
-                                        style=graph_container(),
                                     ),
                                 ],
                                 style=section_card(),
@@ -279,11 +288,20 @@ def build_stability_layout(
                             html.Div(
                                 [
                                     html.H3("Diagramme de phase", style=TEXT["h3"]),
-                                    html.Div(
-                                        [
-                                            dcc.Graph(figure=phase_fig, config={"displayModeBar": False}),
+                                    dcc.Loading(
+                                        id="stabilite-phase-loading",
+                                        type="default",
+                                        children=[
+                                            html.Div(
+                                                [
+                                                    dcc.Graph(
+                                                        figure=phase_fig,
+                                                        config={"displayModeBar": False},
+                                                    ),
+                                                ],
+                                                style=graph_container(),
+                                            ),
                                         ],
-                                        style=graph_container(),
                                     ),
                                 ],
                                 style=section_card(),

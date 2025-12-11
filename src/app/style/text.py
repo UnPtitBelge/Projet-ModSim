@@ -74,6 +74,16 @@ SMALL = {
     "fontStyle": "normal",
 }
 
+# Form labels
+LABEL = {
+    "fontFamily": TYPOGRAPHY.font_sans,
+    "fontSize": f"{TYPOGRAPHY.size_sm}rem",
+    "lineHeight": f"{TYPOGRAPHY.lh_snug}",
+    "color": PALETTE.text,
+    "fontWeight": str(TYPOGRAPHY.weight_semibold),
+    "textTransform": "none",
+}
+
 # Monospace code block
 CODE_BLOCK = {
     "fontFamily": TYPOGRAPHY.font_mono,
@@ -86,6 +96,16 @@ CODE_BLOCK = {
     "whiteSpace": "pre-wrap",
 }
 
+# Inline code style
+CODE_INLINE = {
+    "fontFamily": TYPOGRAPHY.font_mono,
+    "fontSize": f"{TYPOGRAPHY.size_sm}rem",
+    "color": PALETTE.text,
+    "background": PALETTE.bg,
+    "padding": "2px 4px",
+    "borderRadius": "4px",
+}
+
 # Export dictionary for convenience
 TEXT = {
     "h1": H1,
@@ -94,6 +114,8 @@ TEXT = {
     "p": P,
     "muted": MUTED,
     "small": SMALL,
+    "label": LABEL,
+    "code": CODE_INLINE,
     "code_block": CODE_BLOCK,
 }
 

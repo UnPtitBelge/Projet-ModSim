@@ -44,7 +44,9 @@ def app_container() -> Dict[str, str]:
     }
 
 
-def content_wrapper(padding_px: int = 24, margin_left_px: int = SIDEBAR_WIDTH) -> Dict[str, str]:
+def content_wrapper(
+    padding_px: int = 24, margin_left_px: int = SIDEBAR_WIDTH//2
+) -> Dict[str, str]:
     """
     Wrapper for main content area (right of the fixed sidebar).
     The margin-left equals the sidebar width to prevent overlap.
@@ -88,7 +90,9 @@ def section_card(padding_px: int = 18) -> Dict[str, str]:
     }
 
 
-def side_by_side_container(width_percent: int = 48, margin_right_percent: int = 4) -> Dict[str, str]:
+def side_by_side_container(
+    width_percent: int = 48, margin_right_percent: int = 4
+) -> Dict[str, str]:
     """Container for placing elements side-by-side (e.g., two graphs or two cards)."""
     return {
         "width": f"{width_percent}%",
@@ -119,10 +123,12 @@ def code_display(padding_px: int = 12) -> Dict[str, str]:
     }
 
 
-def nav_button(kind: str = "primary", padding_px: int = 12, padding_horizontal: int = 24) -> Dict[str, str]:
+def nav_button(
+    kind: str = "primary", padding_px: int = 12, padding_horizontal: int = 24
+) -> Dict[str, str]:
     """
     Navigation button style (for html.A links styled as buttons).
-    
+
     Args:
         kind: "primary" (filled) or "secondary" (outlined)
         padding_px: vertical padding
@@ -156,7 +162,7 @@ def nav_button(kind: str = "primary", padding_px: int = 12, padding_horizontal: 
 def spacing_section(spacing_type: str = "top") -> Dict[str, str]:
     """
     Standardized spacing for sections.
-    
+
     Args:
         spacing_type: "top", "bottom", "both", "small"
     """
@@ -186,6 +192,80 @@ def back_link() -> Dict[str, str]:
     }
 
 
+def action_button() -> Dict[str, str]:
+    """Action button style (for html.Button elements)."""
+    return {
+        "padding": "10px 20px",
+        "margin": "10px 0",
+        "backgroundColor": PALETTE.primary,
+        "color": PALETTE.surface,
+        "border": "none",
+        "borderRadius": "8px",
+        "cursor": "pointer",
+        "fontSize": "14px",
+        "fontWeight": "600",
+        "transition": "all 0.2s ease",
+    }
+
+
+def loading_container(padding_px: int = 12) -> Dict[str, str]:
+    """
+    Container style for dcc.Loading spinner.
+    
+    Provides a consistent appearance with soft colors and spacing.
+    """
+    return {
+        "display": "flex",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "minHeight": "300px",
+        "color": PALETTE.primary,
+        "fontFamily": TYPOGRAPHY.font_sans,
+    }
+
+
+def alert_box(kind: str = "info") -> Dict[str, str]:
+    """
+    Alert/notice box style for informational messages, warnings, or tips.
+    
+    Args:
+        kind: "info" (default), "warning", or "tip"
+    
+    Returns:
+        Style dictionary for the alert box
+    """
+    base = {
+        "padding": "10px 12px",
+        "borderRadius": "4px",
+        "fontSize": f"{TYPOGRAPHY.size_sm}rem",
+        "fontFamily": TYPOGRAPHY.font_sans,
+        "lineHeight": f"{TYPOGRAPHY.lh_normal}",
+        "margin": "8px 0",
+    }
+    
+    if kind == "warning":
+        return {
+            **base,
+            "backgroundColor": "#f5f5f5",
+            "color": PALETTE.text_muted,
+            "borderLeft": f"3px solid {PALETTE.text_muted}",
+        }
+    elif kind == "tip":
+        return {
+            **base,
+            "backgroundColor": "#FFF9F0",
+            "color": PALETTE.text,
+            "borderLeft": f"3px solid {PALETTE.primary}",
+        }
+    else:  # info
+        return {
+            **base,
+            "backgroundColor": PALETTE.bg,
+            "color": PALETTE.text_muted,
+            "borderLeft": f"3px solid {PALETTE.border}",
+        }
+
+
 __all__ = [
     "app_container",
     "content_wrapper",
@@ -198,4 +278,7 @@ __all__ = [
     "nav_button",
     "spacing_section",
     "back_link",
+    "action_button",
+    "loading_container",
+    "alert_box",
 ]

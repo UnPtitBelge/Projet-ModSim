@@ -6,7 +6,9 @@ from dash import html  # type: ignore
 from src.app.poincare.callbacks import register_callbacks
 from src.app.poincare.figure import get_cached_poincare_figure
 from src.app.poincare.layout import build_layout
-from src.app.style.components.layout import app_container, content_wrapper, section_card, nav_button, spacing_section
+from src.app.style.components.layout import (app_container, content_wrapper,
+                                             nav_button, section_card,
+                                             spacing_section)
 from src.app.style.palette import PALETTE
 
 # Enregistrement de la page (native multipage)

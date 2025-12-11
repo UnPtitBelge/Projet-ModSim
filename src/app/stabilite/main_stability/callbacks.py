@@ -10,11 +10,8 @@ from scipy.integrate import odeint
 from src.app.style.text import TEXT
 
 from ..base_figures import create_phase_diagram, create_system_graph
-from ..eigenvalue_utils import (
-    classify_equilibrium,
-    format_eigenvalue_display,
-    tau_delta_to_matrix,
-)
+from ..eigenvalue_utils import (classify_equilibrium,
+                                format_eigenvalue_display, tau_delta_to_matrix)
 from .constants import get_ids
 
 
@@ -127,4 +124,3 @@ def register_callbacks(app: Dash) -> None:
         a, b, c, d = tau_delta_to_matrix(tau, delta)
         title = "Portrait de phase"
         return create_phase_diagram(a, b, c, d, title)
-

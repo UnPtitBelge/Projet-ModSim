@@ -182,11 +182,11 @@ def calculate_eigenvalues(tau: float, delta: float) -> Tuple[complex, complex]:
 def classify_equilibrium(tau: float, delta: float) -> str:
     """
     Classify equilibrium point type based on tau (trace) and delta (determinant).
-    
+
     Uses the Poincaré plane classification based on the position of (τ, Δ):
-    
+
     Parabola boundary: Δ = τ²/4 (discriminant = 0)
-    
+
     Cases (in order of priority):
     1. τ = 0, Δ = 0: Mouvement uniforme (double zero eigenvalue)
     2. τ = 0, Δ > 0: Centre (purely imaginary eigenvalues)
@@ -208,23 +208,23 @@ def classify_equilibrium(tau: float, delta: float) -> str:
         String describing the equilibrium type
     """
     TOL = 1e-10  # Tolerance for numerical comparisons
-    
+
     # Calculate discriminant for parabola comparison
     discriminant = tau**2 - 4 * delta
-    
+
     # === CAS 1: Origin (τ = 0, Δ = 0) ===
     if abs(tau) < TOL and abs(delta) < TOL:
         return "Mouvement uniforme"
-    
+
     # === CAS 2: τ = 0, Δ > 0 (Centre) ===
     if abs(tau) < TOL and delta > TOL:
         return "Centre"
-    
+
     # === CAS 3: Δ < 0 (Selle) ===
     # Eigenvalues have opposite signs (λ₁ × λ₂ < 0)
     if delta < -TOL:
         return "Point selle (instable)"
-    
+
     # === CAS 4: Δ ≈ 0, τ ≠ 0 (Ligne de points d'équilibre) ===
     # One eigenvalue is zero, the other is τ
     if abs(delta) < TOL and abs(tau) > TOL:
@@ -232,7 +232,7 @@ def classify_equilibrium(tau: float, delta: float) -> str:
             return "Ligne de points d'équilibre (stable)"
         else:
             return "Ligne de points d'équilibre (instable)"
-    
+
     # === CAS 5: Sur la parabole (discriminant ≈ 0) ===
     # Valeur propre double réelle: λ = τ/2
     if abs(discriminant) < TOL:
@@ -240,7 +240,7 @@ def classify_equilibrium(tau: float, delta: float) -> str:
             return "Nœud dégénéré stable"
         else:
             return "Nœud dégénéré instable"
-    
+
     # === CAS 6: Au-dessus de la parabole (discriminant < 0) ===
     # Valeurs propres complexes conjuguées: λ = (τ ± i√|discriminant|) / 2
     if discriminant < -TOL:
@@ -248,7 +248,7 @@ def classify_equilibrium(tau: float, delta: float) -> str:
             return "Foyer stable"
         else:
             return "Foyer instable"
-    
+
     # === CAS 7: En-dessous de la parabole (discriminant > 0, Δ > 0) ===
     # Valeurs propres réelles distinctes de même signe
     # λ₁ = (τ + √discriminant) / 2,  λ₂ = (τ - √discriminant) / 2
@@ -257,7 +257,7 @@ def classify_equilibrium(tau: float, delta: float) -> str:
             return "Nœud stable"
         else:
             return "Nœud instable"
-    
+
     # Cas par défaut (ne devrait jamais arriver)
     return "Type indéterminé"
 

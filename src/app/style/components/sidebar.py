@@ -41,7 +41,7 @@ from src.app.style.text import TEXT
 from src.app.style.typography import TYPOGRAPHY
 
 # Public constants
-SIDEBAR_WIDTH: int = 140
+SIDEBAR_WIDTH: int = 200
 
 
 def sidebar_container() -> Dict[str, str]:
@@ -147,6 +147,44 @@ def footer_text() -> Dict[str, str]:
     return style
 
 
+def chaos_badge() -> Dict[str, str]:
+    """Unique badge style for chaos page in sidebar: orange rounded rectangle."""
+    return {
+        "display": "block",
+        "padding": "12px 14px",
+        "margin": "12px 6px",
+        "backgroundColor": PALETTE.primary,
+        "color": PALETTE.surface,
+        "borderRadius": "12px",
+        "textAlign": "center",
+        "textDecoration": "none",
+        "fontFamily": TYPOGRAPHY.font_sans,
+        "fontSize": f"{TYPOGRAPHY.size_md}rem",
+        "fontWeight": str(TYPOGRAPHY.weight_semibold),
+        "transition": "all 120ms ease",
+        "boxShadow": f"0 2px 8px 0 rgba(234, 88, 12, 0.2)",
+    }
+
+
+def chaos_badge_hover() -> Dict[str, str]:
+    """Hover state for chaos badge."""
+    return {
+        "display": "block",
+        "padding": "12px 14px",
+        "margin": "12px 6px",
+        "backgroundColor": PALETTE.primary_dark,
+        "color": PALETTE.surface,
+        "borderRadius": "12px",
+        "textAlign": "center",
+        "textDecoration": "none",
+        "fontFamily": TYPOGRAPHY.font_sans,
+        "fontSize": f"{TYPOGRAPHY.size_md}rem",
+        "fontWeight": str(TYPOGRAPHY.weight_semibold),
+        "transition": "all 120ms ease",
+        "boxShadow": f"0 4px 12px 0 rgba(234, 88, 12, 0.35)",
+    }
+
+
 __all__ = [
     "SIDEBAR_WIDTH",
     "sidebar_container",
@@ -156,4 +194,6 @@ __all__ = [
     "nav_link_hover_guide",
     "divider",
     "footer_text",
+    "chaos_badge",
+    "chaos_badge_hover",
 ]

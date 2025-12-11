@@ -10,8 +10,7 @@ from __future__ import annotations
 import dash
 
 from src.app.logging_setup import get_logger
-from src.app.stabilite.main_stability import (build_layout,
-                                              register_callbacks)
+from src.app.stabilite.main_stability import build_layout, register_callbacks
 
 log = get_logger(__name__)
 log.info("Enregistrement de la page principale /stabilite.")
