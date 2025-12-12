@@ -1,8 +1,8 @@
 # Projet ModSim (Dash multipage)
 
-Application Dash multipage pour explorer la stabilité de systèmes linéaires d’ordre 2 via le diagramme de Poincaré. Navigation serveur fiable (clic sur zones), design system centralisé, logging rotatif et pages dédiées pour chaque type d’équilibre.
+Application Dash multipage pour explorer la stabilité de systèmes linéaires d’ordre 2 via le diagramme de Poincaré.
 
-📄 Documentation clé : `ARCHITECTURE.md` (vue complète), `DEPLOYMENT.md` (mise en ligne), `CLEANUP_REPORT.md` (nettoyage & docstrings).
+📄 Documentation clé : `ARCHITECTURE.md` (vue complète).
 
 ## Prérequis
 
@@ -82,5 +82,3 @@ Couverture : structure/ordre des traces Poincaré, import app & navigation multi
 ## Pour aller plus loin
 
 - Architecture détaillée : `ARCHITECTURE.md`
-- Guide de mise en ligne : `DEPLOYMENT.md`
-- Rapport de nettoyage/docstrings : `CLEANUP_REPORT.md`
