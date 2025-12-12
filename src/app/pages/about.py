@@ -208,6 +208,10 @@ layout = html.Div(
                             "MathJax : rendu des équations mathématiques",
                             style=TEXT["p"],
                         ),
+                        html.Li(
+                            "Copilot : assistance à la documentation, structuration et développement du code (à permis de se concentrer sur le contenu)",
+                            style=TEXT["p"],
+                        ),
                     ],
                 ),
             ],
