@@ -61,16 +61,13 @@ def layout_pedagogic() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Un nœud stable dégénéré est un point d'équilibre critique où les trajectoires convergent linéairement vers le point fixe de façon dégénérée."
+                "Un nœud stable dégénéré est un point d'équilibre critique où les trajectoires convergent linéairement vers le point fixe avec une légère déformation de la trajectoire avant l'arrivée."
             ),
             html.H4("Exemple de la vie réelle :"),
             html.Ul(
                 [
                     html.Li(
-                        "Un système de ressorts parfaitement amortis: Le système revient à l'équilibre de façon critique sans dépasser."
-                    ),
-                    html.Li(
-                        "L'amortissement critique d'une suspension automobile: La voiture revient à sa position d'équilibre sans oscillations, le plus rapidement possible."
+                        "Un système de ressorts parfaitement amortis: Le système revient à l'équilibre sans oscillations, le plus rapidement possible."
                     ),
                 ]
             ),

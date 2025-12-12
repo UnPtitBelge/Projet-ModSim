@@ -67,10 +67,10 @@ def layout_pedagogic() -> html.Div:
             html.Ul(
                 [
                     html.Li(
-                        "Un ballon de football surmonté d'une épine: Lorsqu'on place le ballon en équilibre sur l'épine et qu'on le perturbe, il roule dans une direction quelconque et s'éloigne indéfiniment."
+                        "Une boule de neige en état d'équilibre instable au sommet d'une colline: Une petite perturbation la fait dévaler la pente dans une direction quelconque."
                     ),
                     html.Li(
-                        "Une réaction nucléaire incontrôlée: La réaction s'accélère exponentiellement et s'éloigne de l'équilibre initial."
+                        "Un ballon gonflé à l'hélium coincé: Une petite perturbation le fait s'envoler s'éloignant du point d'équilibre."
                     ),
                 ]
             ),

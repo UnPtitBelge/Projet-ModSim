@@ -67,10 +67,7 @@ def layout_pedagogic() -> html.Div:
             html.Ul(
                 [
                     html.Li(
-                        "Un système laser critique: À un point critique du laser, des perturbations mineures peuvent causer une divergence dégénérée de l'émission."
-                    ),
-                    html.Li(
-                        "Une pile instable: Une pile de blocs où une perturbation au sommet cause une chute dans une direction préférentielle."
+                        "Une toupie parfaitement équilibrée sur sa pointe tournant sur un dôme: La toupie reste en équilibre instable, et toute perturbation la fait diverger dans une direction."
                     ),
                 ]
             ),

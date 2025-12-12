@@ -63,16 +63,16 @@ def layout_pedagogic() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Un point d’équilibre est un nœud stable lorsque les valeurs propres sont réelles, négatives et éventuellement égales. Les trajectoires se dirigent vers l’équilibre sans osciller, en suivant des directions privilégiées correspondant aux vecteurs propres. Comme toutes les valeurs propres sont négatives, les perturbations décroissent exponentiellement ce qui rend l’équilibre asymptotiquement stable."
+                "Un point d’équilibre est un noeud stable lorsque les valeurs propres sont réelles, négatives. Les trajectoires se dirigent vers l’équilibre sans osciller, en suivant des directions privilégiées correspondant aux vecteurs propres. Comme toutes les valeurs propres sont négatives, les perturbations décroissent exponentiellement ce qui rend l’équilibre asymptotiquement stable."
             ),
-            html.H4("Exemple de la vie réelle :"),
+            html.H4("Exemple de la vie réelle:"),
             html.Ul(
                 [
                     html.Li(
                         "Une bille placée au bord d'une cuvette, qui va rouler vers le fond de celle-ci et s'y stabiliser sans oscillations lorsqu'on la perturbe légèrement, le fond de la cuvette représentant un noeud stable."
                     ),
                     html.Li(
-                        "Le cruise control d'une voiture : Lorsqu'on active le cruise control, le système ajuste automatiquement la vitesse de la voiture pour maintenir la vitesse cible constante. Si la voiture ralentit légèrement, le système augmente la puissance pour revenir à la vitesse définie, et vice versa, assurant ainsi une stabilité sans oscillations autour de la vitesse choisie."
+                        "Le cruise control d'une voiture: Lorsqu'on active le cruise control, le système ajuste automatiquement la vitesse de la voiture pour maintenir la vitesse cible constante. Si la voiture ralentit légèrement, le système augmente la puissance pour revenir à la vitesse définie, et vice versa, assurant ainsi une stabilité sans oscillations autour de la vitesse choisie."
                     ),
                 ]
             ),

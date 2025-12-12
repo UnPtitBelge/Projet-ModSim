@@ -67,10 +67,7 @@ def layout_pedagogic() -> html.Div:
             html.Ul(
                 [
                     html.Li(
-                        "Un bille dans une gouttière: Lorsqu'elle est perturbée légèrement, elle roule vers le bas de la gouttière et s'y stabilise."
-                    ),
-                    html.Li(
-                        "Un amortisseur de voiture: L'amortissement de l'énergie conduit à la stabilité le long d'une direction privilégiée."
+                        "Un joystick de drone: Le joystick peut rester dans une position stable le long d'une ligne, mais toute déviation perpendiculaire le fait revenir à cette position stable instantanément et sans oscillation."
                     ),
                 ]
             ),

@@ -67,10 +67,10 @@ def layout_pedagogic() -> html.Div:
             html.Ul(
                 [
                     html.Li(
-                        "Un bâton placé verticalement en équilibre instable: Une petite perturbation le fait tomber dans une direction préférentielle."
+                        "Un bâton placé verticalement en équilibre instable coincé entre deux murs: Une petite perturbation le fait tomber dans l'une des deux directions ou les murs n'empêchent pas sa chute."
                     ),
                     html.Li(
-                        "La bifurcation pitchfork: Certains systèmes bifurquent vers plusieurs états instables à partir d'un point d'équilibre initial."
+                        "Un système de population avec un seuil critique: Si la population tombe en dessous d'un certain seuil, elle s'effondre, sinon elle croît indéfiniment."
                     ),
                 ]
             ),

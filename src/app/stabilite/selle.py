@@ -67,10 +67,6 @@ def layout_pedagogic() -> html.Div:
             html.Ul(
                 [
                     html.Li(
-                        "Un ballon placé sur une selle: Si on pousse légèrement vers l'avant ou l'arrière, il roule dans ces directions. "
-                        "Mais si on le pousse sur les côtés, il peut se stabiliser temporairement avant de retomber."
-                    ),
-                    html.Li(
                         "Un col de montagne: Les points cols sont des selles topologiques où vous êtes en bas dans une direction et en haut dans l'autre."
                     ),
                 ]

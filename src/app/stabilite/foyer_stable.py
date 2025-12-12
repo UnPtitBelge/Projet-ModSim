@@ -73,10 +73,10 @@ def layout_pedagogic() -> html.Div:
             html.Ul(
                 [
                     html.Li(
-                        "Le poids suspendu à un ressort suspendu: Lorsqu'on déplace le poids de sa position d'équilibre et qu'on le relâche, il oscille de haut en bas avant de revenir à sa position d'équilibre stable."
+                        "Une corde de guitare: Quand elle est jouée, elle oscille rapidement autour de sa position d'équilibre avant de s'arrêter progressivement."
                     ),
                     html.Li(
-                        "Le pendule: Un pendule qui oscille dans l'air perd de l'énergie à cause des frottements, ce qui le fait revenir à sa position d'équilibre stable."
+                        "Une voiture avec amortisseurs: après un dos-d’âne, elle oscille de haut en bas puis revient à la position d'équilibre quand le choc a bien été amorti."
                     ),
                 ]
             ),

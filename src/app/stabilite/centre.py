@@ -70,7 +70,7 @@ def layout_pedagogic() -> html.Div:
                         "Un pendule dans le vide: Sans friction, un pendule oscille indéfiniment autour du point d'équilibre, ni divergent ni convergent."
                     ),
                     html.Li(
-                        "Les orbites planétaires: Les planètes orbitent autour du soleil suivant des trajectoires fermées et stables, ce qui les maintient à une distance relativement constante du soleil."
+                        "La Lune orbitant autour de la Terre: La Lune suit une trajectoire fermée et stable autour de la Terre, illustrant un mouvement continu en orbite."
                     ),
                 ]
             ),
