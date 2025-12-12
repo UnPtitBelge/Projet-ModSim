@@ -568,7 +568,11 @@ def build_layout() -> html.Div:
                                     html.Li("Deux valeurs propres complexes avec partie réelle positive: Foyer instable"),   
                                     html.Li("Deux valeurs propres réelles de signes opposés: Selle"),       
                                     html.Li("Deux valeurs propres purement imaginaires: Centre"),
-                                    html.Li("Présence d’une valeur propre nulle: ")
+                                    html.Li("Deux valeurs propres réelles négatives égales (multiplicité 2): Noeud stable dégénéré "),
+                                    html.Li("Deux valeurs propres réelles négatives égales (multiplicité 2): Noeud stable dégénéré"),
+                                    html.Li("Une valeur propre nulle et une négative: Ligne de points d’équilibre stable"),
+                                    html.Li("Une valeur propre nulle et une négative: Ligne de points d’équilibre stable"),
+                                    html.Li("Deux valeurs propres nulles: mouvement uniforme")
                                 ]
                             ),
                         ],
